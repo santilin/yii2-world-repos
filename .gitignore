@@ -7,7 +7,7 @@ tests/_support/_generated
 tests/fixtures/unit/data
 
 *.log
-world-repositories_*.hmcfg
+world-repos_*.hmcfg
 *.kate-swp
 *~
 .kdev4/**

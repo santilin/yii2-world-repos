@@ -16,7 +16,7 @@ $config = [
 	// Set as es-ES, not es_ES
 	'language' => 'es-ES',
 	'sourceLanguage' => 'es',
-	'vendorPath' => '/home/santilin/devel/yii2base/yii2-world-repositories/vendor/',
+	'vendorPath' => '/home/santilin/devel/yii2base/yii2-world-repos/vendor/',
     'controllerNamespace' => 'app\console\controllers',
 	'modules' => [
 		'churros' => [

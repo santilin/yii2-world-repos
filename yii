@@ -14,8 +14,8 @@ defined('YII_ENV') or define('YII_ENV', 'dev');
 
 define('APP_VERSION','0.0.1');
 
-require '/home/santilin/devel/yii2base/yii2-world-repositories/vendor/autoload.php';
-require '/home/santilin/devel/yii2base/yii2-world-repositories/vendor/yiisoft/yii2/Yii.php';
+require '/home/santilin/devel/yii2base/yii2-world-repos/vendor/autoload.php';
+require '/home/santilin/devel/yii2base/yii2-world-repos/vendor/yiisoft/yii2/Yii.php';
 
 $config = require __DIR__ . '/config/console.php';
 

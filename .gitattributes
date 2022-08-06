@@ -1,7 +1,7 @@
 #<<<<<YII2_CAPEL
-world-repositories.hmcfg export-ignore
-world-repositories.kdev4 export-ignore
-world-repositories.capel.json export-ignore
+world-repos.hmcfg export-ignore
+world-repos.kdev4 export-ignore
+world-repos.capel.json export-ignore
 .kdev4 export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore

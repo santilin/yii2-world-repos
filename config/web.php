@@ -11,10 +11,10 @@ $routes = require __DIR__ . '/routes.php';
 $secrets = require __DIR__ . '/secrets.php';
 
 $config = [
-	'id' => 'world-repositories',
+	'id' => 'world-repos',
 	'name' => 'World repositories',
 	'basePath' => dirname(__DIR__),
-	'vendorPath' => '/home/santilin/devel/yii2base/yii2-world-repositories/vendor/',
+	'vendorPath' => '/home/santilin/devel/yii2base/yii2-world-repos/vendor/',
 	// Set as es-ES, not es_ES
 	'language' => 'es-ES',
 	'sourceLanguage' => 'es',

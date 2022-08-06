@@ -25,7 +25,7 @@
 			"type": "Yii2App",
 			"access_filters": ["none"],
 			"title": "Repositories",
-			"dest_path": "/home/santilin/devel/yii2base/yii2-world-repositories",
+			"dest_path": "/home/santilin/devel/yii2base/yii2-world-repos",
 			"models": {
 				"Country": ["model"],
 				"Territory": ["model"]

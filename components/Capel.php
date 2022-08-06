@@ -3,7 +3,7 @@
 namespace app\components;
 use yii;
 /**
- * Meta information for the app world-repositories
+ * Meta information for the app world-repos
  * @version 0.0.1
  */
 /*>>>>>INIT*/

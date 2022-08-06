@@ -4,8 +4,8 @@
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
 
-require '/home/santilin/devel/yii2base/yii2-world-repositories/vendor/autoload.php';
-require '/home/santilin/devel/yii2base/yii2-world-repositories/vendor/yiisoft/yii2/Yii.php';
+require '/home/santilin/devel/yii2base/yii2-world-repos/vendor/autoload.php';
+require '/home/santilin/devel/yii2base/yii2-world-repos/vendor/yiisoft/yii2/Yii.php';
 
 define('APP_VERSION','0.0.1');
 

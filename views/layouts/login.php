@@ -18,7 +18,7 @@ $company = Yii::$app->name;
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
-	<meta name="description" content="world-repositories">
+	<meta name="description" content="world-repos">
 	<meta name="author" content="santilín">
 	<meta charset="<?= Yii::$app->charset ?>">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">

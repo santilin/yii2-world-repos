@@ -65,15 +65,14 @@ class SourceController extends Controller
 			die($lau);
 		}
 	}
-	private function lauToCode($nut_reg)
+	private function lauToCode(array $nut_reg)
 	{
-		$ret = substr($nut_reg['nuts3_id'],0,2); // País
-		$ret .= substr($nut_reg['lau_id'],0,2) . '.'; // Provincia
-		if( strlen($nut_reg['city_id']) > 2 ) {
-			$ret .= substr($nut_reg['city_id'],2,3) . '.';
-		} else {
-			$ret .= substr($nut_reg['city_id'],2,3) . '.';
-		}
+		$ret = $nut_reg['nuts3_id']; // País hasta provincia
+// 		if( strlen($nut_reg['fua_id']) > 2 ) {
+// 			$ret .= '.' . substr($nut_reg['fua_id'],2,3) . '.';
+// 		} else {
+// 			$ret .= '.';
+// 		}
 		$ret .= substr($nut_reg['lau_id'],2);
 		return $ret;
 	}
@@ -94,35 +93,39 @@ CREATE TABLE `territorios` (
 	`country_id` integer NOT NULL,
 	'lau_code' string,
 	`postcode` text,
-	`lau_national` string,
-	`lau_latin` string,
+	`name` string,
+	`latin_name` string,
 	`city_name` string,
  	`greater_city` string,
 	`city_id` string,
 	`nuts3_id` integer,
- 	`fua_id` string,
+	'lau_id' string,
+ 	`fua_id` string
 );
 sql
-	)->execute();
+		)->execute();
 // 	`lau_es` string,
 // 	`lau_en` string,
 // 	`latitude` float,
 // 	`longitude` float
 // 	`nsi_id` integer,
 
-	// Source provinces from nuts
-	foreach( array_keys(self::COUNTRY_XX2ISO) as $cc ) {
-		if( $cc != 'ES') continue;
+		// Source provinces from nuts
+		foreach( array_keys(self::COUNTRY_XX2ISO) as $cc ) {
+			if( $cc != 'ES') continue;
 			$nuts3 = Yii::$app->db->createCommand("SELECT * FROM nuts3 WHERE NUTS_ID like '$cc%'")->queryAll();
 			if( count($nuts3) > 0 ) {
 				echo "Found " . count($nuts3) . " provinces for country $cc\n";
 			}
 			foreach( $nuts3 as $nut ) {
+				if( strlen($nut['NUTS_ID']) == 3 ) {
+					continue; // north, etc
+				}
 				$values = [
 					'country_id' => $this->lauToCountry($nut['NUTS_ID']),
-					'lau_code' => $this->lauToCode($nut),
-					'lau_national' => $this->escapeSql($nut['NUTS_NAME']),
-					'lau_latin' => $this->escapeSql($nut['NAME_LATN']),
+					'lau_code' => $nut['NUTS_ID'],
+					'name' => $this->escapeSql($nut['NUTS_NAME']),
+					'latin_name' => $this->escapeSql($nut['NAME_LATN']),
 					'nuts3_id' => $nut['NUTS_ID']
 				];
 				$sql = "INSERT INTO territorios ('id','" . implode("','",array_keys($values)) . "') VALUES (null,'"
@@ -130,26 +133,21 @@ sql
 				Yii::$app->db->createCommand($sql)->execute();
 			}
 		}
-	}
-	die;
 
-
-
-
-
-	foreach( array_keys(self::COUNTRY_XX2ISO) as $cc ) {
+		foreach( array_keys(self::COUNTRY_XX2ISO) as $cc ) {
 			if( $cc != 'ES') continue;
-			$nuts = Yii::$app->db->createCommand("SELECT * FROM nuts WHERE nuts3_id like '$cc%' LIMIT 100")->queryAll();
+			$nuts = Yii::$app->db->createCommand("SELECT * FROM nuts WHERE nuts3_id like '{$cc}%'")->queryAll();
 			if( count($nuts) > 0 ) {
 				echo "Found " . count($nuts) . " localities for country $cc\n";
 				foreach( $nuts as $nut ) {
 					$values = [
 						'country_id' => $this->lauToCountry($nut['nuts3_id']),
 						'lau_code' => $this->lauToCode($nut),
-						'lau_national' => $this->escapeSql($nut['lau_national']),
-						'lau_latin' => $this->escapeSql($nut['lau_latin']),
+						'name' => $this->escapeSql($nut['lau_national']),
+						'latin_name' => $this->escapeSql($nut['lau_latin']),
 						'nuts3_id' => $nut['nuts3_id'],
 						'fua_id' => $nut['fua_id'],
+						'lau_id' => $nut['lau_id'],
 						'city_id' => $nut['city_id'],
 						'greater_city' => $nut['greater_city_id'],
 
@@ -157,7 +155,7 @@ sql
 					$sql = "INSERT INTO territorios ('id','" . implode("','",array_keys($values)) . "') VALUES (null,'"
 						. implode("','", $values). "')";
 					Yii::$app->db->createCommand($sql)->execute();
-// 					echo "Insertando {$values['lau_national']}\n";
+	// 					echo "Insertando {$values['lau_national']}\n";
 				}
 			}
 		}
