@@ -1,0 +1,31 @@
+#<<<<<YII2_CAPEL
+phpunit.phar
+/phpunit.xml
+tests/_output
+tests/_data
+tests/_support/_generated
+tests/fixtures/unit/data
+
+*.log
+world-repositories_*.hmcfg
+*.kate-swp
+*~
+.kdev4/**
+/nbproject/**
+
+### begin-preserve-local ###
+vendor
+web/assets/*
+runtime/*
+config/db.php
+config/test_db.php
+config/smtp.php
+config/secrets.php
+config/local_console.php
+config/local_web.php
+composer.lock
+### end-preserve-local ###
+#>>>>>YII2_CAPEL
+database/seeders/SchemaSeeder.php
+data
+db

@@ -1,0 +1,5 @@
+{
+	"places/country/name": {
+		"type": "string"
+	}
+}

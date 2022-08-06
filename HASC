@@ -1,0 +1,111 @@
+FUA_ID: Functional Urban Areas
+LAU: Local Administrative Units
+DEGURBA: Índice de urbanización.
+
+
+CREATE INDEX `yii2idx-territorios-taxon` ON `territorios` (`nuts3_id`);
+CREATE INDEX `yii2idx-territorios-nombre` ON `territorios` (`fua_id`);
+
+
+  "LAU CODE" TEXT,
+  "LAU NAME NATIONAL" TEXT,
+  "LAU NAME LATIN" TEXT,
+  "CHANGE (yes/no)" TEXT,
+  "POPULATION" TEXT,
+  "TOTAL AREA (m2)" TEXT,
+  "DEGURBA" TEXT,
+  "DEG change compared to last year" TEXT,
+  "COASTAL AREA (yes/no)" TEXT,
+  "COAST change compared to last year" TEXT,
+  "CITY_ID" TEXT,
+  "CITY_ID change compared to last year" TEXT,
+  "CITY_NAME" TEXT,
+  "GREATER_CITY_ID" TEXT,
+  "GREATER_CITY_ID change compared to last year" TEXT,
+  "GREATER_CITY_NAME" TEXT,
+  "FUA_ID" TEXT,
+  "FUA_ID change compared to last year" TEXT,
+  "FUA_NAME" TEXT
+
+
+
+
+OBJECTID "2572922",
+POSTCODE "30140",
+CNTR_ID "ES",
+PC_CNTR "ES_30140",
+NUTS3_2021: "'ES620'", Todas las ciudades de Murcia
+CODE "'30140'",
+GISCO_ID "ES_30901", Todas las municipios de Santomera
+NSI_CODE "30901",
+LAU_NAT "Santomera",
+LAU_LATIN "Santomera",
+COASTAL: "NO",
+CITY_ID "", Si es una ciudad
+GREATER_CI "",
+FUA_ID "ES007L2",
+DGURBA "2"
+
+
+
+
+
+== USA
+https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-2-counties/
+
+== ALL
+https://data.humdata.org/dataset/kontur-boundaries
+sqlite3
+select * from kontur_boundaries where hasc is not null;
+https://github.com/nvkelso/natural-earth-vector
+
+== Australia
+= Nueva zelanda: https://www.stats.govt.nz/methods/functional-urban-areas-methodology-and-classification/
+
+== EUROPA
+https://en.wikipedia.org/wiki/Nomenclature_of_Territorial_Units_for_Statistics#National_structures
+https://gisco-services.ec.europa.eu/tercet/flat-files
+
+
+https://ec.europa.eu/eurostat/web/gisco/overview
+post.csv: Códigos postales de europa. Sólo ciudades, no está el siscar
+PC_2020_PT_SH.zip
+
+"OBJECTID","POSTCODE","CNTR_ID","PC_CNTR","NUTS3_2021","CODE","GISCO_ID","NSI_CODE","LAU_NAT","LAU_LATIN","COASTAL","CITY_ID","GREATER_CI","FUA_ID","DGURBA"
+
+OBJECTID "2572922",
+POSTCODE "30140",
+CNTR_ID "ES",
+PC_CNTR "ES_30140",
+NUTS3_2021: "'ES620'", Todas las ciudades de Murcia
+CODE "'30140'",
+GISCO_ID "ES_30901", Todas las municipios de Santomera
+NSI_CODE "30901",
+LAU_NAT "Santomera",
+LAU_LATIN "Santomera",
+COASTAL: "NO",
+CITY_ID "", Si es una ciudad
+GREATER_CI "",
+FUA_ID "ES007L2",
+DGURBA "2"
+
+
+
+https://ec.europa.eu/eurostat/web/nuts/local-administrative-units
+https://gisco-services.ec.europa.eu/distribution/v2/nuts/nuts-2021-files.html
+Países y provincias: https://gisco-services.ec.europa.eu/distribution/v2/nuts/csv/NUTS_AT_2021.csv
+
+https://gisco-services.ec.europa.eu/distribution/v2/lau/lau-2020-files.html
+- densidad de población, no vale.
+
+
+
+= Geolocalización:
+https://gisco-services.ec.europa.eu/distribution/v2/communes/communes-2016-files.html
+https://gisco-services.ec.europa.eu/distribution/v2/communes/csv/COMM_LB_2016_3035.csv
+
+
+
+
+
+

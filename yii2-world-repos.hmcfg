@@ -1,0 +1,49 @@
+#!/bin/bash
+##################################################
+# CONFIGURACIÓN DE LAS APLICACIONES DE HOLAMUNDO #
+##################################################
+# Tipo de aplicación
+APPTYPE=YII2
+
+# Comandos para copiar ficheros entre servidores
+REMOTECMD=ssh # ssh|ftp
+
+# Definición de los servidores
+# Nombre del dominio del virtual host en local o de la url del cliente, sin http://
+WEBDOMAIN=
+
+# IP del host de la base de datos, que en la configuración del proyecto es localhost, pero en torres realmente es bluehost o strato o el alojamiento del cliente
+REMOTE_HOST=
+
+# Método para subir o bajar la base de datos mysql|ssh|socket
+REMOTE_DB_ACCESS=mysql
+
+# Cuando el comando remoto es SSH o RSYNC, definir estas variables
+# user@host para ssh, rsync y scp
+SSH_LOGIN=
+
+# Directorio de la aplicación en el servidor remoto, tanto para ssh como para ftp
+REMOTE_APPDIR=
+
+# Cuando el comando remoto es FTP, definir estas variables
+# Nombre del bookmark de ncftp para acceso al código de producción
+ftp_bookmark=
+# El comando para descargar un archivo por ftp
+FTPGET=ncftpget
+# El comando para subir un archivo por ftp
+FTPPUT=ncftpput
+
+# Cuando es wordpress, definir las URL. Si son distintas, se llama a wp_move para cambiarlas
+# Ojo, no poner / al final
+# La URL de la aplicacion en local, ej, http://localhost/myapp
+HTTP_LOCAL_URL=
+# La URL de la aplicacion en producción, ej, http://www.myapp.com
+HTTP_REMOTE_URL=
+
+# Cambiar estos valores si el comando necesita algún parámetro especial, por ejemplo, el puerto en una conexión por ssh
+# El comando para sincronizar remotamente (no usamos -t para que la cache de apache funcione bien)
+RSYNC="rsync -rlDvz"
+# El comando para copiar remotamente
+SCP=scp
+# El comando para copiar remotamente
+SSH=ssh
