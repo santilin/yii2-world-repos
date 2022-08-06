@@ -109,6 +109,34 @@ sql
 // 	`latitude` float,
 // 	`longitude` float
 // 	`nsi_id` integer,
+
+	// Source provinces from nuts
+	foreach( array_keys(self::COUNTRY_XX2ISO) as $cc ) {
+		if( $cc != 'ES') continue;
+			$nuts3 = Yii::$app->db->createCommand("SELECT * FROM nuts3 WHERE NUTS_ID like '$cc%'")->queryAll();
+			if( count($nuts3) > 0 ) {
+				echo "Found " . count($nuts3) . " provinces for country $cc\n";
+			}
+			foreach( $nuts3 as $nut ) {
+				$values = [
+					'country_id' => $this->lauToCountry($nut['NUTS_ID']),
+					'lau_code' => $this->lauToCode($nut),
+					'lau_national' => $this->escapeSql($nut['NUTS_NAME']),
+					'lau_latin' => $this->escapeSql($nut['NAME_LATN']),
+					'nuts3_id' => $nut['NUTS_ID']
+				];
+				$sql = "INSERT INTO territorios ('id','" . implode("','",array_keys($values)) . "') VALUES (null,'"
+					. implode("','", $values). "')";
+				Yii::$app->db->createCommand($sql)->execute();
+			}
+		}
+	}
+	die;
+
+
+
+
+
 	foreach( array_keys(self::COUNTRY_XX2ISO) as $cc ) {
 			if( $cc != 'ES') continue;
 			$nuts = Yii::$app->db->createCommand("SELECT * FROM nuts WHERE nuts3_id like '$cc%' LIMIT 100")->queryAll();

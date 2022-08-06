@@ -46,9 +46,11 @@ GREATER_CI "",
 FUA_ID "ES007L2",
 DGURBA "2"
 
+==
+Subdivisiones de todos los países
 
-
-
+== post codes degurba para France Germany Spain Switzerland United Kingdom
+https://github.com/saschagobel/degurba-postcode-areas
 
 == USA
 https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-2-counties/
