@@ -161,9 +161,12 @@ sql
 		}
 
 		// Códigos postales
+
+
+
 		// Sólo para españa
 		$sql_cp = <<<sql
-select distinct t.lau_national, t.nuts3_id, t.lau_id, t.city_id, t.fua_id, p.* from territorios t inner join post p on t.lau_national = p.lau_nat where t.city_id=p.CITY_ID AND t.lau_id=p.NSI_CODE and t.lau_latin = p.lau_latin;
+select distinct t.name, t.nuts3_id, t.lau_id, p.* from territorios t inner join post p on t.nuts3_id=p.nuts3_2021 and t.lau_id=p.nsi_code where t.nust3 like 'ES620%';
 sql;
 		echo $sql_cp;
 		return ExitCode::OK;
