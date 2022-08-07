@@ -10,6 +10,7 @@ CREATE INDEX `yii2idx-territorios-nombre` ON `territorios` (`fua_id`);
 == España
 http://centrodedescargas.cnig.es/CentroDescargas/buscadorCatalogo.do?codFamilia=02122#
 Nomenclátor Geográfico de Municipios y Entidades de Población: BD_Municipios_entidades.zip
+https://en.wikipedia.org/wiki/NUTS_statistical_regions_of_Spain
 ==
 Subdivisiones de todos los países
 

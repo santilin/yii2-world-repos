@@ -104,7 +104,7 @@ class SourceController extends Controller
 	/**
 	 * Generador de modelos y migraciones
 	 */
-	public function actionImportar($country=ES)
+	public function actionImportar($country='ES')
 	{
 /*>>>>>ACTION_IMPORTAR*/
 		try {
@@ -124,7 +124,7 @@ CREATE TABLE `territorios` (
 	`nuts3_id` integer,
 	'lau_id' string,
  	`fua_id` string,
- 	`type` string
+ 	`level` integer
 );
 sql
 		)->execute();
@@ -152,14 +152,15 @@ sql
 					'lau_code' => $nut['NUTS_ID'],
 					'name' => $this->escapeSql($nut['NUTS_NAME']),
 					'latin_name' => $this->escapeSql($nut['NAME_LATN']),
-					'nuts3_id' => $nut['NUTS_ID']
+					'nuts3_id' => $nut['NUTS_ID'],
+					'level' => $this->nuts3Level($nut),
 				];
-				$values = $this->changeNuts($values);
 				$sql = "INSERT INTO territorios ('id','" . implode("','",array_keys($values)) . "') VALUES (null,'"
 					. implode("','", $values). "')";
 				Yii::$app->db->createCommand($sql)->execute();
 			}
 		}
+		die;
 
 		foreach( array_keys(self::COUNTRY_XX2ISO) as $cc ) {
 			if( $country && $cc != $country) {
@@ -169,7 +170,7 @@ sql
 			if( count($nuts) > 0 ) {
 				echo "Found " . count($nuts) . " localities for country $cc\n";
 				foreach( $nuts as $nut ) {
-					$nut = $this->changeNuts3($nut);
+					$nut = $this->changeNuts($nut);
 					$values = [
 						'country_id' => $this->lauToCountry($nut['nuts3_id']),
 						'lau_code' => $this->lauToCode($nut),
@@ -200,14 +201,32 @@ sql;
 /*>>>>>ACTION_IMPORTAR_END*/
 
 
-	private function changeNuts3(array $values): array
+	private function nuts3Level($values)
 	{
-		$nuts_id = $values['NUTS_ID'];
-		switch($nuts_id) {
+		$nutsid = $values['NUTS_ID'];
+		switch( $nutsid ) {
+			case "ES531":
+			case "ES532":
+			case "ES533":
+			case "ES703":
+			case "ES704":
+			case "ES705":
+			case "ES706":
+			case "ES707":
+			case "ES708":
+			case "ES709":
+				return 4;
+			default:
+				if( strlen($nutsid) == 2 ) {
+					return 0; // País
+				} else if( strlen($nutsid) == 4 ) {
+					return 2; // Comunidad autónoma
+				} else {
+					return 3; // Provincia
+				}
+			break;
 		}
-		return $values;
 	}
-
 
 	const COUNTRY_XX2ISO = [
 		'ZW' => 716, // ZWE
