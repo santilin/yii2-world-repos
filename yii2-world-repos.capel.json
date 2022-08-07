@@ -116,7 +116,31 @@
 					}
 				]
 			}
+		},
+		"Source": {
+			"Importar" : {
+				"description": "Generador de modelos y migraciones",
+				"options": [
+					{
+						"name": "dryRun",
+						"type": "bool",
+						"default_value": true
+					}, {
+						"name": "abortOnError",
+						"type": "bool",
+						"default_value": true
+					}
+				],
+				"arguments": [
+					{
+						"name": "country",
+						"type": "string",
+						"default_value": "ES"
+					}
+				]
+			}
 		}
+
 	}
 
 }

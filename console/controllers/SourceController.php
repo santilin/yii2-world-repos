@@ -1,56 +1,4 @@
 <?php
-namespace app\console\controllers;
-
-use Yii;
-use yii\helpers\Console;
-use yii\console\ExitCode;
-use yii\console\Controller;
-
-/**
- * trivel console commands
- *
- * @author Santilín <santi@noviolento.es>
- * @since 1.0
- */
-class SourceController extends Controller
-{
-	/** The version of this command */
-	const VERSION = '0.1.0';
-
-	public $dryRun;
-	public $abortOnError;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function options($actionID)
-    {
-		if( $actionID == "importar" ) {
-			return [ 'abortOnError','dryRun' ];
-		} else {
-			return [];
-		}
-    }
-
-	/**
-	 * Main action
-	 */
-	public function actionIndex()
-	{
-		return ExitCode::OK;
-	} // actionIndex
-
-	/**
-     * Show help message.
-     * @param array $fixturesInput
-     */
-    private function printHelpMessage()
-    {
-        $this->stdout($this->getHelpSummary() . "\n");
-
-        $helpCommand = Console::ansiFormat('yii help trivel', [Console::FG_CYAN]);
-        $this->stdout("Use $helpCommand to get usage info.\n");
-    }
 
 	private function escapeSql($str)
 	{
@@ -156,7 +104,6 @@ sql
 						'lau_id' => $nut['lau_id'],
 						'city_id' => $nut['city_id'],
 						'greater_city' => $nut['greater_city_id'],
-
 					];
 					$sql = "INSERT INTO territorios ('id','" . implode("','",array_keys($values)) . "') VALUES (null,'"
 						. implode("','", $values). "')";
@@ -165,10 +112,6 @@ sql
 				}
 			}
 		}
-
-		// Códigos postales
-
-
 
 		// Sólo para españa
 		$sql_cp = <<<sql
