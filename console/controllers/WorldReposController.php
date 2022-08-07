@@ -49,23 +49,6 @@ class WorldReposController extends Controller
 		return ExitCode::OK;
 	} // actionIndex
 /*>>>>>ACTION_END*/
-/*<<<<<ACTION_CHECK_CAPEL*/
-	public function actionCheckCapel()
-	{
-		// https://json-schema.org/understanding-json-schema/index.html
-		$validator = new \JsonSchema\Validator();
-		$data = json_decode(file_get_contents("world-repos.capel.json"));
-		$validator->validate($data, (object) ['$ref' => 'file://' . realpath('../../../capel/share/definitions/program_schema.json')]);
-		if ($validator->isValid()) {
-			echo "The supplied JSON validates against the schema.\n";
-		} else {
-			echo "JSON does not validate. Violations:\n";
-			foreach ($validator->getErrors() as $error) {
-				echo sprintf("[%s] %s\n", $error['property'], $error['message']);
-			}
-		}
-	}
-/*>>>>>ACTION_CHECK_CAPEL*/
 /*<<<<<PRINT_HELP_MESSAGE*/
     /**
      * Show help message.
