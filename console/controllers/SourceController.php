@@ -81,18 +81,17 @@ class SourceController extends Controller
 		39 Países
 		Vacíos: XK, BA, RS, MK, UK,
 	*/
-	public function actionImportar($modelname=null, $filename=null)
+	public function actionImportar($country = 'ES')
 	{
 		try {
-		Yii::$app->db->createCommand("DROP TABLE IF EXISTS territorios")->execute();
+			Yii::$app->db->createCommand("DROP TABLE IF EXISTS territorios")->execute();
 		} catch( \Exception $e) {
 		}
 		Yii::$app->db->createCommand(<<<sql
 CREATE TABLE `territorios` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`country_id` integer NOT NULL,
-	'lau_code' string,
-	`postcode` text,
+	`lau_code` string,
 	`name` string,
 	`latin_name` string,
 	`city_name` string,
@@ -100,7 +99,8 @@ CREATE TABLE `territorios` (
 	`city_id` string,
 	`nuts3_id` integer,
 	'lau_id' string,
- 	`fua_id` string
+ 	`fua_id` string,
+ 	`type` string
 );
 sql
 		)->execute();
@@ -112,7 +112,9 @@ sql
 
 		// Source provinces from nuts
 		foreach( array_keys(self::COUNTRY_XX2ISO) as $cc ) {
-			if( $cc != 'ES') continue;
+			if( $country && $cc != $country) {
+				continue;
+			}
 			$nuts3 = Yii::$app->db->createCommand("SELECT * FROM nuts3 WHERE NUTS_ID like '$cc%'")->queryAll();
 			if( count($nuts3) > 0 ) {
 				echo "Found " . count($nuts3) . " provinces for country $cc\n";
@@ -128,6 +130,7 @@ sql
 					'latin_name' => $this->escapeSql($nut['NAME_LATN']),
 					'nuts3_id' => $nut['NUTS_ID']
 				];
+				$values = $this->changeNuts($values);
 				$sql = "INSERT INTO territorios ('id','" . implode("','",array_keys($values)) . "') VALUES (null,'"
 					. implode("','", $values). "')";
 				Yii::$app->db->createCommand($sql)->execute();
@@ -135,11 +138,14 @@ sql
 		}
 
 		foreach( array_keys(self::COUNTRY_XX2ISO) as $cc ) {
-			if( $cc != 'ES') continue;
+			if( $country && $cc != $country) {
+				continue;
+			}
 			$nuts = Yii::$app->db->createCommand("SELECT * FROM nuts WHERE nuts3_id like '{$cc}%'")->queryAll();
 			if( count($nuts) > 0 ) {
 				echo "Found " . count($nuts) . " localities for country $cc\n";
 				foreach( $nuts as $nut ) {
+					$nut = $this->changeNuts3($nut);
 					$values = [
 						'country_id' => $this->lauToCountry($nut['nuts3_id']),
 						'lau_code' => $this->lauToCode($nut),
@@ -171,6 +177,16 @@ sql;
 		echo $sql_cp;
 		return ExitCode::OK;
 	} // actionImportar
+
+
+	private function changeNuts3(array $values): array
+	{
+		$nuts_id = $values['NUTS_ID'];
+		switch($nuts_id) {
+		}
+		return $values;
+	}
+
 
 	const COUNTRY_XX2ISO = [
 		'ZW' => 716, // ZWE
