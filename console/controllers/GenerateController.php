@@ -38,34 +38,17 @@ class GenerateController extends Controller
         return array_merge(parent::options($actionID), $own_options);
     }
 /*>>>>>OPTIONS_END*/
-/*<<<<<ACTION*/
+/*<<<<<ACTION_INDEX*/
 	/**
 	 * Main action
 	 */
 	public function actionIndex()
 	{
-/*>>>>>ACTION*/
-/*<<<<<ACTION_END*/
+/*>>>>>ACTION_INDEX*/
+/*<<<<<ACTION_INDEX_END*/
 		return ExitCode::OK;
 	} // actionIndex
-/*>>>>>ACTION_END*/
-/*<<<<<ACTION_CHECK_CAPEL*/
-	public function actionCheckCapel()
-	{
-		// https://json-schema.org/understanding-json-schema/index.html
-		$validator = new \JsonSchema\Validator();
-		$data = json_decode(file_get_contents("world-repos.capel.json"));
-		$validator->validate($data, (object) ['$ref' => 'file://' . realpath('../../../capel/share/definitions/program_schema.json')]);
-		if ($validator->isValid()) {
-			echo "The supplied JSON validates against the schema.\n";
-		} else {
-			echo "JSON does not validate. Violations:\n";
-			foreach ($validator->getErrors() as $error) {
-				echo sprintf("[%s] %s\n", $error['property'], $error['message']);
-			}
-		}
-	}
-/*>>>>>ACTION_CHECK_CAPEL*/
+/*>>>>>ACTION_INDEX_END*/
 /*<<<<<PRINT_HELP_MESSAGE*/
     /**
      * Show help message.

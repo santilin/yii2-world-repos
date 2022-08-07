@@ -63,6 +63,19 @@ class SourceController extends Controller
 	} // actionIndex
 /*>>>>>ACTION_INDEX_END*/
 
+/*<<<<<PRINT_HELP_MESSAGE*/
+    /**
+     * Show help message.
+     * @param array $fixturesInput
+     */
+    private function printHelpMessage()
+    {
+        $this->stdout($this->getHelpSummary() . "\n");
+
+        $helpCommand = Console::ansiFormat('yii help world-repos', [Console::FG_CYAN]);
+        $this->stdout("Use $helpCommand to get usage info.\n");
+    }
+/*>>>>>PRINT_HELP_MESSAGE*/
 	private function lauToCountry($lau)
 	{
 		if( isset( self::COUNTRY_XX2ISO[substr($lau,0,2)]) ) {
