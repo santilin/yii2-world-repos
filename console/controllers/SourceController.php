@@ -1,9 +1,67 @@
 <?php
+/*<<<<<USES*/
+namespace app\console\controllers;
 
+use Yii;
+use yii\helpers\Console;
+use yii\console\ExitCode;
+use yii\console\Controller;
+/*>>>>>USES*/
+/*<<<<<MAIN*/
+/**
+ * world-repos console commands
+ *
+ * @author Santilín <santi@noviolento.es>
+ * @since 1.0
+ */
+class SourceController extends Controller
+{
+	/** The version of this command */
+	const VERSION = '0.0.1';
+	public $abortOnError = false;
+	public $dryRun = false;
+/*>>>>>MAIN*/
 	private function escapeSql($str)
 	{
 		return str_replace("'", "''", $str);
 	}
+
+/*<<<<<OPTIONS*/
+    /**
+     * {@inheritdoc}
+     */
+    public function options($actionID)
+    {
+		$own_options = [];
+		if( $actionID == "generate" ) {
+			$own_options = [
+		'abortOnError','dryRun',
+		];
+		}
+
+		if( $actionID == "importar" ) {
+			$own_options = [
+		'abortOnError','dryRun',
+		];
+		}
+/*>>>>>OPTIONS*/
+/*<<<<<OPTIONS_END*/
+        return array_merge(parent::options($actionID), $own_options);
+    }
+/*>>>>>OPTIONS_END*/
+
+
+/*<<<<<ACTION_INDEX*/
+	/**
+	 * Main action
+	 */
+	public function actionIndex()
+	{
+/*>>>>>ACTION_INDEX*/
+/*<<<<<ACTION_INDEX_END*/
+		return ExitCode::OK;
+	} // actionIndex
+/*>>>>>ACTION_INDEX_END*/
 
 	private function lauToCountry($lau)
 	{
@@ -29,8 +87,13 @@
 		39 Países
 		Vacíos: XK, BA, RS, MK, UK,
 	*/
-	public function actionImportar($country = 'ES')
+/*<<<<<ACTION_IMPORTAR*/
+	/**
+	 * Generador de modelos y migraciones
+	 */
+	public function actionImportar($country=ES)
 	{
+/*>>>>>ACTION_IMPORTAR*/
 		try {
 			Yii::$app->db->createCommand("DROP TABLE IF EXISTS territorios")->execute();
 		} catch( \Exception $e) {
@@ -118,8 +181,10 @@ sql
 select distinct t.name, t.nuts3_id, t.lau_id, p.* from territorios t inner join post p on t.nuts3_id=p.nuts3_2021 and t.lau_id=p.nsi_code where t.nust3 like 'ES620%';
 sql;
 		echo $sql_cp;
+/*<<<<<ACTION_IMPORTAR_END*/
 		return ExitCode::OK;
 	} // actionImportar
+/*>>>>>ACTION_IMPORTAR_END*/
 
 
 	private function changeNuts3(array $values): array
@@ -887,6 +952,6 @@ sql;
 		20 => [ 'iso2' => 'AD', 'iso3' => 'AND', ],
 	];
 
-
-}
-
+/*<<<<<CLASS_END*/
+} // class world-reposController
+/*>>>>>CLASS_END*/

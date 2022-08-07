@@ -14,7 +14,7 @@ use yii\console\Controller;
  * @author Santilín <santi@noviolento.es>
  * @since 1.0
  */
-class WorldReposController extends Controller
+class GenerateController extends Controller
 {
 	/** The version of this command */
 	const VERSION = '0.0.1';
