@@ -43,21 +43,20 @@ $company = "Santilín";
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-    <?php
-    $extra_navbar_classes = 'ml-auto mt-2 mt-lg-0';
-	$home_link = null;
-	if( '' != '' ) {
-		$home_link = [ 'label' => Yii::t('app', 'Repositories'), 'url' => ['/']];
-	}
-    NavBar::begin([
-        'brandLabel' => '<span>' . (isset(Yii::$app->params['logo'])
-			? Html::img(Yii::$app->params['logo'], ['id' => 'app-logo']) : '' ) . '&nbsp;'
-			. Yii::$app->name,
-        'brandUrl' => isset($home_link['url'])? $home_link['url'] : Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'nav navbar navbar-expand-md navbar-light bg-dark',
-        ],
-    ]);
+<?php
+$home_link = null;
+if( '' != '' ) {
+	$home_link = [ 'label' => Yii::t('app', 'Repositories'), 'url' => ['/']];
+}
+$navbar_options = [
+	'brandLabel' => '<span>' . (isset(Yii::$app->params['logo'])
+		? Html::img(Yii::$app->params['logo'], ['id' => 'app-logo']) : '' ) . '&nbsp;'
+		. Yii::$app->name,
+	'brandUrl' => isset($home_link['url'])? $home_link['url'] : Yii::$app->homeUrl,
+	'options' => [
+		'class' => 'nav navbar navbar-expand-md navbar-light',
+	],
+];
 $items_main = []; // Main menu
 $login_menu = [];
 $login_items = [];
@@ -75,17 +74,18 @@ if( count($login_items) != 0 ) {
 
 /*>>>>>MENUITEMS*/
 /*<<<<<NAVMENUS*/
-$menu_options = [
-	'options' => ['class' => "navbar-nav $extra_navbar_classes"],
+$nav_menu_options = [
+	'options' => ['class' => 'navbar-nav ml-auto mt-2 mt-lg-0' ],
 	'items' => array_merge(		[[
 		'label' => Yii::t('app', 'Menú'), 'items' => $items_main, 'url' => '#'
 	]]
 ),
 ];
+NavBar::begin( $navbar_options );
 /*>>>>>NAVMENUS*/
 /*<<<<<MENU_BEGIN*/
-	echo Nav::widget($menu_options);
-	NavBar::end();
+echo Nav::widget($nav_menu_options);
+NavBar::end();
 /*>>>>>MENU_BEGIN*/
 /*<<<<<MENU_END*/
 	?>

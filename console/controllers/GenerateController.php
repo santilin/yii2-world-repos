@@ -66,7 +66,7 @@ class GenerateController extends Controller
 	/**
 	 * Generador de modelos y migraciones
 	 */
-	public function actionGenerate($modelname=null, $filename=null)
+	public function actionGenerate($modelname= null, $filename= null)
 	{
 /*>>>>>ACTION_GENERATE*/
 /*<<<<<ACTION_GENERATE_END*/

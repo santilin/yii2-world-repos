@@ -108,11 +108,11 @@
 					{
 						"name": "modelname",
 						"type": "string",
-						"default_value": "null"
+						"default_value": null
 					}, {
 						"name": "filename",
 						"type": "string",
-						"default_value": "null"
+						"default_value": null
 					}
 				]
 			}
