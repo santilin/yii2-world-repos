@@ -115,7 +115,8 @@ class SourceController extends Controller
 CREATE TABLE `territorios` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`country_id` integer NOT NULL,
-	`lau_code` string,
+	'nuts_code' string,
+	`postcode` text,
 	`name` string,
 	`latin_name` string,
 	`city_name` string,
@@ -149,7 +150,7 @@ sql
 				}
 				$values = [
 					'country_id' => $this->lauToCountry($nut['NUTS_ID']),
-					'lau_code' => $nut['NUTS_ID'],
+					'nuts_code' => $nut['NUTS_ID'],
 					'name' => $this->escapeSql($nut['NUTS_NAME']),
 					'latin_name' => $this->escapeSql($nut['NAME_LATN']),
 					'nuts3_id' => $nut['NUTS_ID'],
@@ -160,7 +161,6 @@ sql
 				Yii::$app->db->createCommand($sql)->execute();
 			}
 		}
-		die;
 
 		foreach( array_keys(self::COUNTRY_XX2ISO) as $cc ) {
 			if( $country && $cc != $country) {
@@ -170,10 +170,9 @@ sql
 			if( count($nuts) > 0 ) {
 				echo "Found " . count($nuts) . " localities for country $cc\n";
 				foreach( $nuts as $nut ) {
-					$nut = $this->changeNuts($nut);
 					$values = [
 						'country_id' => $this->lauToCountry($nut['nuts3_id']),
-						'lau_code' => $this->lauToCode($nut),
+						'nuts_code' => $this->lauToCode($nut),
 						'name' => $this->escapeSql($nut['lau_national']),
 						'latin_name' => $this->escapeSql($nut['lau_latin']),
 						'nuts3_id' => $nut['nuts3_id'],
