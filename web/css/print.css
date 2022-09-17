@@ -1,4 +1,5 @@
 /*<<<<<MAIN*/
+@media print {
 /* css for printing in all modules */
 .record-view .rv-field, .record-view .rv-label {
 	display: block;
@@ -125,5 +126,7 @@
 }
 .record-view .rv-embedded-grid > .rv-field > .rv-label + div + div {
 	flex: 3 0 100%;
+}
+
 }
 /*>>>>>MAIN*/

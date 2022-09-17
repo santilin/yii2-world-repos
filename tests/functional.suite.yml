@@ -1,0 +1,21 @@
+#<<<<<MAIN
+# Codeception Test Suite Configuration
+#
+# Suite for functional tests
+# Emulate web requests and make application process them
+# Include one of framework modules (Symfony2, Yii2, Laravel5) to use it
+# Remove this suite if you don't use frameworks
+
+# http://codeception.com/for/yii
+# http://codeception.com/docs/modules/Yii2
+# https://github.com/yiisoft/yii2-app-basic/blob/master/README.md#testing
+
+actor: FunctionalTester
+modules:
+    step_decorators: ~
+    enabled:
+        - Filesystem
+        - Yii2
+        - \Helper\Functional
+        - Asserts
+#>>>>>MAIN

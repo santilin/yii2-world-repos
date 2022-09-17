@@ -3,9 +3,13 @@ html,
 body {
     height: 100%;
 }
-
+.readonly {
+	background-color: lightgray;
+}
 .form-control::placeholder { opacity:0.5; }
-
+.nav.navbar.navbar-light {
+	background-color: #e3f2fd;
+}
 .wrap {
     min-height: 100%;
     height: auto;

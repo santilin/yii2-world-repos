@@ -14,7 +14,7 @@ $config = [
 	'id' => 'world-repos',
 	'name' => 'World repositories',
 	'basePath' => dirname(__DIR__),
-	'vendorPath' => '/home/santilin/devel/yii2base/yii2-world-repos/vendor/',
+	'vendorPath' => '/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos/vendor/',
 	// Set as es-ES, not es_ES
 	'language' => 'es-ES',
 	'sourceLanguage' => 'es',
@@ -56,7 +56,8 @@ $config = [
 			'class' => \santilin\churros\components\Formatter::class,
 			'locale' => 'es_ES',
 			'dateFormat' => 'php:d/m/Y',
-			'datetimeFormat' => 'php:d/m/Y h:i:s'
+			'datetimeFormat' => 'php:d/m/Y h:i:s',
+			'currencyCode' => 'EUR',
 		],
 		'db' => $db,
 		'i18n' => $i18n,
@@ -163,7 +164,6 @@ $config['modules']['datecontrol'] = [
 // tweak your DateControl settings here
 // $config['modules']['datecontrol'][...] = ...
 
-
 // You can tweak the $config array here as you need
 /*<<<<<RETURN*/
 unset($params, $smtp_transport, $db, $i18n, $routes, $secrets);
@@ -173,3 +173,4 @@ if( file_exists(__DIR__ . "/local_web.php") ) {
 	return $config;
 }
 /*>>>>>RETURN*/
+

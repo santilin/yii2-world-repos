@@ -19,6 +19,20 @@ function formEnterAsTab(event) {
 		return true;
 	}
 }
+// CHURROS
+$('.search-dropdown').change(function() {
+	let value= $(this).val();
+	console.log('#second-field-' + this.id);
+	console.log($('#second-field-' + this.id).html());
+	if( value == 'BETWEEN' || value == 'NOT BETWEEN' ) {
+		$('#second-field-' + this.id).show(200);
+	} else {
+		$('#second-field-' + this.id).hide(200);
+	}
+});
+$('.search-adv-field').click(function() {
+	console.log($(this).data('input-name'));
+});
 /*>>>>>FORMS_JS*/
 /*<<<<<EXTRA_JS*/
 
