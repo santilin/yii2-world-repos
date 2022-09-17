@@ -4,8 +4,9 @@
 	"charset": "utf8",
 	"language": "es-ES",
 	"languages": [ "es-ES"],
-	"prod_vendor_path": "/",
+	"prod_vendor_path": "/home/santilin/devel/yii2base/vendor",
 	"source_language": "es",
+	"currency_code": "EUR",
 	"definitions_path": "capel",
 	"description": "World repositories",
 	"package_doc_block": "yii2-world-repos",
@@ -25,12 +26,20 @@
 			"type": "Yii2App",
 			"access_filters": ["none"],
 			"title": "Repositories",
-			"dest_path": "/home/santilin/devel/yii2base/yii2-world-repos",
+			"dest_path": "/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos/src",
 			"models": {
 				"Country": ["model"],
 				"Territory": ["model"]
 			},
 			"controllers": {
+				"Country": {
+					"type": "Crud",
+					"tests": true
+				},
+				"Territory": {
+					"type": "Crud",
+					"tests": true
+				}
 			}
 		}
 	],

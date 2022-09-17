@@ -1,6 +1,6 @@
 <?php
 /*<<<<<MAIN*/
-namespace app\controllers;
+namespace santilin\wrepos\controllers;
 
 use Yii;
 use yii\base\ViewNotFoundException;

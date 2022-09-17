@@ -1,6 +1,6 @@
 <?php
 /*<<<<<USES*/
-namespace app\console\controllers;
+namespace santilin\wrepos\console\controllers;
 
 use Yii;
 use yii\helpers\Console;
