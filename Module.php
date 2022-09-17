@@ -1,17 +1,17 @@
 <?php
-namespace santilin\churros;
+namespace santilin\wrepos;
 
 use Yii;
 
 class Module extends \yii\base\Module
 {
-	public $controllerNamespace = 'wrepos\controllers';
+	public $controllerNamespace = 'santilin\wrepos\controllers';
 
 	public function init()
 	{
 		parent::init();
 		if (Yii::$app instanceof \yii\console\Application) {
-			$this->controllerNamespace = 'wrepos\console\controllers';
+			$this->controllerNamespace = 'santilin\wrepos\console\controllers';
 		}
 
 	}
