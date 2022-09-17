@@ -62,9 +62,13 @@ FUA_ID "ES007L2",
 DGURBA "2"
 
 
+== https://gisco-services.ec.europa.eu/distribution/v2/nuts/nuts-2021-files.html
+Principales ciudades europeas, para GIS
 
-https://ec.europa.eu/eurostat/web/nuts/local-administrative-units
-https://gisco-services.ec.europa.eu/distribution/v2/nuts/nuts-2021-files.html
+== https://ec.europa.eu/eurostat/web/nuts/local-administrative-units
+
+
+
 Países y provincias: https://gisco-services.ec.europa.eu/distribution/v2/nuts/csv/NUTS_AT_2021.csv
 
 https://gisco-services.ec.europa.eu/distribution/v2/lau/lau-2020-files.html
