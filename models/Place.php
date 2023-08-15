@@ -5,6 +5,7 @@ namespace santilin\wrepos\models;
 
 use Yii;
 use santilin\churros\helpers\{AppHelper,DateTimeEx,FormHelper};
+use santilin\wrepos\models\Country;
 use santilin\wrepos\models\PostCode;
 /*>>>>>USES*/
 /*<<<<<CLASS*/
@@ -12,7 +13,6 @@ use santilin\wrepos\models\PostCode;
  * This is the base model class for table "{{%places}}".
  *
  * @property integer $id // key/primary/tiny
- * @property string $contry_code // places/country/iso2_code
  * @property string $name // places/name
  * @property string $nuts_code
  * @property string $nuts3_id
@@ -21,7 +21,9 @@ use santilin\wrepos\models\PostCode;
  * @property string $city_id
  * @property string $lau_id
  * @property string $fua_id
+ * @property integer $countries_id
  *
+ * @property santilin\wrepos\models\Country $country // HasOne
  * @property santilin\wrepos\models\PostCode[] $postCodes // BelongsToMany
  */
 class Place extends _BaseModel
@@ -34,6 +36,7 @@ class Place extends _BaseModel
 /*>>>>>CLASS*/
 /*<<<<<STATIC_INFO*/
 	static public $relations = [
+'country' => [ 'model' => 'Country', 'left' => 'places.countries_id', 'right' => 'countries.id', 'modelClass' => 'santilin\wrepos\models\Country', 'relatedTablename' => 'countries', 'join' => 'places.countries_id = countries.id', 'type' => 'HasOne'],
 'postCodes' => [ 'model' => 'PostCode', 'left' => 'places.id', 'right' => 'postcodes.places_id', 'modelClass' => 'santilin\wrepos\models\PostCode', 'relatedTablename' => 'postcodes', 'join' => 'places.id = postcodes.places_id', 'type' => 'BelongsToMany']
 	];
 /*>>>>>STATIC_INFO*/
@@ -46,13 +49,13 @@ class Place extends _BaseModel
 			$mi = [
 				'title' => 'Place',
 				'title_plural' => 'Places',
-				'code_field' => 'contry_code',
+				'code_field' => 'id',
 				'desc_field' => 'name',
 				'controller_name' => 'place',
 				'female' => true,
-				'record_desc_format_short' => '{contry_code}, {name}',
-				'record_desc_format_medium' => '{contry_code}, {name}',
-				'record_desc_format_long' => '{contry_code}, {name}'
+				'record_desc_format_short' => '{country}, {name}',
+				'record_desc_format_medium' => '{country}, {name}',
+				'record_desc_format_long' => '{country}, {name}'
 			];
 /*>>>>>MODEL_INFO*/
 /*<<<<<MODEL_INFO_CUSTOM*/
@@ -79,7 +82,6 @@ class Place extends _BaseModel
 	{
 		$labels = [
 			'id' => 'Id',
-			'contry_code' => 'Contry code',
 			'name' => 'Name',
 			'nuts_code' => 'Nuts code',
 			'nuts3_id' => 'Nuts3 id',
@@ -88,6 +90,8 @@ class Place extends _BaseModel
 			'city_id' => 'City id',
 			'lau_id' => 'Lau id',
 			'fua_id' => 'Fua id',
+			'countries_id' => Country::getModelInfo('title'), // HasOne
+			'country' => Country::getModelInfo('title'), // HasOne
 		];
 /*>>>>>LABELS*/
 		// customize your labels here
@@ -99,9 +103,8 @@ class Place extends _BaseModel
     public function rules()
     {
 		$rules = [
-			'req' => [['contry_code','name'], 'required', 'on' => $this->crudScenarios],
+			'req' => [['name','countries_id'], 'required', 'on' => $this->crudScenarios],
 			'null' => [['nuts_code','nuts3_id','city_name','greater_city','city_id','lau_id','fua_id'], 'default', 'value' => null],
-			'max_contry_code'=>['contry_code', 'string', 'max' => 2, 'on' => $this->crudScenarios],
 		];
 /*>>>>>RULES*/
 		// customize your rules here
@@ -129,6 +132,18 @@ class Place extends _BaseModel
 		}
 /*>>>>>HANDY_VALUES_PRE*/
 /*<<<<<HANDY_VALUES*/
+		if( $field == 'countries_id' || $field == 'country' || $field == 'Country' ) { // HasOne
+			$q = Country::find();
+			$q->defaultOrder();
+			if( $scope_func ) {
+				call_user_func_array([$q,$scope_func],$scope_args);
+			}
+			$models = $q->all();
+			$ret = [];
+			foreach($models as $model) {
+				$ret[$model->getPrimaryKey()] = $model->recordDesc($model_format);
+			}
+		}
 		if( $field == 'postCodes' ) { // hasMany
 			$q = PostCode::find();
 			$q->defaultOrder();
@@ -171,15 +186,9 @@ class Place extends _BaseModel
 			$relname = 'places';
 		}
 		$ret = [
-			"$relname.desc_short" => [
-				'attribute' => "CONCAT($relname.contry_code, ', ', $relname.name)",
-				'label' => static::getModelInfo('title'),
-			],
+
 			"$relname.id" => [ // tinyInteger
 				'format' => 'integer',
-			],
-			"$relname.contry_code" => [ // string
-				'format' => 'raw',
 			],
 			"$relname.name" => [ // string
 				'format' => 'raw',
@@ -205,6 +214,9 @@ class Place extends _BaseModel
 			"$relname.fua_id" => [ // string
 				'format' => 'raw',
 			],
+			"$relname.countries_id" => [ // HasOne
+				'format' => 'integer',
+			],
 		];
 /*>>>>>REPORT_COLUMNS*/
 		// Tweak or add report fields here
@@ -213,6 +225,16 @@ class Place extends _BaseModel
 	}
 /*>>>>>REPORT_COLUMNS.END*/
 /*<<<<<RELATIONS*/
+	/**
+	 * The keys of the array refer to the attributes of the record associated
+	 *	with the `$class` model, while the values of the
+     * array refer to the corresponding attributes in **this** AR class.
+	 */
+	public function getCountry()
+	{
+		// country:Place HasOne(not null) Country: places.countries_id=>countries.id
+		return $this->hasOne(\santilin\wrepos\models\Country::class, ['id' => 'countries_id']);
+	}
 	/**
 	 * The keys of the array refer to the attributes of the record associated
 	 *	with the `$class` model, while the values of the

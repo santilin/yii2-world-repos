@@ -11,7 +11,7 @@ class m220101_000200_capel_create_places_table extends Migration
 {
 /*>>>>>CLASS*/
 /*<<<<<SAFE_UP*/
-	public function safeUp()
+	public function up()
 	{
 /*>>>>>SAFE_UP*/
 /*<<<<<TABLEOPTIONS*/
@@ -25,7 +25,6 @@ class m220101_000200_capel_create_places_table extends Migration
 /*>>>>>CREATE_TABLE*/
 /*<<<<<COLUMNS*/
 			'id' => $this->tinyInteger()->notNull() . ' PRIMARY KEY',
-			'contry_code' => $this->string(2)->notNull(),
 			'name' => $this->string()->notNull(),
 			'nuts_code' => $this->string()->null(),
 			'nuts3_id' => $this->string()->null(),
@@ -34,27 +33,38 @@ class m220101_000200_capel_create_places_table extends Migration
 			'city_id' => $this->string()->null(),
 			'lau_id' => $this->string()->null(),
 			'fua_id' => $this->string()->null(),
+			'countries_id' => $this->tinyInteger()->notNull(),
 /*>>>>>COLUMNS*/
 /*<<<<<END_CREATE_TABLE*/
 		// add more fields here
 		], $tableOptions);
 /*>>>>>END_CREATE_TABLE*/
 /*<<<<<CREATE_CONSTRAINTS*/
-		// creates index for column contry_code
-		$this->createIndex(
-            'yii2idx-places-contry_code',
-            '{{%places}}',
-            'contry_code' );
 		// creates index for column name
 		$this->createIndex(
             'yii2idx-places-name',
             '{{%places}}',
             'name' );
+		// creates index for relation countries_id
+		$this->createIndex(
+            'yii2idx-places-countries_id',
+            '{{%places}}',
+            'countries_id'
+		);
+		$this->addForeignKey(
+            'yii2fk-places-countries_id',
+            '{{%places}}',
+            'countries_id',
+            '{{%countries}}',
+            'id',
+            'RESTRICT',
+            'RESTRICT'
+        );
 /*>>>>>CREATE_CONSTRAINTS*/
 /*<<<<<SAFE_DOWN*/
     } // safeup
 
-	public function safeDown()
+	public function down()
 	{
 /*>>>>>SAFE_DOWN*/
 /*<<<<<DROP*/

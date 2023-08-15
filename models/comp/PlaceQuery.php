@@ -13,7 +13,7 @@ class PlaceQuery extends ActiveQuery
 	// Used in handyValues to sort select lists
 	public function defaultOrder()
 	{
-		$this->orderBy('contry_code');
+		$this->orderBy('name');
 /*>>>>>CLASS*/
 /*<<<<<DEFAULT_ORDER_RETURN*/
 		return $this;

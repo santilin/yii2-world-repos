@@ -68,6 +68,18 @@
 					"name": "name",
 					"type": "places/country/name",
 					"is_desc": true
+				}, {
+					"name": "name_es",
+					"type": "places/country/name",
+					"is_desc": true
+				}, {
+					"name": "name_en",
+					"type": "places/country/name",
+					"is_desc": true
+				}, {
+					"name": "name_fr",
+					"type": "places/country/name",
+					"is_desc": true
 				}
 			]
 		},
@@ -128,33 +140,6 @@
 		}
 	},
 	"commands": {
-		"Generate": {
-			"options": [
-				{
-					"name": "dryRun",
-					"type": "bool",
-					"default_value": true
-				}, {
-					"name": "abortOnError",
-					"type": "bool",
-					"default_value": true
-				}
-			],
-			"Generate" : {
-				"description": "Generador de modelos y migraciones",
-				"arguments": [
-					{
-						"name": "modelname",
-						"type": "string",
-						"default_value": null
-					}, {
-						"name": "filename",
-						"type": "string",
-						"default_value": null
-					}
-				]
-			}
-		},
 		"Source": {
 			"options": [
 				{
@@ -167,25 +152,27 @@
 					"default_value": true
 				}
 			],
-			"Importar" : {
-				"description": "Importador general",
-				"arguments": [
-					{
-						"name": "country",
-						"type": "string",
-						"default_value": "ES"
-					}
-				]
-			},
-			"ImportarPaises" : {
-				"description": "Importador de países por lenguajes",
-				"arguments": [
-					{
-						"name": "language",
-						"type": "string",
-						"default_value": "ES"
-					}
-				]
+			"actions": {
+				"ImportarPlaces" : {
+					"description": "Importador de lugares: provincias, municipios, etc.",
+					"arguments": [
+						{
+							"name": "country",
+							"type": "string",
+							"default_value": "ES"
+						}
+					]
+				},
+				"ImportarPaises" : {
+					"description": "Importador de países por lenguajes",
+					"arguments": [
+						{
+							"name": "language",
+							"type": "string",
+							"default_value": "ES"
+						}
+					]
+				}
 			}
 		}
 	}

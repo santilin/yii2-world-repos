@@ -28,6 +28,9 @@ class m220101_000100_capel_create_countries_table extends Migration
 			'iso2' => $this->string(2)->notNull(),
 			'iso3' => $this->string(3)->notNull(),
 			'name' => $this->string()->null(),
+			'name_es' => $this->string()->null(),
+			'name_en' => $this->string()->null(),
+			'name_fr' => $this->string()->null(),
 /*>>>>>COLUMNS*/
 /*<<<<<END_CREATE_TABLE*/
 		// add more fields here
@@ -44,6 +47,21 @@ class m220101_000100_capel_create_countries_table extends Migration
             'yii2idx-countries-name',
             '{{%countries}}',
             'name' );
+		// creates index for column name_es
+		$this->createIndex(
+            'yii2idx-countries-name_es',
+            '{{%countries}}',
+            'name_es' );
+		// creates index for column name_en
+		$this->createIndex(
+            'yii2idx-countries-name_en',
+            '{{%countries}}',
+            'name_en' );
+		// creates index for column name_fr
+		$this->createIndex(
+            'yii2idx-countries-name_fr',
+            '{{%countries}}',
+            'name_fr' );
 /*>>>>>CREATE_CONSTRAINTS*/
 /*<<<<<SAFE_DOWN*/
     } // safeup

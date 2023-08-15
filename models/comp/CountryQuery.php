@@ -27,6 +27,12 @@ class CountryQuery extends ActiveQuery
 		return $this;
 	}
 /*>>>>>MINE_SCOPE.RETURN*/
+
+	public function byIso2(string $iso2)
+	{
+		return $this->andWhere(['iso2' => $iso2]);
+	}
+
 /*<<<<<END*/
 } // CountryQuery
 /*>>>>>END*/

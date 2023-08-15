@@ -8,6 +8,8 @@ use yii\helpers\Console;
 use yii\console\ExitCode;
 use yii\console\Controller;
 /*>>>>>USES*/
+use santilin\wrepos\models\Country;
+
 /*<<<<<MAIN*/
 /**
  * world-repos console commands
@@ -19,6 +21,8 @@ class SourceController extends Controller
 {
 	/** The version of this command */
 	const VERSION = '0.0.1';
+	public $abortOnError = false;
+	public $dryRun = false;
 /*>>>>>MAIN*/
 	private function escapeSql($str)
 	{
@@ -31,7 +35,7 @@ class SourceController extends Controller
      */
     public function options($actionID)
     {
-		$own_options = [];
+		$own_options = ['abortOnError','dryRun'];
 /*>>>>>OPTIONS*/
 /*<<<<<OPTIONS_END*/
         return array_merge(parent::options($actionID), $own_options);
@@ -83,13 +87,13 @@ class SourceController extends Controller
 		39 Países
 		Vacíos: XK, BA, RS, MK, UK,
 	*/
-/*<<<<<ACTION_IMPORTAR*/
+/*<<<<<ACTION_IMPORTARPLACES*/
 	/**
-	 * Generador de modelos y migraciones
+	 * Importador de lugares: provincias, municipios, etc.
 	 */
-	public function actionImportar($country='ES')
+	public function actionImportarPlaces($country='ES')
 	{
-/*>>>>>ACTION_IMPORTAR*/
+/*>>>>>ACTION_IMPORTARPLACES*/
 
 
 
@@ -153,11 +157,10 @@ class SourceController extends Controller
 			}
 		}
 
-/*<<<<<ACTION_IMPORTAR_END*/
+/*<<<<<ACTION_IMPORTARPLACES_END*/
 		return ExitCode::OK;
-	} // actionImportar
-/*>>>>>ACTION_IMPORTAR_END*/
-
+	} // actionImportarPlaces
+/*>>>>>ACTION_IMPORTARPLACES_END*/
 
 	public function actionCodigosPostalesEs()
 	{
@@ -968,6 +971,48 @@ sql;
 		784 => [ 'iso2' => 'AE', 'iso3' => 'ARE', ],
 		20 => [ 'iso2' => 'AD', 'iso3' => 'AND', ],
 	];
+
+	/*<<<<<ACTION_IMPORTARPAISES*/
+	/**
+	 * Importador de países por lenguajes
+	 */
+	public function actionImportarPaises($language='ES')
+	{
+/*>>>>>ACTION_IMPORTARPAISES*/
+		$csvFile = Yii::getAlias("@app/data/countries.csv");
+		if (($handle = fopen($csvFile, 'r')) !== false) {
+			while (($data = fgetcsv($handle)) !== false) {
+				$csvArray[] = $data;
+			}
+		}
+		fclose($handle);
+		array_shift($csvArray);
+		$name_field = "name_" . strtolower($language);
+		foreach ($csvArray as $country_data) {
+			if ($country_data[0] == $language) {
+				$country = Country::find()->byIso2($country_data[2])->one();
+				if (!$country) {
+					$country = new Country;
+					$country->iso2 = $country_data[2];
+					$country->iso3 = $country_data[3];
+					$country->id = intval($country_data[4]);
+				}
+				$country->$name_field = $country_data[5];
+				if (!$country->name || $language == "EN") {
+					$country->name = $country_data[5];
+				}
+				if (!$country->save()) {
+					exit();
+				}
+			}
+		}
+
+/*<<<<<ACTION_IMPORTARPAISES_END*/
+		return ExitCode::OK;
+	} // actionImportarPaises
+/*>>>>>ACTION_IMPORTARPAISES_END*/
+
+
 
 /*<<<<<CLASS_END*/
 } // class world-reposController

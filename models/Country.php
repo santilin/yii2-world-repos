@@ -5,6 +5,7 @@ namespace santilin\wrepos\models;
 
 use Yii;
 use santilin\churros\helpers\{AppHelper,DateTimeEx,FormHelper};
+use santilin\wrepos\models\Place;
 /*>>>>>USES*/
 /*<<<<<CLASS*/
 /**
@@ -14,7 +15,11 @@ use santilin\churros\helpers\{AppHelper,DateTimeEx,FormHelper};
  * @property string $iso2 // places/country/iso2_code
  * @property string $iso3 // places/country/iso3_code
  * @property string $name // places/country/name
+ * @property string $name_es // places/country/name
+ * @property string $name_en // places/country/name
+ * @property string $name_fr // places/country/name
  *
+ * @property santilin\wrepos\models\Place[] $places // BelongsToMany
  */
 class Country extends _BaseModel
 {
@@ -26,7 +31,7 @@ class Country extends _BaseModel
 /*>>>>>CLASS*/
 /*<<<<<STATIC_INFO*/
 	static public $relations = [
-
+'places' => [ 'model' => 'Place', 'left' => 'countries.id', 'right' => 'places.countries_id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'countries.id = places.countries_id', 'type' => 'BelongsToMany']
 	];
 /*>>>>>STATIC_INFO*/
 /*<<<<<MODEL_INFO*/
@@ -43,7 +48,7 @@ class Country extends _BaseModel
 				'female' => true,
 				'record_desc_format_short' => '{iso2}, {name}',
 				'record_desc_format_medium' => '{iso2}, {name}',
-				'record_desc_format_long' => '{iso2}, {name}'
+				'record_desc_format_long' => '{iso2}, {name}, {name_es}, {name_en}, {name_fr}'
 			];
 /*>>>>>MODEL_INFO*/
 /*<<<<<MODEL_INFO_CUSTOM*/
@@ -73,6 +78,9 @@ class Country extends _BaseModel
 			'iso2' => 'Iso2',
 			'iso3' => 'Iso3',
 			'name' => 'Name',
+			'name_es' => 'Name es',
+			'name_en' => 'Name en',
+			'name_fr' => 'Name fr',
 		];
 /*>>>>>LABELS*/
 		// customize your labels here
@@ -85,7 +93,7 @@ class Country extends _BaseModel
     {
 		$rules = [
 			'req' => [['iso2','iso3'], 'required', 'on' => $this->crudScenarios],
-			'null' => [['name'], 'default', 'value' => null],
+			'null' => [['name','name_es','name_en','name_fr'], 'default', 'value' => null],
 			'max_iso2'=>['iso2', 'string', 'max' => 2, 'on' => $this->crudScenarios],
 			'max_iso3'=>['iso3', 'string', 'max' => 3, 'on' => $this->crudScenarios],
 		];
@@ -116,7 +124,18 @@ class Country extends _BaseModel
 		}
 /*>>>>>HANDY_VALUES_PRE*/
 /*<<<<<HANDY_VALUES*/
-
+		if( $field == 'places' ) { // hasMany
+			$q = Place::find();
+			$q->defaultOrder();
+			if( $scope_func ) {
+				call_user_func_array([$q,$scope_func],$scope_args);
+			}
+			$models = $q->all();
+			$ret = [];
+			foreach($models as $model) {
+				$ret[$model->getPrimaryKey()] = $model->recordDesc($model_format);
+			}
+		}
 /*>>>>>HANDY_VALUES*/
 /*<<<<<HANDY_VALUES_RETURN*/
 		if( $ret === null ) {
@@ -147,6 +166,11 @@ class Country extends _BaseModel
 			$relname = 'countries';
 		}
 		$ret = [
+			"$relname.desc_long" => [
+				'attribute' => "CONCAT($relname.iso2, ', ', $relname.name, ', ', $relname.name_es, ', ', $relname.name_en, ', ', $relname.name_fr)",
+				'label' => static::getModelInfo('title'),
+			],
+
 			"$relname.desc_short" => [
 				'attribute' => "CONCAT($relname.iso2, ', ', $relname.name)",
 				'label' => static::getModelInfo('title'),
@@ -163,6 +187,15 @@ class Country extends _BaseModel
 			"$relname.name" => [ // string
 				'format' => 'raw',
 			],
+			"$relname.name_es" => [ // string
+				'format' => 'raw',
+			],
+			"$relname.name_en" => [ // string
+				'format' => 'raw',
+			],
+			"$relname.name_fr" => [ // string
+				'format' => 'raw',
+			],
 		];
 /*>>>>>REPORT_COLUMNS*/
 		// Tweak or add report fields here
@@ -170,6 +203,18 @@ class Country extends _BaseModel
 		return $ret;
 	}
 /*>>>>>REPORT_COLUMNS.END*/
+/*<<<<<RELATIONS*/
+	/**
+	 * The keys of the array refer to the attributes of the record associated
+	 *	with the `$class` model, while the values of the
+     * array refer to the corresponding attributes in **this** AR class.
+     */
+	public function getPlaces()
+	{
+		// places:Country BelongsToMany(inv)(not null) Place: countries.id=>places.countries_id
+		return $this->hasMany(\santilin\wrepos\models\Place::class, ['countries_id' => 'id'])->inverseOf('country');
+	}
+/*>>>>>RELATIONS*/
 /*<<<<<END*/
 } // class Country
 /*>>>>>END*/
