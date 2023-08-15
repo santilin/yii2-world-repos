@@ -1,11 +1,11 @@
 <?php
 /*<<<<<USES*/
 /*Template:Yii2App/models/ModelQuery.php*/
-namespace santilin\wrepos\\models\comp;
+namespace santilin\wrepos\models\comp;
 
 use Yii;
 use yii\db\ActiveQuery;
-use santilin\wrepos\\models\Country;
+use santilin\wrepos\models\Country;
 /*>>>>>USES*/
 /*<<<<<CLASS*/
 class CountryQuery extends ActiveQuery

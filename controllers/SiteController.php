@@ -1,7 +1,7 @@
 <?php
 /*<<<<<USES*/
 /*Template:Yii2App/controllers/SiteController.php*/
-namespace santilin\wrepos\\controllers;
+namespace santilin\wrepos\controllers;
 
 use Yii;
 use yii\base\ViewNotFoundException;

@@ -29,8 +29,8 @@
 			"namespace": "santilin\\wrepos",
 			"dest_path": "/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos",
 			"models": {
-				"Country": ["model"],
-				"Place": ["model"]
+				"Country": ["model", "migration"],
+				"Place": ["model", "migration"]
 			},
 			"controllers": {
 				"Place": {
@@ -44,7 +44,7 @@
 		"Country": {
 			"name_plural": "Countries",
 			"table_name": "countries",
-			"migration_timestamp": "220101_000000",
+			"migration_timestamp": "220101_000100",
 			"fields": [
 				{
 					"name": "id",
@@ -68,7 +68,7 @@
 		},
 		"Place": {
 			"table_name": "places",
-			"migration_timestamp": "220101_000000",
+			"migration_timestamp": "220101_000200",
 			"fields": [
 				{
 					"name": "id",

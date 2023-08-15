@@ -1,7 +1,7 @@
 <?php
 /*<<<<<USES*/
 /*Template:Yii2App/models/Model.php*/
-namespace santilin\wrepos\\models;
+namespace santilin\wrepos\models;
 
 use Yii;
 use santilin\churros\helpers\{AppHelper,DateTimeEx,FormHelper};
@@ -54,12 +54,12 @@ class Country extends \yii\db\ActiveRecord
 /*>>>>>MODEL_INFO_CUSTOM*/
 /*<<<<<FIND*/
 	/**
-     * @return \santilin\wrepos\forms\CountryQuery the active query used by this AR class.
+     * @return \santilin\wreposforms\CountryQuery the active query used by this AR class.
      */
     static public function find()
     {
-		if( class_exists("santilin\wrepos\\models\comp\CountryQuery") ) {
-			return new \santilin\wrepos\\models\comp\CountryQuery(get_called_class());
+		if( class_exists("santilin\wrepos\models\comp\CountryQuery") ) {
+			return new \santilin\wrepos\models\comp\CountryQuery(get_called_class());
 		} else {
 			return parent::find();
 		}
