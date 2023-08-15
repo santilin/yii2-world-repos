@@ -9,7 +9,7 @@ $smtp_transport = require __DIR__ . '/smtp.php';
 $i18n = require __DIR__ . '/i18n.php';
 
 $config = [
-    'id' => 'basic-console',
+    'id' => 'wrepos',
 	'name' => 'World repositories',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
@@ -17,7 +17,7 @@ $config = [
 	'language' => 'es-ES',
 	'sourceLanguage' => 'es',
 	'vendorPath' => '/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos/vendor/',
-    'controllerNamespace' => 'app\console\controllers',
+    'controllerNamespace' => 'santilin\wrepos\console\controllers',
 	'modules' => [
 		'churros' => [
 			'class' => 'santilin\churros\Module'
