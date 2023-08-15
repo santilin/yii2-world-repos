@@ -1,8 +1,9 @@
 <?php
 /*<<<<<USES*/
 /*Template:Yii2App/console/controllers/Controller.php*/
-namespace santilin\repos\app\console\controllers;
+namespace santilin\wrepos\console\controllers;
 
+use Yii;
 use yii\helpers\Console;
 use yii\console\ExitCode;
 use yii\console\Controller;
@@ -82,10 +83,9 @@ class SourceController extends Controller
 	public function actionCreateTerritoriosTable()
 	{
 		Yii::$app->db->createCommand("DROP TABLE IF EXISTS territorios")->queryAll();
-		Yii::$app->db->createCommand("DROP TABLE IF EXISTS places")->queryAll();
 
 		Yii::$app->db->createCommand(<<<sql
-CREATE TABLE `places` (
+CREATE TABLE `territorios` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`country_id` integer NOT NULL,
 	`name` string,
@@ -106,7 +106,7 @@ sql
 // 	`latitude` float,
 // 	`longitude` float
 // 	`nsi_id` integer,
-		echo "Tabla places creada";
+		echo "Tabla territorios creada";
 	}
 
     /*
@@ -120,7 +120,7 @@ sql
 	public function actionImportar($country='ES')
 	{
 /*>>>>>ACTION_IMPORTAR*/
-		$nuts3 = Yii::$app->db->createCommand("DELETE FROM places")->queryAll();
+		$nuts3 = Yii::$app->db->createCommand("DELETE FROM territorios")->queryAll();
 
 		// Source provinces from nuts
 		foreach( array_keys(self::COUNTRY_XX2ISO) as $cc ) {
@@ -143,7 +143,7 @@ sql
 					'nuts3_id' => $nut['NUTS_ID'],
 					'level' => $this->nuts3Level($nut),
 				];
-				$sql = "INSERT INTO places ('id','" . implode("','",array_keys($values)) . "') VALUES (null,'"
+				$sql = "INSERT INTO territorios ('id','" . implode("','",array_keys($values)) . "') VALUES (null,'"
 					. implode("','", $values). "')";
 				Yii::$app->db->createCommand($sql)->execute();
 			}
@@ -168,7 +168,7 @@ sql
 						'city_id' => $nut['city_id'],
 						'greater_city' => $nut['greater_city_id'],
 					];
-					$sql = "INSERT INTO places ('id','" . implode("','",array_keys($values)) . "') VALUES (null,'"
+					$sql = "INSERT INTO territorios ('id','" . implode("','",array_keys($values)) . "') VALUES (null,'"
 						. implode("','", $values). "')";
 					Yii::$app->db->createCommand($sql)->execute();
 	// 					echo "Insertando {$values['lau_national']}\n";
@@ -185,7 +185,7 @@ sql
 	public function actionCodigosPostalesEs()
 	{
 		$sql_cp = <<<sql
-select t.id, p.POSTCODE AS cp,t.name,t.nuts3_id,t.lau_id from places t inner join post p on t.nuts3_id=p.nuts3_2021 and t.lau_id=p.nsi_code where t.nuts3_id like 'ES62%' GROUP BY p.CITY_ID,lau_nat,p.POSTCODE
+select t.id, p.POSTCODE AS cp,t.name,t.nuts3_id,t.lau_id from territorios t inner join post p on t.nuts3_id=p.nuts3_2021 and t.lau_id=p.nsi_code where t.nuts3_id like 'ES62%' GROUP BY p.CITY_ID,lau_nat,p.POSTCODE
 sql;
 		$command = Yii::$app->db->createCommand($sql_cp);
 		$cps = [];
@@ -203,7 +203,7 @@ sql;
 		foreach ($cps as $id => $cps_array) {
 			$cps = implode(",",$cps_array);
 			$sql_update = <<<sql
-UPDATE places set postcode = '$cps' WHERE id=$id
+UPDATE territorios set postcode = '$cps' WHERE id=$id
 sql;
 			Yii::$app->db->createCommand($sql_update)->execute();
 		}

@@ -24,10 +24,8 @@ class PlaceController extends Controller
 
 	public function actionFindPostCode(string $place, string $country_code)
 	{
-		$tables = Yii::$app->db->createCommand("SELECT * FROM places")->query()->all();
-		echo "<pre>";print_r($tables);
-// 		$models = Place::find()->where(['LIKE', 'name', $place])->asArray()->all();
-// 		return $models;
+		$models = Place::find()->where(['LIKE', 'name', $place])->asArray()->all();
+		return $models;
 	}
 
 /*<<<<<CLASS_END*/
