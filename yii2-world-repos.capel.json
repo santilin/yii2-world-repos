@@ -30,10 +30,14 @@
 			"dest_path": "/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos",
 			"models": {
 				"Country": ["model", "migration"],
-				"Place": ["model", "migration"]
+				"Place": ["model", "migration"],
+				"PostCode": ["model", "migration"]
 			},
 			"controllers": {
 				"Place": {
+					"type": "Empty"
+				},
+				"PostCode": {
 					"type": "Empty"
 				}
 			}
@@ -86,10 +90,6 @@
 					"is_nullable": false,
 					"is_desc": true
 				}, {
-					"name": "postcode",
-					"type": "places/postcode",
-					"is_desc": true
-				}, {
 					"name": "nuts_code",
 					"type": "string"
 				}, {
@@ -110,6 +110,21 @@
 				}, {
 					"name": "fua_id",
 					"type": "string"
+				}
+			]
+		},
+		"PostCode": {
+			"base_model_class": "_BaseModel",
+			"table_name": "places",
+			"migration_timestamp": "220101_000300",
+			"relations": {
+				"Place": { "type": "HasOne", "is_nullable": false }
+			},
+			"fields": [
+				{
+					"name": "postcode",
+					"type": "places/postcode",
+					"is_nullable": false
 				}
 			]
 		}

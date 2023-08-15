@@ -89,7 +89,6 @@ CREATE TABLE `territorios` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`country_id` integer NOT NULL,
 	`name` string,
-	`postcode` text,
 	'nuts_code' string,
 	`nuts3_id` integer,
 	`city_name` string,

@@ -5,26 +5,18 @@ namespace santilin\wrepos\models;
 
 use Yii;
 use santilin\churros\helpers\{AppHelper,DateTimeEx,FormHelper};
-use santilin\wrepos\models\PostCode;
+use santilin\wrepos\models\Place;
 /*>>>>>USES*/
 /*<<<<<CLASS*/
 /**
  * This is the base model class for table "{{%places}}".
  *
- * @property integer $id // key/primary/tiny
- * @property string $contry_code // places/country/iso2_code
- * @property string $name // places/name
- * @property string $nuts_code
- * @property string $nuts3_id
- * @property string $city_name
- * @property string $greater_city
- * @property string $city_id
- * @property string $lau_id
- * @property string $fua_id
+ * @property float $postcode // places/postcode
+ * @property integer $places_id
  *
- * @property santilin\wrepos\models\PostCode[] $postCodes // BelongsToMany
+ * @property santilin\wrepos\models\Place $place // HasOne
  */
-class Place extends _BaseModel
+class PostCode extends _BaseModel
 {
 	use \santilin\churros\ModelInfoTrait;
 	static public function tableName()
@@ -34,25 +26,24 @@ class Place extends _BaseModel
 /*>>>>>CLASS*/
 /*<<<<<STATIC_INFO*/
 	static public $relations = [
-'postCodes' => [ 'model' => 'PostCode', 'left' => 'places.id', 'right' => 'places.places_id', 'modelClass' => 'santilin\wrepos\models\PostCode', 'relatedTablename' => 'places', 'join' => 'places.id = places.places_id', 'type' => 'BelongsToMany']
+'place' => [ 'model' => 'Place', 'left' => 'places.places_id', 'right' => 'places.id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'places.places_id = places.id', 'type' => 'HasOne']
 	];
 /*>>>>>STATIC_INFO*/
-
 /*<<<<<MODEL_INFO*/
 	static public $_model_info = [];
 	static public function getModelInfo($part)
 	{
 		if (static::$_model_info == [] ) {
 			$mi = [
-				'title' => 'Place',
-				'title_plural' => 'Places',
-				'code_field' => 'contry_code',
-				'desc_field' => 'name',
-				'controller_name' => 'place',
+				'title' => 'PostCode',
+				'title_plural' => 'PostCodes',
+				'code_field' => '',
+				'desc_field' => '',
+				'controller_name' => 'post-code',
 				'female' => true,
-				'record_desc_format_short' => '{contry_code}, {name}',
-				'record_desc_format_medium' => '{contry_code}, {name}',
-				'record_desc_format_long' => '{contry_code}, {name}'
+				'record_desc_format_short' => '',
+				'record_desc_format_medium' => '',
+				'record_desc_format_long' => ''
 			];
 /*>>>>>MODEL_INFO*/
 /*<<<<<MODEL_INFO_CUSTOM*/
@@ -63,12 +54,12 @@ class Place extends _BaseModel
 /*>>>>>MODEL_INFO_CUSTOM*/
 /*<<<<<FIND*/
 	/**
-     * @return \santilin\wreposforms\PlaceQuery the active query used by this AR class.
+     * @return \santilin\wreposforms\PostCodeQuery the active query used by this AR class.
      */
     static public function find()
     {
-		if( class_exists("santilin\wrepos\models\comp\PlaceQuery") ) {
-			return new \santilin\wrepos\models\comp\PlaceQuery(get_called_class());
+		if( class_exists("santilin\wrepos\models\comp\PostCodeQuery") ) {
+			return new \santilin\wrepos\models\comp\PostCodeQuery(get_called_class());
 		} else {
 			return parent::find();
 		}
@@ -78,16 +69,9 @@ class Place extends _BaseModel
 	public function attributeLabels()
 	{
 		$labels = [
-			'id' => 'Id',
-			'contry_code' => 'Contry code',
-			'name' => 'Name',
-			'nuts_code' => 'Nuts code',
-			'nuts3_id' => 'Nuts3 id',
-			'city_name' => 'City name',
-			'greater_city' => 'Greater city',
-			'city_id' => 'City id',
-			'lau_id' => 'Lau id',
-			'fua_id' => 'Fua id',
+			'postcode' => 'Postcode',
+			'places_id' => Place::getModelInfo('title'), // HasOne
+			'place' => Place::getModelInfo('title'), // HasOne
 		];
 /*>>>>>LABELS*/
 		// customize your labels here
@@ -99,9 +83,9 @@ class Place extends _BaseModel
     public function rules()
     {
 		$rules = [
-			'req' => [['contry_code','name'], 'required', 'on' => $this->crudScenarios],
-			'null' => [['nuts_code','nuts3_id','city_name','greater_city','city_id','lau_id','fua_id'], 'default', 'value' => null],
-			'max_contry_code'=>['contry_code', 'string', 'max' => 2, 'on' => $this->crudScenarios],
+			'req' => [['places_id'], 'required', 'on' => $this->crudScenarios],
+			'def0'=>[['postcode'], 'default', 'value' => 0.0,'on' => $this->crudScenarios],
+			'number_postcode'=>['postcode', 'number'],
 		];
 /*>>>>>RULES*/
 		// customize your rules here
@@ -129,8 +113,8 @@ class Place extends _BaseModel
 		}
 /*>>>>>HANDY_VALUES_PRE*/
 /*<<<<<HANDY_VALUES*/
-		if( $field == 'postCodes' ) { // hasMany
-			$q = PostCode::find();
+		if( $field == 'places_id' || $field == 'place' || $field == 'Place' ) { // HasOne
+			$q = Place::find();
 			$q->defaultOrder();
 			if( $scope_func ) {
 				call_user_func_array([$q,$scope_func],$scope_args);
@@ -154,6 +138,18 @@ class Place extends _BaseModel
 		}
 	} // handyFieldValues
 /*>>>>>HANDY_VALUES_RETURN*/
+/*<<<<<DEFAULT_VALUES*/
+	public function setDefaultValues(bool $duplicating = false)
+	{
+		if (!$duplicating) {
+			$this->postcode = 0.0;
+		} else {
+
+		}
+/*>>>>>DEFAULT_VALUES*/
+/*<<<<<DEFAULT_VALUES_RETURN*/
+	} // setDefaultValues
+/*>>>>>DEFAULT_VALUES_RETURN*/
 /*<<<<<BEHAVIORS*/
 	public function behaviors()
 	{
@@ -171,39 +167,12 @@ class Place extends _BaseModel
 			$relname = 'places';
 		}
 		$ret = [
-			"$relname.desc_short" => [
-				'attribute' => "CONCAT($relname.contry_code, ', ', $relname.name)",
-				'label' => static::getModelInfo('title'),
+
+			"$relname.postcode" => [ // decimal
+				'format' => 'decimal',
 			],
-			"$relname.id" => [ // tinyInteger
+			"$relname.places_id" => [ // HasOne
 				'format' => 'integer',
-			],
-			"$relname.contry_code" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.name" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.nuts_code" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.nuts3_id" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.city_name" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.greater_city" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.city_id" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.lau_id" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.fua_id" => [ // string
-				'format' => 'raw',
 			],
 		];
 /*>>>>>REPORT_COLUMNS*/
@@ -217,13 +186,13 @@ class Place extends _BaseModel
 	 * The keys of the array refer to the attributes of the record associated
 	 *	with the `$class` model, while the values of the
      * array refer to the corresponding attributes in **this** AR class.
-     */
-	public function getPostCodes()
+	 */
+	public function getPlace()
 	{
-		// postCodes:Place BelongsToMany(inv)(not null) PostCode: places.id=>places.places_id
-		return $this->hasMany(\santilin\wrepos\models\PostCode::class, ['places_id' => 'id'])->inverseOf('place');
+		// place:PostCode HasOne(not null) Place: places.places_id=>places.id
+		return $this->hasOne(\santilin\wrepos\models\Place::class, ['id' => 'places_id']);
 	}
 /*>>>>>RELATIONS*/
 /*<<<<<END*/
-} // class Place
+} // class PostCode
 /*>>>>>END*/
