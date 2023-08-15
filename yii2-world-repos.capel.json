@@ -75,15 +75,13 @@
 			"base_model_class": "_BaseModel",
 			"table_name": "places",
 			"migration_timestamp": "220101_000200",
+			"relations": {
+				"Country": { "type": "HasOne", "is_nullable": false, "is_code": true }
+			},
 			"fields": [
 				{
 					"name": "id",
 					"type": "key/primary/tiny"
-				}, {
-					"name": "contry_code",
-					"type": "places/country/iso2_code",
-					"is_nullable": false,
-					"is_code": true
 				}, {
 					"name": "name",
 					"type": "places/name",
@@ -131,19 +129,19 @@
 	},
 	"commands": {
 		"Generate": {
+			"options": [
+				{
+					"name": "dryRun",
+					"type": "bool",
+					"default_value": true
+				}, {
+					"name": "abortOnError",
+					"type": "bool",
+					"default_value": true
+				}
+			],
 			"Generate" : {
 				"description": "Generador de modelos y migraciones",
-				"options": [
-					{
-						"name": "dryRun",
-						"type": "bool",
-						"default_value": true
-					}, {
-						"name": "abortOnError",
-						"type": "bool",
-						"default_value": true
-					}
-				],
 				"arguments": [
 					{
 						"name": "modelname",
@@ -158,19 +156,19 @@
 			}
 		},
 		"Source": {
+			"options": [
+				{
+					"name": "dryRun",
+					"type": "bool",
+					"default_value": true
+				}, {
+					"name": "abortOnError",
+					"type": "bool",
+					"default_value": true
+				}
+			],
 			"Importar" : {
-				"description": "Generador de modelos y migraciones",
-				"options": [
-					{
-						"name": "dryRun",
-						"type": "bool",
-						"default_value": true
-					}, {
-						"name": "abortOnError",
-						"type": "bool",
-						"default_value": true
-					}
-				],
+				"description": "Importador general",
 				"arguments": [
 					{
 						"name": "country",
@@ -178,9 +176,18 @@
 						"default_value": "ES"
 					}
 				]
+			},
+			"ImportarPaises" : {
+				"description": "Importador de países por lenguajes",
+				"arguments": [
+					{
+						"name": "language",
+						"type": "string",
+						"default_value": "ES"
+					}
+				]
 			}
 		}
-
 	}
 
 }

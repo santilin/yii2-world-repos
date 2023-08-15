@@ -79,35 +79,6 @@ class SourceController extends Controller
 		return $ret;
 	}
 
-
-	public function actionCreateTerritoriosTable()
-	{
-		Yii::$app->db->createCommand("DROP TABLE IF EXISTS territorios")->queryAll();
-
-		Yii::$app->db->createCommand(<<<sql
-CREATE TABLE `territorios` (
-	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`country_id` integer NOT NULL,
-	`name` string,
-	'nuts_code' string,
-	`nuts3_id` integer,
-	`city_name` string,
- 	`greater_city` string,
-	`city_id` string,
-	'lau_id' string,
- 	`fua_id` string,
- 	`level` integer
-);
-sql
-		)->execute();
-// 	`lau_es` string,
-// 	`lau_en` string,
-// 	`latitude` float,
-// 	`longitude` float
-// 	`nsi_id` integer,
-		echo "Tabla territorios creada";
-	}
-
     /*
 		39 Países
 		Vacíos: XK, BA, RS, MK, UK,
@@ -119,7 +90,14 @@ sql
 	public function actionImportar($country='ES')
 	{
 /*>>>>>ACTION_IMPORTAR*/
-		$nuts3 = Yii::$app->db->createCommand("DELETE FROM territorios")->queryAll();
+
+
+
+		Yii::$app->db->createCommand("DELETE FROM postcodes")->queryAll();
+		Yii::$app->db->createCommand("DELETE FROM places")->queryAll();
+		Yii::$app->db->createCommand("DELETE FROM countries")->queryAll();
+
+
 
 		// Source provinces from nuts
 		foreach( array_keys(self::COUNTRY_XX2ISO) as $cc ) {
