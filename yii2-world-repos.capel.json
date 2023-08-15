@@ -26,20 +26,12 @@
 			"type": "Yii2App",
 			"access_filters": ["none"],
 			"title": "Repositories",
-			"dest_path": "/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos/src",
+			"dest_path": "/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos",
 			"models": {
 				"Country": ["model"],
 				"Territory": ["model"]
 			},
 			"controllers": {
-				"Country": {
-					"type": "Crud",
-					"tests": true
-				},
-				"Territory": {
-					"type": "Crud",
-					"tests": true
-				}
 			}
 		}
 	],
@@ -61,10 +53,10 @@
 			"type": "string"
 		},
 		"shopping/product/image": {
-			"type": "string/url/local_storage/image"
+			"type": "file/local_storage/image"
 		},
 		"image/logo/local_storage": {
-			"type": "string/url/local_storage/image"
+			"type": "file/local_storage/image"
 		}
 	},
 

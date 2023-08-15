@@ -1,0 +1,3 @@
+#<<<<<INIT
+User-agent: *
+#>>>>>INIT

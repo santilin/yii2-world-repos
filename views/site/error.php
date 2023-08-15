@@ -1,5 +1,5 @@
 <?php
-/*<<<<<MAIN*/
+/*<<<<<USES*/
 /* var yii\web\View $this */
 /* @var $title string */
 /* @var $message string */
@@ -27,4 +27,4 @@ if (YII_ENV_DEV && isset($exception) && $exception->getPrevious()) {
 	<p><?= $exception->getPrevious()->getMessage() ?></p>
 <?php
 }
-/*>>>>>MAIN*/
+/*>>>>>USES*/

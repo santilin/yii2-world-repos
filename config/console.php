@@ -61,14 +61,15 @@ if (YII_ENV_DEV || YII_ENV_TEST) {
 	Yii::setAlias('@tests', dirname(__DIR__) . '/tests');
 	$config['controllerMap']['fixture'] = [ // Fixture generation command line.
 		'class' => 'yii\faker\FixtureController',
-		'templatePath' => '@tests/fixtures/templates',
-		'namespace' => 'tests\fixtures\unit',
-		'fixtureDataPath' => '@tests/fixtures/unit/data', // for faker
+		// paths and namespaces by default for the unit suite
+		'templatePath' => '@tests/unit/fixtures/templates',
+		'namespace' => 'tests\unit\fixtures',
+		'fixtureDataPath' => '@tests/unit/fixtures/data', // for faker
 		'providers' => [
-				'santilin\churros\fakers\Base',
-				'santilin\churros\fakers\Address',
-				'santilin\churros\fakers\Person',
-				'santilin\churros\fakers\PhoneNumber',
+			'santilin\churros\fakers\Base',
+			'santilin\churros\fakers\Address',
+			'santilin\churros\fakers\Person',
+			'santilin\churros\fakers\PhoneNumber',
 		],
 	];
 }

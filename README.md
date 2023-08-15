@@ -1,2 +1,73 @@
+
+[//]: # (<<<<<MAIN)
+# world-repos 0.0.1
+World repositories
+
+[//]: # (>>>>>MAIN)
 # yii2-world-repos
 World repos of all kinds: countries, cities ,villages, etc.
+
+[//]: # (<<<<<INSTALL)
+# Instalación
+
+* Configurar config/smtp.php
+* Configurar config/secrets.php
+* Configurar config/db.php
+
+```
+mkdir -pm 777 web/uploads
+mkdir -m 777 web/assets
+mkdir -pm 777 runtime/logs runtime/HTML
+cd runtime
+ln -s ../web/uploads .;
+cd ..
+\# sqlite3
+if [ -f runtime/world-repos.db ]; then
+	chmod g+w runtime/world-repos.db
+	chgrp www-data runtime/world-repos.db
+	YII2_SQLITE3_DISABLE_FOREIGN_CHECKS=1 ./yii migrate
+else
+	./yii migrate
+fi
+```
+## Configuración extra
+
+### web.php:
+```
+$config['modules']['user']['administrators'] = ['santilin'];
+```
+
+[//]: # (>>>>>INSTALL)
+[//]: # (<<<<<TESTS)
+# Tests
+Hay tres niveles estandar de tests:
+## unitarios
+En tests/unit, usan fixtures propias autogeneradas
+## funcionales
+* en `tests/functional`
+* fixtures compartidas y no autogeneradas en `tests/fixtures`
+## de aceptación
+* en `tests/acceptance`,
+* fixtures compartidas y no autogeneradas en `tests/fixtures`
+* BDD. Usan el lenguaje gherkin
+
+# Fixtures
+```
+./yii fixture/generate-all --count=2
+ls tests/fixtures/unit
+./yii fixture/load "*"
+```
+
+# Run
+```
+torres devel test
+```
+
+[//]: # (>>>>>TESTS)
+[//]: # (<<<<<USUARIAS)
+# Usuarias
+```
+./yii user/create software@noviolento.es admin my_secret
+```
+
+[//]: # (>>>>>USUARIAS)

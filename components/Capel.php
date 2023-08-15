@@ -1,32 +1,19 @@
 <?php
-/*<<<<<INIT*/
+/*<<<<<USES*/
 namespace app\components;
 use yii;
+use \santilin\churros\helpers\AppHelper;
 /**
  * Meta information for the app world-repos
  * @version 0.0.1
  */
-/*>>>>>INIT*/
+/*>>>>>USES*/
 /*<<<<<CLASS*/
 class Capel
 {
 /*>>>>>CLASS*/
 /*<<<<<MODELS*/
 	const MODELS = [
-'Country' => [
-	'class' => 'app\models\Country',
-	'type' => 'models',
-	'fields' => [
-		"id" => [ "name" => "id", "type" => "tinyInteger",
-			"length" => null,"precision" => null,"title" => "Id","title_plural" => "Ides","required" => true,"app_type" => "key/primary/tiny","values_callback" => ""],
-		"iso2" => [ "name" => "iso2", "type" => "string",
-			"length" => 2,"precision" => null,"title" => "Iso2","title_plural" => "Iso2s","required" => true,"app_type" => "string","values_callback" => ""],
-		"iso3" => [ "name" => "iso3", "type" => "string",
-			"length" => 2,"precision" => null,"title" => "Iso3","title_plural" => "Iso3s","required" => true,"app_type" => "string","values_callback" => ""],
-		"name" => [ "name" => "name", "type" => "string",
-			"length" => null,"precision" => null,"title" => "Name","title_plural" => "Names","required" => false,"app_type" => "places/country/name","values_callback" => ""],
-	],
-],
 
 ];
 	const MODULES = [
@@ -45,10 +32,10 @@ class Capel
 	}
 	static public function modulesWithAccess()
 	{
-		$user_module = Yii::$app->user;
+		$user_component = Yii::$app->get('user');
 		$ret = [];
 		foreach( static::getModules() as $mk => $mtitle ) {
-			if( !$user_module || $user_module->can($mk) ) {
+			if( !$user_component || AppHelper::userIsAdmin() || $user_component->can($mk) ) {
 				$ret[$mk] = $mtitle;
 			}
 		}

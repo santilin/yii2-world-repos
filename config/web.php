@@ -12,6 +12,7 @@ $secrets = require __DIR__ . '/secrets.php';
 
 $config = [
 	'id' => 'world-repos',
+	'catchAll' => ($params['maintenance']??null)?['site/maintenance', 'message' => $params['maintenance']]:'',
 	'name' => 'World repositories',
 	'basePath' => dirname(__DIR__),
 	'vendorPath' => '/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos/vendor/',
@@ -30,6 +31,10 @@ $config = [
 		]
 	],
 	'components' => [
+		'assetManager' => [
+			'linkAssets' => YII_ENV_DEV,
+			'forceCopy' => YII_ENV_DEV
+		],
 		'request' => [
 			// !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
 			'cookieValidationKey' => $secrets['cookie_validation_key'],
@@ -41,6 +46,7 @@ $config = [
 			'class' => 'yii\caching\FileCache',
 		],
 		'errorHandler' => [
+			'class' => \santilin\churros\components\ErrorHandler::class,
 			'errorAction' => 'site/error',
 		],
 		'log' => [
@@ -68,6 +74,7 @@ $config = [
 			'rules' => $routes,
 		],
 		'mailer' =>	[
+			'useFileTransport' => false, // Avoid email errors in development env
 			'class' => 'yii\swiftmailer\Mailer',
 			'viewPath' => '@app/views/mailer',
 			'transport' => $smtp_transport
@@ -130,6 +137,8 @@ $config['modules']['datecontrol'] = [
 	// use ajax conversion for processing dates from display format to save format.
 	'ajaxConversion' => true,
 
+	'convertAction' => '/site/convert-date',
+
 	// default settings for each widget from kartik\widgets used when autoWidget is true
 	'autoWidgetSettings' => [
 		\kartik\datecontrol\Module::FORMAT_DATE => [
@@ -164,6 +173,7 @@ $config['modules']['datecontrol'] = [
 // tweak your DateControl settings here
 // $config['modules']['datecontrol'][...] = ...
 
+
 // You can tweak the $config array here as you need
 /*<<<<<RETURN*/
 unset($params, $smtp_transport, $db, $i18n, $routes, $secrets);
@@ -173,4 +183,3 @@ if( file_exists(__DIR__ . "/local_web.php") ) {
 	return $config;
 }
 /*>>>>>RETURN*/
-

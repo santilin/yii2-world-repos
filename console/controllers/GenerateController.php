@@ -1,6 +1,7 @@
 <?php
 /*<<<<<USES*/
-namespace santilin\wrepos\console\controllers;
+/*Template:Yii2App/console/controllers/Controller.php*/
+namespace app\console\controllers;
 
 use Yii;
 use yii\helpers\Console;
@@ -18,8 +19,6 @@ class GenerateController extends Controller
 {
 	/** The version of this command */
 	const VERSION = '0.0.1';
-	public $abortOnError = false;
-	public $dryRun = false;
 /*>>>>>MAIN*/
 /*<<<<<OPTIONS*/
     /**
@@ -28,11 +27,6 @@ class GenerateController extends Controller
     public function options($actionID)
     {
 		$own_options = [];
-		if( $actionID == "generate" ) {
-			$own_options = [
-		'abortOnError','dryRun',
-		];
-		}
 /*>>>>>OPTIONS*/
 /*<<<<<OPTIONS_END*/
         return array_merge(parent::options($actionID), $own_options);
@@ -52,7 +46,6 @@ class GenerateController extends Controller
 /*<<<<<PRINT_HELP_MESSAGE*/
     /**
      * Show help message.
-     * @param array $fixturesInput
      */
     private function printHelpMessage()
     {

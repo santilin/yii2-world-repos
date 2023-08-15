@@ -4,10 +4,9 @@ phpunit.phar
 tests/_output
 tests/_data
 tests/_support/_generated
-tests/fixtures/unit/data
 
 *.log
-world-repos_*.hmcfg
+world-repos_*.torres
 *.kate-swp
 *~
 .kdev4/**
@@ -24,7 +23,11 @@ config/secrets.php
 config/local_console.php
 config/local_web.php
 composer.lock
+web/uploads
+tests/unit/fixtures/data
 ### end-preserve-local ###
+tests/**/fixtures/data
+!tests/fixtures/data
 #>>>>>YII2_CAPEL
 database/seeders/SchemaSeeder.php
 data

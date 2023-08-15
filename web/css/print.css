@@ -1,6 +1,20 @@
 /*<<<<<MAIN*/
 @media print {
-/* css for printing in all modules */
+	/* css for printing in all modules */
+body {
+	background: none;
+}
+.not-set {
+	visibility: hidden;
+}
+.reportview-oneline {
+	white-space: nowrap;
+}
+.reportview-label {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 .record-view .rv-field, .record-view .rv-label {
 	display: block;
 	padding: 6px 12px;
@@ -128,5 +142,140 @@
 	flex: 3 0 100%;
 }
 
-}
+} /* media print */
+@media print {
 /*>>>>>MAIN*/
+/*<<<<<REPORTS*/
+.reportview-currency, .reportview-integer, .reportview-decimal {
+	text-align: right;
+}
+
+.reportview-grand-total td {
+	border-top: 2px solid blue;
+	border-bottom: 2px solid blue;
+	color: black;
+	font-weight: bold;
+	font-size: larger;
+}
+
+.reportview-total-label {
+	text-align: right;
+}
+
+.reportview-group-total-label {
+	text-align: right;
+	border-bottom: 1px solid blue;
+	color: black;
+	font-weight: bold;
+}
+
+.reportview-group-head-1 {
+	border-bottom: 1px solid blue;
+	background-color: white;
+	color: blue;
+	font-weight: bold;
+}
+
+.reportview-group-foot-1 {
+	border-top: 1px solid blue;
+	font-weight: bold;
+	color: blue;
+}
+
+.reportview-group-head-1, .reportview-group-foot-1 {
+/*	background-color: gray;
+    color: white;*/
+    font-size: 1.1em;
+    padding-left: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-right: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.reportview-group-head-2, .reportview-group-foot-2 {
+    background-color: white;
+    color: black;
+    font-size: 1.1em;
+    padding-left: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-right: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+	font-style: italic;
+}
+
+.reportview-group-foot-2 {
+	text-align: right;
+}
+.reportview-group-foot-text-2::before {
+       content: '+'
+}
+.reportview-group-head-2::before {
+       content: '+'
+}
+.reportview-group-foot-text-3::before {
+       content: '++'
+}
+.reportview-group-head-3::before {
+       content: '++'
+}
+.reportview-group-head-3, .reportview-group-foot-3 {
+    background-color: gray;
+    color: white;
+    font-size: 1.1em;
+    padding-left: 10px;
+    padding-left: 5px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-right: 0px;
+    margin-left: -5px;
+	margin-right: 0px;
+}
+
+#report-columns.table > thead > tr > th,
+#report-columns.table > tbody > tr > th,
+#report-columns.table > tfoot > tr > th,
+#report-columns.table > thead > tr > td,
+#report-columns.table > tbody > tr > td,
+#report-columns.table > tfoot > tr > td
+{
+	padding: 0px;
+	vertical-align: center;
+	border: 0;
+}
+
+.report-page table th {
+	border-bottom: 1px solid black;
+}
+
+.report-page table#report-filters {
+	width: revert;
+}
+.report-page table#report-sorting {
+	width: revert;
+}
+
+.report-page .search-form-filters .form-control {
+	padding: 0px 10px;
+}
+
+.report-page .search-form-filters .input-group {
+	margin-bottom: 0px;
+}
+
+/* REPORT BUILDER */
+#report-columns.table > thead > tr > th,
+#report-columns.table > tbody > tr > th,
+#report-columns.table > tfoot > tr > th,
+#report-columns.table > thead > tr > td,
+#report-columns.table > tbody > tr > td,
+#report-columns.table > tfoot > tr > td
+{
+	padding: 0px;
+	vertical-align: center;
+	border: 0;
+}
+/*>>>>>REPORTS*/

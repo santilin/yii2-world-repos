@@ -1,16 +1,18 @@
 <?php
 /*<<<<<USES*/
+/*Template:Yii2App/layouts/login.php*/
 /* @var \yii\web\View $this*/
 /* @var string $content */
 
-use yii\helpers\Html;
+use yii\helpers\{Html,Url};
 use yii\widgets\Breadcrumbs;
 use app\assets\LoginAsset;
 use santilin\churros\helpers\AppHelper;
-use santilin\churros\yii\bootstrap\SessionAlert;
+use santilin\churros\widgets\SessionAlert;
 
 LoginAsset::register($this);
-$company = Yii::$app->name;
+$company = $brand_name = Yii::$app->name;
+$created_by = 'Creado por Santilín con Yii' . Yii::getVersion();
 /*>>>>>USES*/
 /*<<<<<BEGINPAGE*/
 ?>
@@ -36,17 +38,17 @@ if( !YII_ENV_DEV && AppHelper::yiiparam('baseUrl') ) {
 /*<<<<<BEGINBODY*/
 ?>
 </head>
-<body>
 <?php $this->beginBody() ?>
+<body class="site">
+<div class="header">
 <div class="text-center">
 <?php
 /*>>>>>BEGINBODY*/
 /*<<<<<JUMBOTRON*/
 	echo Breadcrumbs::widget([
-		'homeLink' => [ 'label' => Yii::t('app', 'Inicio'), 'url' => ['/']],
-		'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-	]) ?>
-	<h1><?= (isset(Yii::$app->params['logo']) ? Html::img(Yii::$app->params['logo'], ['id' => 'app-logo']) : '') . Yii::$app->name ?></h1>
+		'homeLink' => [ 'label' => Yii::t('app', 'World repositories'), 'url' => ['/']],
+		'links' => $this->params['breadcrumbs']?? [ 'Inicio' ] ]); ?>
+	<h1><?= (isset(Yii::$app->params['logo']) ? Html::a(Html::img(Yii::$app->params['logo'], ['id' => 'app-logo']), ['/']) : '') . '&nbsp;&nbsp;' . Yii::$app->name ?></h1>
 </div><!--jumbotron-->
 <?php
 /*>>>>>JUMBOTRON*/
@@ -56,14 +58,16 @@ echo $content;
 /*>>>>>CONTENT*/
 /*<<<<<ENDBODY*/
 ?>
+</div>
+</div>
 <footer class="footer">
 <?php
 /*>>>>>ENDBODY*/
 /*<<<<<FOOTER*/
 ?>
 	<div class="container">
-		<p class="pull-left">&copy; <?= $company ?> <?= date('Y') ?></p>
-		<p class="pull-right">Desarrollado por Santilín con Yii2</p>
+		<p class="pull-left">&copy; <?= $company ?>, <?= date('Y') ?></p>
+		<p class="pull-right"><?= $created_by ?></p>
 	</div>
 </footer>
 <?=	$this->endBody(); ?>

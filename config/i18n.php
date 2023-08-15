@@ -1,5 +1,5 @@
 <?php
-/*<<<<<I18N*/
+/*<<<<<USES*/
 $ret = [
     'translations' => [
 		'app*' => [
@@ -9,7 +9,7 @@ $ret = [
 	]
 ];
 // Add your i18n config here
-/*>>>>>I18N*/
+/*>>>>>USES*/
 /*<<<<<RETURN*/
 return $ret;
 /*>>>>>RETURN*/
