@@ -16,7 +16,7 @@ use santilin\churros\helpers\{AppHelper,DateTimeEx,FormHelper};
  * @property string $name // places/country/name
  *
  */
-class Country extends \yii\db\ActiveRecord
+class Country extends _BaseModel
 {
 	use \santilin\churros\ModelInfoTrait;
 	static public function tableName()

@@ -23,7 +23,7 @@ use santilin\churros\helpers\{AppHelper,DateTimeEx,FormHelper};
  * @property string $fua_id
  *
  */
-class Place extends \yii\db\ActiveRecord
+class Place extends _BaseModel
 {
 	use \santilin\churros\ModelInfoTrait;
 	static public function tableName()
