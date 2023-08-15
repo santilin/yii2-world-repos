@@ -18,7 +18,7 @@ define('APP_REVISION', '###GIT_REVISION###');
 require '/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos/vendor/autoload.php';
 require '/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos/vendor/yiisoft/yii2/Yii.php';
 
-$config = require __DIR__ . '/config/console.php';
+$config = require __DIR__ . '/app/config/console.php';
 
 $application = new yii\console\Application($config);
 /*>>>>>MAIN*/
