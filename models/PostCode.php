@@ -9,7 +9,7 @@ use santilin\wrepos\models\Place;
 /*>>>>>USES*/
 /*<<<<<CLASS*/
 /**
- * This is the base model class for table "{{%places}}".
+ * This is the base model class for table "{{%postcodes}}".
  *
  * @property float $postcode // places/postcode
  * @property integer $places_id
@@ -21,12 +21,12 @@ class PostCode extends _BaseModel
 	use \santilin\churros\ModelInfoTrait;
 	static public function tableName()
 	{
-		return '{{%places}}';
+		return '{{%postcodes}}';
 	}
 /*>>>>>CLASS*/
 /*<<<<<STATIC_INFO*/
 	static public $relations = [
-'place' => [ 'model' => 'Place', 'left' => 'places.places_id', 'right' => 'places.id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'places.places_id = places.id', 'type' => 'HasOne']
+'place' => [ 'model' => 'Place', 'left' => 'postcodes.places_id', 'right' => 'places.id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'postcodes.places_id = places.id', 'type' => 'HasOne']
 	];
 /*>>>>>STATIC_INFO*/
 /*<<<<<MODEL_INFO*/
@@ -164,7 +164,7 @@ class PostCode extends _BaseModel
 	static public function allReportColumns($relname = null)
 	{
 		if( $relname === null ) {
-			$relname = 'places';
+			$relname = 'postcodes';
 		}
 		$ret = [
 
@@ -189,7 +189,7 @@ class PostCode extends _BaseModel
 	 */
 	public function getPlace()
 	{
-		// place:PostCode HasOne(not null) Place: places.places_id=>places.id
+		// place:PostCode HasOne(not null) Place: postcodes.places_id=>places.id
 		return $this->hasOne(\santilin\wrepos\models\Place::class, ['id' => 'places_id']);
 	}
 /*>>>>>RELATIONS*/

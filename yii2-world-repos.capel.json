@@ -115,7 +115,7 @@
 		},
 		"PostCode": {
 			"base_model_class": "_BaseModel",
-			"table_name": "places",
+			"table_name": "postcodes",
 			"migration_timestamp": "220101_000300",
 			"relations": {
 				"Place": { "type": "HasOne", "is_nullable": false }

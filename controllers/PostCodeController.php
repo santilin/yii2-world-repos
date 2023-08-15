@@ -16,11 +16,16 @@ class PostCodeController extends Controller
 	 * @var $layout The layout for this controller
 	 */
 	public $layout = 'main';
-	/**
-	 * @inheritdoc
-	 */
-    public $enableCsrfValidation = false;
 /*>>>>>USES*/
+
+	public function actionFindPostCode(string $place, string $country_code)
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$models = PostCode::find()->joinWith('place p')->where(['LIKE', 'p.name', $place])->asArray()->all();
+		return $models;
+	}
+
+
 /*<<<<<CLASS_END*/
 } // class SiteController
 /*>>>>>CLASS_END*/

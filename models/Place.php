@@ -34,7 +34,7 @@ class Place extends _BaseModel
 /*>>>>>CLASS*/
 /*<<<<<STATIC_INFO*/
 	static public $relations = [
-'postCodes' => [ 'model' => 'PostCode', 'left' => 'places.id', 'right' => 'places.places_id', 'modelClass' => 'santilin\wrepos\models\PostCode', 'relatedTablename' => 'places', 'join' => 'places.id = places.places_id', 'type' => 'BelongsToMany']
+'postCodes' => [ 'model' => 'PostCode', 'left' => 'places.id', 'right' => 'postcodes.places_id', 'modelClass' => 'santilin\wrepos\models\PostCode', 'relatedTablename' => 'postcodes', 'join' => 'places.id = postcodes.places_id', 'type' => 'BelongsToMany']
 	];
 /*>>>>>STATIC_INFO*/
 
@@ -220,7 +220,7 @@ class Place extends _BaseModel
      */
 	public function getPostCodes()
 	{
-		// postCodes:Place BelongsToMany(inv)(not null) PostCode: places.id=>places.places_id
+		// postCodes:Place BelongsToMany(inv)(not null) PostCode: places.id=>postcodes.places_id
 		return $this->hasMany(\santilin\wrepos\models\PostCode::class, ['places_id' => 'id'])->inverseOf('place');
 	}
 /*>>>>>RELATIONS*/

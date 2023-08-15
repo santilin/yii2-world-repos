@@ -16,10 +16,6 @@ class PlaceController extends Controller
 	 * @var $layout The layout for this controller
 	 */
 	public $layout = 'main';
-	/**
-	 * @inheritdoc
-	 */
-    public $enableCsrfValidation = false;
 /*>>>>>USES*/
 
 	public function actionFindPostCode(string $place, string $country_code)
