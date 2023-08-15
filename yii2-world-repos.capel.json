@@ -26,6 +26,7 @@
 			"type": "Yii2App",
 			"access_filters": ["none"],
 			"title": "Repositories",
+			"namespace": "santilin\\wrepos",
 			"dest_path": "/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos",
 			"models": {
 				"Country": ["model"],

@@ -4,7 +4,7 @@
 /**
  * BS4 Asset for the 'main' layout
  */
-namespace app\assets;
+namespace santilin\wrepos\assets;
 
 use yii\web\AssetBundle;
 

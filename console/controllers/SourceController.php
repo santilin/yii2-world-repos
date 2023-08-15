@@ -1,7 +1,7 @@
 <?php
 /*<<<<<USES*/
 /*Template:Yii2App/console/controllers/Controller.php*/
-namespace app\console\controllers;
+namespace santilin\wrepos\console\controllers;
 
 use Yii;
 use yii\helpers\Console;

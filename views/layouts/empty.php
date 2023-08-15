@@ -9,7 +9,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap4\{Breadcrumbs,Nav,NavBar};
-use app\assets\MainAsset;
+use santilin\wrepos\assets\MainAsset;
 use santilin\churros\helpers\AppHelper;
 use santilin\churros\widgets\SessionAlert;
 
