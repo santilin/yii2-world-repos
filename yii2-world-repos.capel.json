@@ -30,11 +30,11 @@
 			"dest_path": "/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos",
 			"models": {
 				"Country": ["model"],
-				"Territory": ["model"]
+				"Place": ["model"]
 			},
 			"controllers": {
-				"Territory": {
-					"type": "Crud"
+				"Place": {
+					"type": "Empty"
 				}
 			}
 		}
