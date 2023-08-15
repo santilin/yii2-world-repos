@@ -36,6 +36,7 @@ class Place extends \yii\db\ActiveRecord
 
 	];
 /*>>>>>STATIC_INFO*/
+
 /*<<<<<MODEL_INFO*/
 	static public $_model_info = [];
 	static public function getModelInfo($part)

@@ -27,7 +27,6 @@ class Bootstrap implements BootstrapInterface
 				'sourceLanguage' => 'en-US',
 			];
 		}
-
 		Yii::setAlias('@wrepos', __DIR__);
 	}
 
