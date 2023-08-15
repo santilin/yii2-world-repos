@@ -100,6 +100,23 @@
 					"is_nullable": false,
 					"is_desc": true
 				}, {
+					"name": "level",
+					"type": "tinyInteger",
+					"is_nullable": false,
+					"default_value": 0
+				}, {
+					"name": "name_es",
+					"type": "places/name",
+					"is_nullable": true
+				}, {
+					"name": "name_en",
+					"type": "places/name",
+					"is_nullable": true
+				}, {
+					"name": "name_fr",
+					"type": "places/name",
+					"is_nullable": true
+				}, {
 					"name": "nuts_code",
 					"type": "string"
 				}, {

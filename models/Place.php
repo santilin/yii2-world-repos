@@ -14,6 +14,10 @@ use santilin\wrepos\models\PostCode;
  *
  * @property integer $id // key/primary/tiny
  * @property string $name // places/name
+ * @property integer $level // tinyInteger
+ * @property string $name_es // places/name
+ * @property string $name_en // places/name
+ * @property string $name_fr // places/name
  * @property string $nuts_code
  * @property string $nuts3_id
  * @property string $city_name
@@ -83,6 +87,10 @@ class Place extends _BaseModel
 		$labels = [
 			'id' => 'Id',
 			'name' => 'Name',
+			'level' => 'Level',
+			'name_es' => 'Name es',
+			'name_en' => 'Name en',
+			'name_fr' => 'Name fr',
 			'nuts_code' => 'Nuts code',
 			'nuts3_id' => 'Nuts3 id',
 			'city_name' => 'City name',
@@ -104,7 +112,9 @@ class Place extends _BaseModel
     {
 		$rules = [
 			'req' => [['name','countries_id'], 'required', 'on' => $this->crudScenarios],
-			'null' => [['nuts_code','nuts3_id','city_name','greater_city','city_id','lau_id','fua_id'], 'default', 'value' => null],
+			'def0'=>[['level'], 'default', 'value' => 0,'on' => $this->crudScenarios],
+			'int_level' => ['level', 'integer', 'on' => $this->crudScenarios],
+			'null' => [['name_es','name_en','name_fr','nuts_code','nuts3_id','city_name','greater_city','city_id','lau_id','fua_id'], 'default', 'value' => null],
 		];
 /*>>>>>RULES*/
 		// customize your rules here
@@ -169,6 +179,18 @@ class Place extends _BaseModel
 		}
 	} // handyFieldValues
 /*>>>>>HANDY_VALUES_RETURN*/
+/*<<<<<DEFAULT_VALUES*/
+	public function setDefaultValues(bool $duplicating = false)
+	{
+		if (!$duplicating) {
+			$this->level = 0;
+		} else {
+
+		}
+/*>>>>>DEFAULT_VALUES*/
+/*<<<<<DEFAULT_VALUES_RETURN*/
+	} // setDefaultValues
+/*>>>>>DEFAULT_VALUES_RETURN*/
 /*<<<<<BEHAVIORS*/
 	public function behaviors()
 	{
@@ -191,6 +213,18 @@ class Place extends _BaseModel
 				'format' => 'integer',
 			],
 			"$relname.name" => [ // string
+				'format' => 'raw',
+			],
+			"$relname.level" => [ // tinyInteger
+				'format' => 'integer',
+			],
+			"$relname.name_es" => [ // string
+				'format' => 'raw',
+			],
+			"$relname.name_en" => [ // string
+				'format' => 'raw',
+			],
+			"$relname.name_fr" => [ // string
 				'format' => 'raw',
 			],
 			"$relname.nuts_code" => [ // string

@@ -7,6 +7,10 @@ use Yii;
 use yii\web\Controller;
 use yii\web\Response;
 use santilin\wrepos\models\PostCode;
+/*>>>>>USES*/
+use santilin\wrepos\models\Place;
+
+/*<<<<<CLASS*/
 /**
  * PostCodeController an empty controller.
  */
@@ -16,15 +20,17 @@ class PostCodeController extends Controller
 	 * @var $layout The layout for this controller
 	 */
 	public $layout = 'main';
-/*>>>>>USES*/
+/*>>>>>CLASS*/
 
 	public function actionFindPostCode(string $place, string $country_code)
 	{
 		\Yii::$app->response->format = Response::FORMAT_JSON;
-		$models = PostCode::find()->joinWith('place p')->where(['LIKE', 'p.name', $place])->asArray()->all();
+		$models = PostCode::getDb()->createCommand("SELECT * FROM "
+			. PostCode::tableName() . 'pc INNER JOIN '
+			. Place::tableName() . 'pl ON pl.id=pc.places_id'
+			. " WHERE pl.name LIKE '%$place%'")->queryAll();
 		return $models;
 	}
-
 
 /*<<<<<CLASS_END*/
 } // class SiteController

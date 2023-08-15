@@ -26,6 +26,10 @@ class m220101_000200_capel_create_places_table extends Migration
 /*<<<<<COLUMNS*/
 			'id' => $this->tinyInteger()->notNull() . ' PRIMARY KEY',
 			'name' => $this->string()->notNull(),
+			'level' => $this->tinyInteger()->notNull()->defaultValue(0),
+			'name_es' => $this->string()->null(),
+			'name_en' => $this->string()->null(),
+			'name_fr' => $this->string()->null(),
 			'nuts_code' => $this->string()->null(),
 			'nuts3_id' => $this->string()->null(),
 			'city_name' => $this->string()->null(),

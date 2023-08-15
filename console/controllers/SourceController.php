@@ -8,7 +8,7 @@ use yii\helpers\Console;
 use yii\console\ExitCode;
 use yii\console\Controller;
 /*>>>>>USES*/
-use santilin\wrepos\models\Country;
+use santilin\wrepos\models\{Country,Place,PostCode};
 
 /*<<<<<MAIN*/
 /**
@@ -95,12 +95,8 @@ class SourceController extends Controller
 	{
 /*>>>>>ACTION_IMPORTARPLACES*/
 
-
-
 		Yii::$app->db->createCommand("DELETE FROM postcodes")->queryAll();
 		Yii::$app->db->createCommand("DELETE FROM places")->queryAll();
-		Yii::$app->db->createCommand("DELETE FROM countries")->queryAll();
-
 
 
 		// Source provinces from nuts
@@ -112,21 +108,33 @@ class SourceController extends Controller
 			if( count($nuts3) > 0 ) {
 				echo "Found " . count($nuts3) . " provinces for country $cc\n";
 			}
+			$name_field = "name_" . strtolower($country);
 			foreach( $nuts3 as $nut ) {
 				if( strlen($nut['NUTS_ID']) == 3 ) {
 					continue; // north, etc
 				}
 				$values = [
-					'country_id' => $this->lauToCountry($nut['NUTS_ID']),
+					'countries_id' => $this->lauToCountry($nut['NUTS_ID']),
 					'nuts_code' => $nut['NUTS_ID'],
 					'name' => $this->escapeSql($nut['NUTS_NAME']),
 					'latin_name' => $this->escapeSql($nut['NAME_LATN']),
 					'nuts3_id' => $nut['NUTS_ID'],
 					'level' => $this->nuts3Level($nut),
 				];
-				$sql = "INSERT INTO territorios ('id','" . implode("','",array_keys($values)) . "') VALUES (null,'"
-					. implode("','", $values). "')";
-				Yii::$app->db->createCommand($sql)->execute();
+
+				$place = Place::find()->byCountryId($values['countries_id'])
+					->byNutsCode($values['nuts_code'])
+					->andWhere(['level' => $values['level']])
+					->one();
+				if (!$place) {
+					$place = new Place;
+				}
+				$place->setAttributes($values);
+				$place->$name_field = $place->name;
+				if (!$place->save()) {
+					echo $place->getOneError();
+					exit();
+				}
 			}
 		}
 
@@ -139,7 +147,7 @@ class SourceController extends Controller
 				echo "Found " . count($nuts) . " localities for country $cc\n";
 				foreach( $nuts as $nut ) {
 					$values = [
-						'country_id' => $this->lauToCountry($nut['nuts3_id']),
+						'countries_id' => $this->lauToCountry($nut['nuts3_id']),
 						'nuts_code' => $this->lauToCode($nut),
 						'name' => $this->escapeSql($nut['lau_national']),
 						'latin_name' => $this->escapeSql($nut['lau_latin']),
@@ -149,10 +157,19 @@ class SourceController extends Controller
 						'city_id' => $nut['city_id'],
 						'greater_city' => $nut['greater_city_id'],
 					];
-					$sql = "INSERT INTO territorios ('id','" . implode("','",array_keys($values)) . "') VALUES (null,'"
-						. implode("','", $values). "')";
-					Yii::$app->db->createCommand($sql)->execute();
-	// 					echo "Insertando {$values['lau_national']}\n";
+					$place = Place::find()->byCountryId($values['countries_id'])
+						->byNutsCode($values['nuts_code'])->one();
+					if (!$place) {
+						$place = new Place;
+					}
+					$place->setAttributes($values);
+					$place->$name_field = $place->name;
+					if (!$place->save()) {
+						echo $place->getOneError();
+						exit();
+					} else {
+						echo "Saved {$place->nuts_code} {$place->name}\n";
+					}
 				}
 			}
 		}
@@ -162,15 +179,15 @@ class SourceController extends Controller
 	} // actionImportarPlaces
 /*>>>>>ACTION_IMPORTARPLACES_END*/
 
-	public function actionCodigosPostalesEs()
+	public function actionImportarPostCodes($country = 'ES')
 	{
 		$sql_cp = <<<sql
-select t.id, p.POSTCODE AS cp,t.name,t.nuts3_id,t.lau_id from territorios t inner join post p on t.nuts3_id=p.nuts3_2021 and t.lau_id=p.nsi_code where t.nuts3_id like 'ES62%' GROUP BY p.CITY_ID,lau_nat,p.POSTCODE
+select t.id, p.POSTCODE AS cp,t.name,t.nuts3_id,t.lau_id from places t inner join post p on t.nuts3_id=p.nuts3_2021 and t.lau_id=p.nsi_code where t.nuts3_id like '$country%' GROUP BY p.CITY_ID,lau_nat,p.POSTCODE
 sql;
 		$command = Yii::$app->db->createCommand($sql_cp);
 		$cps = [];
 		$cursor = $command->query();
-		while( $row = $cursor->read() ) {
+		while ($row = $cursor->read() ) {
 			if (isset($cps[$row['id']])) {
 				if (!in_array($row['cp'], $cps[$row['id']])) {
 					$cps[$row['id']][] = $row['cp'];
@@ -181,11 +198,21 @@ sql;
 		}
 		$cursor->close();
 		foreach ($cps as $id => $cps_array) {
-			$cps = implode(",",$cps_array);
-			$sql_update = <<<sql
-UPDATE territorios set postcode = '$cps' WHERE id=$id
-sql;
-			Yii::$app->db->createCommand($sql_update)->execute();
+			foreach ($cps_array as $cp) {
+				$postcode = PostCode::find()->andWhere(['places_id'=>$id])
+					->andWhere(['postcode' => $cp])->one();
+				if (!$postcode) {
+					$postcode = new PostCode;
+					$postcode->places_id = $id;
+					$postcode->postcode = $cp;
+					if (!$postcode->save()) {
+						echo $postcode->getOneError();
+						exit();
+					} else {
+						echo "Saved {$postcode->place->name} {$postcode->postcode}\n";
+					}
+				}
+			}
 		}
 	}
 
