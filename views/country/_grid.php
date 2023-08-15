@@ -54,7 +54,7 @@ $dataProvider = $searchModel->search($indexParams);
 if( count($gridOrder) > 0 ) {
 	$dataProvider->sort->defaultOrder = $gridOrder;
 }
-$searchModel->addColumnSortsToProvider($gridColumns, $dataProvider);
+$searchModel->addRelatedSortsToProvider($gridColumns, $dataProvider);
 $beforeGrid = [ 'div_open' => "<div class='toolbar btn-toolbar'>", ]
 + [ FormHelper::displayButtons($indexButtons) ]
 + [
