@@ -27,10 +27,10 @@
 			"access_filters": ["none"],
 			"title": "Repositories",
 			"namespace": "santilin\\wrepos",
-			"dest_path": "/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos",
+			"dest_path": "/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos/src",
 			"models": {
-				"Country": ["model", "migration"],
-				"Place": ["model", "migration"]
+				"Country": [ "model", "migration" ] ,
+				"Place": [ "model", "migration" ]
 			},
 			"controllers": {
 				"Place": {
