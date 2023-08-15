@@ -63,6 +63,7 @@ class SourceController extends Controller
         $this->stdout("Use $helpCommand to get usage info.\n");
     }
 /*>>>>>PRINT_HELP_MESSAGE*/
+
 	private function lauToCountry($lau)
 	{
 		if( isset( self::COUNTRY_XX2ISO[substr($lau,0,2)]) ) {
@@ -74,11 +75,6 @@ class SourceController extends Controller
 	private function lauToCode(array $nut_reg)
 	{
 		$ret = $nut_reg['nuts3_id']; // País hasta provincia
-// 		if( strlen($nut_reg['fua_id']) > 2 ) {
-// 			$ret .= '.' . substr($nut_reg['fua_id'],2,3) . '.';
-// 		} else {
-// 			$ret .= '.';
-// 		}
 		$ret .= substr($nut_reg['lau_id'],2);
 		return $ret;
 	}
@@ -92,12 +88,10 @@ class SourceController extends Controller
 CREATE TABLE `territorios` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`country_id` integer NOT NULL,
+	`name` string,
+	`postcode` text,
 	'nuts_code' string,
 	`nuts3_id` integer,
-	`name` string,
-	`latin_name` string,
-	`postcode` text,
-	`type` integer,
 	`city_name` string,
  	`greater_city` string,
 	`city_id` string,

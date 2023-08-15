@@ -8,20 +8,27 @@ use santilin\churros\helpers\{AppHelper,DateTimeEx,FormHelper};
 /*>>>>>USES*/
 /*<<<<<CLASS*/
 /**
- * This is the base model class for table "{{%countries}}".
+ * This is the base model class for table "{{%places}}".
  *
  * @property integer $id // key/primary/tiny
- * @property string $iso2 // places/country/iso2_code
- * @property string $iso3 // places/country/iso3_code
- * @property string $name // places/country/name
+ * @property string $contry_code // places/country/iso2_code
+ * @property string $name // places/name
+ * @property float $postcode // places/postcode
+ * @property string $nuts_code
+ * @property string $nuts3_id
+ * @property string $city_name
+ * @property string $greater_city
+ * @property string $city_id
+ * @property string $lau_id
+ * @property string $fua_id
  *
  */
-class Country extends \yii\db\ActiveRecord
+class Place extends \yii\db\ActiveRecord
 {
 	use \santilin\churros\ModelInfoTrait;
 	static public function tableName()
 	{
-		return '{{%countries}}';
+		return '{{%places}}';
 	}
 /*>>>>>CLASS*/
 /*<<<<<STATIC_INFO*/
@@ -35,15 +42,15 @@ class Country extends \yii\db\ActiveRecord
 	{
 		if (static::$_model_info == [] ) {
 			$mi = [
-				'title' => 'Country',
-				'title_plural' => 'Countrys',
-				'code_field' => 'iso2',
+				'title' => 'Place',
+				'title_plural' => 'Places',
+				'code_field' => 'contry_code',
 				'desc_field' => 'name',
-				'controller_name' => 'country',
+				'controller_name' => 'place',
 				'female' => true,
-				'record_desc_format_short' => '{iso2}, {name}',
-				'record_desc_format_medium' => '{iso2}, {name}',
-				'record_desc_format_long' => '{iso2}, {name}'
+				'record_desc_format_short' => '{contry_code}, {name}',
+				'record_desc_format_medium' => '{contry_code}, {name}',
+				'record_desc_format_long' => '{contry_code}, {name}, {postcode%.0f}'
 			];
 /*>>>>>MODEL_INFO*/
 /*<<<<<MODEL_INFO_CUSTOM*/
@@ -54,12 +61,12 @@ class Country extends \yii\db\ActiveRecord
 /*>>>>>MODEL_INFO_CUSTOM*/
 /*<<<<<FIND*/
 	/**
-     * @return \santilin\wrepos\forms\CountryQuery the active query used by this AR class.
+     * @return \santilin\wrepos\forms\PlaceQuery the active query used by this AR class.
      */
     static public function find()
     {
-		if( class_exists("santilin\wrepos\\models\comp\CountryQuery") ) {
-			return new \santilin\wrepos\\models\comp\CountryQuery(get_called_class());
+		if( class_exists("santilin\wrepos\\models\comp\PlaceQuery") ) {
+			return new \santilin\wrepos\\models\comp\PlaceQuery(get_called_class());
 		} else {
 			return parent::find();
 		}
@@ -70,9 +77,16 @@ class Country extends \yii\db\ActiveRecord
 	{
 		$labels = [
 			'id' => 'Id',
-			'iso2' => 'Iso2',
-			'iso3' => 'Iso3',
+			'contry_code' => 'Contry code',
 			'name' => 'Name',
+			'postcode' => 'Postcode',
+			'nuts_code' => 'Nuts code',
+			'nuts3_id' => 'Nuts3 id',
+			'city_name' => 'City name',
+			'greater_city' => 'Greater city',
+			'city_id' => 'City id',
+			'lau_id' => 'Lau id',
+			'fua_id' => 'Fua id',
 		];
 /*>>>>>LABELS*/
 		// customize your labels here
@@ -84,14 +98,14 @@ class Country extends \yii\db\ActiveRecord
     public function rules()
     {
 		$rules = [
-			'req' => [['iso2','iso3'], 'required', 'on' => $this->crudScenarios],
-			'null' => [['name'], 'default', 'value' => null],
-			'max_iso2'=>['iso2', 'string', 'max' => 2, 'on' => $this->crudScenarios],
-			'max_iso3'=>['iso3', 'string', 'max' => 3, 'on' => $this->crudScenarios],
+			'req' => [['contry_code','name'], 'required', 'on' => $this->crudScenarios],
+			'def0'=>[['postcode'], 'default', 'value' => 0.0,'on' => $this->crudScenarios],
+			'number_postcode'=>['postcode', 'number'],
+			'null' => [['nuts_code','nuts3_id','city_name','greater_city','city_id','lau_id','fua_id'], 'default', 'value' => null],
+			'max_contry_code'=>['contry_code', 'string', 'max' => 2, 'on' => $this->crudScenarios],
 		];
 /*>>>>>RULES*/
 		// customize your rules here
-
 /*<<<<<RULES_RETURN*/
 		return $rules;
     } // rules
@@ -130,6 +144,18 @@ class Country extends \yii\db\ActiveRecord
 		}
 	} // handyFieldValues
 /*>>>>>HANDY_VALUES_RETURN*/
+/*<<<<<DEFAULT_VALUES*/
+	public function setDefaultValues(bool $duplicating = false)
+	{
+		if (!$duplicating) {
+			$this->postcode = 0.0;
+		} else {
+
+		}
+/*>>>>>DEFAULT_VALUES*/
+/*<<<<<DEFAULT_VALUES_RETURN*/
+	} // setDefaultValues
+/*>>>>>DEFAULT_VALUES_RETURN*/
 /*<<<<<BEHAVIORS*/
 	public function behaviors()
 	{
@@ -144,23 +170,49 @@ class Country extends \yii\db\ActiveRecord
 	static public function allReportColumns($relname = null)
 	{
 		if( $relname === null ) {
-			$relname = 'countries';
+			$relname = 'places';
 		}
 		$ret = [
+			"$relname.desc_long" => [
+				'attribute' => "CONCAT($relname.contry_code, ', ', $relname.name, ', ', $relname.postcode)",
+				'label' => static::getModelInfo('title'),
+			],
+
 			"$relname.desc_short" => [
-				'attribute' => "CONCAT($relname.iso2, ', ', $relname.name)",
+				'attribute' => "CONCAT($relname.contry_code, ', ', $relname.name)",
 				'label' => static::getModelInfo('title'),
 			],
 			"$relname.id" => [ // tinyInteger
 				'format' => 'integer',
 			],
-			"$relname.iso2" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.iso3" => [ // string
+			"$relname.contry_code" => [ // string
 				'format' => 'raw',
 			],
 			"$relname.name" => [ // string
+				'format' => 'raw',
+			],
+			"$relname.postcode" => [ // decimal
+				'format' => 'decimal',
+			],
+			"$relname.nuts_code" => [ // string
+				'format' => 'raw',
+			],
+			"$relname.nuts3_id" => [ // string
+				'format' => 'raw',
+			],
+			"$relname.city_name" => [ // string
+				'format' => 'raw',
+			],
+			"$relname.greater_city" => [ // string
+				'format' => 'raw',
+			],
+			"$relname.city_id" => [ // string
+				'format' => 'raw',
+			],
+			"$relname.lau_id" => [ // string
+				'format' => 'raw',
+			],
+			"$relname.fua_id" => [ // string
 				'format' => 'raw',
 			],
 		];
@@ -171,6 +223,5 @@ class Country extends \yii\db\ActiveRecord
 	}
 /*>>>>>REPORT_COLUMNS.END*/
 /*<<<<<END*/
-} // class Country
+} // class Place
 /*>>>>>END*/
-

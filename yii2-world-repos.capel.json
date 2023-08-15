@@ -23,7 +23,7 @@
 	"outputs" : [
 		{
 			"enabled": true,
-			"type": "Yii2StandaloneModule",
+			"type": "Yii2StandAloneModule",
 			"access_filters": ["none"],
 			"title": "Repositories",
 			"namespace": "santilin\\wrepos",
@@ -40,60 +40,78 @@
 		}
 	],
 
-	"base_fields": {
-		"location/name": {
-			"type": "string"
+	"models" : {
+		"Country": {
+			"name_plural": "Countries",
+			"table_name": "countries",
+			"migration_timestamp": "220101_000000",
+			"fields": [
+				{
+					"name": "id",
+					"type": "key/primary/tiny"
+				}, {
+					"name": "iso2",
+					"type": "places/country/iso2_code",
+					"is_nullable": false,
+					"is_code": true
+				}, {
+					"name": "iso3",
+					"type": "places/country/iso3_code",
+					"is_nullable": false,
+					"is_code": false
+				}, {
+					"name": "name",
+					"type": "places/country/name",
+					"is_desc": true
+				}
+			]
 		},
-		"person/name": {
-			"type": "string"
-		},
-		"shopping/category/name": {
-			"type": "string"
-		},
-		"shopping/producer/name": {
-			"type": "string"
-		},
-		"shopping/product/name": {
-			"type": "string"
-		},
-		"shopping/product/image": {
-			"type": "file/local_storage/image"
-		},
-		"image/logo/local_storage": {
-			"type": "file/local_storage/image"
+		"Place": {
+			"table_name": "places",
+			"migration_timestamp": "220101_000000",
+			"fields": [
+				{
+					"name": "id",
+					"type": "key/primary/tiny"
+				}, {
+					"name": "contry_code",
+					"type": "places/country/iso2_code",
+					"is_nullable": false,
+					"is_code": true
+				}, {
+					"name": "name",
+					"type": "places/name",
+					"is_nullable": false,
+					"is_desc": true
+				}, {
+					"name": "postcode",
+					"type": "places/postcode",
+					"is_desc": true
+				}, {
+					"name": "nuts_code",
+					"type": "string"
+				}, {
+					"name": "nuts3_id",
+					"type": "string"
+				}, {
+					"name": "city_name",
+					"type": "string"
+				}, {
+					"name": "greater_city",
+					"type": "string"
+				}, {
+					"name": "city_id",
+					"type": "string"
+				}, {
+					"name": "lau_id",
+					"type": "string"
+				}, {
+					"name": "fua_id",
+					"type": "string"
+				}
+			]
 		}
 	},
-
-	"models" : [
-	{
-		"name": "Country",
-		"name_plural": "Countries",
-		"table_name": "countries",
-		"migration_timestamp": "220101_000000",
-		"fields": [
-			{
-				"name": "id",
-				"type": "key/primary/tiny"
-			}, {
-				"name": "iso2",
-				"type": "string",
-				"width": 2,
-				"is_nullable": false,
-				"is_code": true
-			}, {
-				"name": "iso3",
-				"type": "string",
-				"width": 2,
-				"is_nullable": false,
-				"is_code": false
-			}, {
-				"name": "name",
-				"type": "places/country/name",
-				"is_desc": true
-			}
-		]
-	}
-	],
 	"commands": {
 		"Generate": {
 			"Generate" : {
