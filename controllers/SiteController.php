@@ -1,4 +1,17 @@
 <?php
+/*<<<<<USES*/
+/*Template:Yii2App/controllers/SiteController.php*/
+namespace santilin\wrepos\controllers;
+
+use Yii;
+use yii\base\ViewNotFoundException;
+use yii\web\Controller;
+use yii\web\Response;
+/*>>>>>USES*/
+/*<<<<<DATECONTROL_MAIN*/
+use DateTimeZone;
+use kartik\datecontrol\DateControl;
+/*>>>>>DATECONTROL_MAIN*/
 /*<<<<<MAIN*/
 class SiteController extends Controller
 {
@@ -30,36 +43,6 @@ class SiteController extends Controller
 		return $this->render('maintenance', $params);
 	}
 /*>>>>>MAINTENANCE_END_PAGE*/
-/*<<<<<USES*/
-/*Template:Yii2App/controllers/SiteController.php*/
-namespace app\controllers;
-
-use Yii;
-use yii\base\ViewNotFoundException;
-use yii\web\Controller;
-use yii\web\Response;
-/*>>>>>USES*/
-/*<<<<<DATECONTROL_MAIN*/
-use DateTimeZone;
-use kartik\datecontrol\DateControl;
-/*>>>>>DATECONTROL_MAIN*/
-/*<<<<<ACTIONS_BEGIN*/
-    /**
-     * {@inheritdoc}
-     */
-    public function actions()
-    {
-        $actions = [
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
-        ];
-/*>>>>>ACTIONS_BEGIN*/
-/*<<<<<ACTIONS*/
-		return $actions;
-    } // actions()
-/*>>>>>ACTIONS*/
 /*<<<<<ERROR*/
     /**
      * Displays error page (customized for server codes: 4xx, 5xx) if view present en views/site.
@@ -136,20 +119,6 @@ use kartik\datecontrol\DateControl;
         return ['status' => 'success', 'output' => $value];
     }
 /*>>>>>DATECONTROL_ACTIONCONVERT*/
-/*<<<<<INDEX*/
-	/**
-	 * Displays index page.
-	 *
-	 * @return string
-	 */
-	public function actionIndex()
-	{
-		$params = [];
-/*>>>>>INDEX*/
-/*<<<<<INDEX_END*/
-		return $this->render('index', $params);
-	}
-/*>>>>>INDEX_END*/
 /*<<<<<CLASS_END*/
 } // class SiteController
 /*>>>>>CLASS_END*/

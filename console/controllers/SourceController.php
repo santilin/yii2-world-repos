@@ -83,33 +83,24 @@ class SourceController extends Controller
 		return $ret;
 	}
 
-    /*
-		39 Países
-		Vacíos: XK, BA, RS, MK, UK,
-	*/
-/*<<<<<ACTION_IMPORTAR*/
-	/**
-	 * Generador de modelos y migraciones
-	 */
-	public function actionImportar($country='ES')
+
+	public function actionCreateTerritoriosTable()
 	{
-/*>>>>>ACTION_IMPORTAR*/
-		try {
-			Yii::$app->db->createCommand("DROP TABLE IF EXISTS territorios")->execute();
-		} catch( \Exception $e) {
-		}
+		Yii::$app->db->createCommand("DROP TABLE IF EXISTS territorios")->queryAll();
+
 		Yii::$app->db->createCommand(<<<sql
 CREATE TABLE `territorios` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`country_id` integer NOT NULL,
 	'nuts_code' string,
-	`postcode` text,
+	`nuts3_id` integer,
 	`name` string,
 	`latin_name` string,
+	`postcode` text,
+	`type` integer,
 	`city_name` string,
  	`greater_city` string,
 	`city_id` string,
-	`nuts3_id` integer,
 	'lau_id' string,
  	`fua_id` string,
  	`level` integer
@@ -121,6 +112,21 @@ sql
 // 	`latitude` float,
 // 	`longitude` float
 // 	`nsi_id` integer,
+		echo "Tabla territorios creada";
+	}
+
+    /*
+		39 Países
+		Vacíos: XK, BA, RS, MK, UK,
+	*/
+/*<<<<<ACTION_IMPORTAR*/
+	/**
+	 * Generador de modelos y migraciones
+	 */
+	public function actionImportar($country='ES')
+	{
+/*>>>>>ACTION_IMPORTAR*/
+		$nuts3 = Yii::$app->db->createCommand("DELETE FROM territorios")->queryAll();
 
 		// Source provinces from nuts
 		foreach( array_keys(self::COUNTRY_XX2ISO) as $cc ) {
@@ -176,16 +182,38 @@ sql
 			}
 		}
 
-		// Sólo para españa
-		$sql_cp = <<<sql
-select distinct t.name, t.nuts3_id, t.lau_id, p.* from territorios t inner join post p on t.nuts3_id=p.nuts3_2021 and t.lau_id=p.nsi_code where t.nust3 like 'ES620%';
-sql;
-		echo $sql_cp;
 /*<<<<<ACTION_IMPORTAR_END*/
 		return ExitCode::OK;
 	} // actionImportar
 /*>>>>>ACTION_IMPORTAR_END*/
 
+
+	public function actionCodigosPostalesEs()
+	{
+		$sql_cp = <<<sql
+select t.id, p.POSTCODE AS cp,t.name,t.nuts3_id,t.lau_id from territorios t inner join post p on t.nuts3_id=p.nuts3_2021 and t.lau_id=p.nsi_code where t.nuts3_id like 'ES62%' GROUP BY p.CITY_ID,lau_nat,p.POSTCODE
+sql;
+		$command = Yii::$app->db->createCommand($sql_cp);
+		$cps = [];
+		$cursor = $command->query();
+		while( $row = $cursor->read() ) {
+			if (isset($cps[$row['id']])) {
+				if (!in_array($row['cp'], $cps[$row['id']])) {
+					$cps[$row['id']][] = $row['cp'];
+				}
+			} else {
+				$cps[$row['id']] = [$row['cp']];
+			}
+		}
+		$cursor->close();
+		foreach ($cps as $id => $cps_array) {
+			$cps = implode(",",$cps_array);
+			$sql_update = <<<sql
+UPDATE territorios set postcode = '$cps' WHERE id=$id
+sql;
+			Yii::$app->db->createCommand($sql_update)->execute();
+		}
+	}
 
 	private function nuts3Level($values)
 	{

@@ -19,8 +19,8 @@ $XLS2CSV -a -I LI NO CH ME -p '' $DATADIR/Europa_Nuts_Jerarquía.xlsx | grep -v 
 $XLS2CSV -a -I MK AL RS TR -p '' $DATADIR/Europa_Nuts_Jerarquía.xlsx | grep -v ",POPULATION,TOTAL" >> $DATADIR/nuts.csv
 $XLS2CSV -a -I BA XK -p '' $DATADIR/Europa_Nuts_Jerarquía.xlsx | grep -v ",POPULATION,TOTAL" >> $DATADIR/nuts.csv
 
-# Postcodes
-# dbf-rb -c $DATADIR/PCODE_2020_PT_SH.dbf > $DATADIR/post.csv 2>/dev/null
+Postcodes
+dbf-rb -c $DATADIR/PCODE_2020_PT_SH.dbf > $DATADIR/post.csv 2>/dev/null
 
 
 pushd $DATADIR

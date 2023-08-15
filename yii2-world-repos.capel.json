@@ -32,6 +32,9 @@
 				"Territory": ["model"]
 			},
 			"controllers": {
+				"Territory": {
+					"type": "Crud"
+				}
 			}
 		}
 	],

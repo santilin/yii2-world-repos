@@ -1,3 +1,27 @@
+																				LAU_ID
+CNTR_CODE	NUTS_ID	NUTS3_ID 	NAME_LATN			POSTCODES 		TIPO		NAT_CODE(INE_MUNI)		NAT_CODE2
+ES			ES62				Región de Murcia
+ES			ES62	ES620		Santomera			30140						30901
+ES			ES62	ES620		El Siscar			30149						309010004*
+
+ES			ES62	ES620		Molina de Segura	30500--			Municipio 	30027					30027000000
+ES			ES62	ES620		Altorreal 							Otras entid	30027					30027001402
+
+
+
+
+
+
+COMM_LB_2016_4326.csv => Geolocalizacion3035.csv
+
+Europa_Nuts_Jerarquia.xlsx => nuts.csv
+
+PCODE_2020_PT_SH.dbf => post.csv
+
+https://raw.githubusercontent.com/inigoflores/ds-codigos-postales/master/data/codigos_postales_municipios_join.csv => es_postcodes.csv
+
+
+
 
 Productos y servicios:
 https://consultas2.oepm.es/clinmar/inicio.action
@@ -16,6 +40,11 @@ CREATE INDEX `yii2idx-territorios-nombre` ON `territorios` (`fua_id`);
 == España
 http://centrodedescargas.cnig.es/CentroDescargas/buscadorCatalogo.do?codFamilia=02122#
 Nomenclátor Geográfico de Municipios y Entidades de Población: BD_Municipios_entidades.zip
+
+
+
+
+
 https://en.wikipedia.org/wiki/NUTS_statistical_regions_of_Spain
 ==
 Subdivisiones de todos los países
