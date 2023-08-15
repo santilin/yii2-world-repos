@@ -1,9 +1,8 @@
 <?php
 /*<<<<<USES*/
 /*Template:Yii2App/console/controllers/Controller.php*/
-namespace santilin\wrepos\console\controllers;
+namespace santilin\repos\app\console\controllers;
 
-use Yii;
 use yii\helpers\Console;
 use yii\console\ExitCode;
 use yii\console\Controller;
