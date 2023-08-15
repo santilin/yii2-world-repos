@@ -26,6 +26,7 @@ $this->params['breadcrumbs'] = [ $label_inicio ];
 <div class="site-index">
 <?php
 /*>>>>>MAIN_DIV*/
+$welcome = "Bienvenid@ a world-repos";
 /*<<<<<WELCOME*/
 if( !empty($welcome) ) : ?>
     <div class="jumbotron">

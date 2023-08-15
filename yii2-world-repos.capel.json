@@ -23,7 +23,7 @@
 	"outputs" : [
 		{
 			"enabled": true,
-			"type": "Yii2App",
+			"type": "Yii2StandaloneModule",
 			"access_filters": ["none"],
 			"title": "Repositories",
 			"namespace": "santilin\\wrepos",
