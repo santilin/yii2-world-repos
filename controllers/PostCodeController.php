@@ -23,6 +23,28 @@ class PostCodeController extends Controller
 /*>>>>>CLASS*/
 
 	// Cant use Query because postcode has no id
+	public function actionFind(string $search, int $page = 1, int $per_page = 5)
+	{
+		if( !$page) {
+			$page = 1;
+		}
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$sql = "SELECT pc.postcode as id, pc.postcode, pl.name FROM "
+		. PostCode::tableName() . 'pc INNER JOIN '
+		. Place::tableName() . 'pl ON pl.id=pc.places_id'
+		. " WHERE pc.postcode = :postcode OR pl.name LIKE :postcode_like";
+		if ($page) {
+			$sql .= ' LIMIT ' . ($page-1) * $per_page . ",$per_page";
+		}
+		$models = PostCode::getDb()->createCommand($sql)
+			->bindValue(':postcode', $search)
+			->bindValue(':postcode_like', $search . '%')
+			->queryAll();
+		return  [ 'items' => $models, 'total_count' => 20 ];
+	}
+
+
+	// Cant use Query because postcode has no id
 	public function actionFindPostCode(string $postcode, string $country_code)
 	{
 		\Yii::$app->response->format = Response::FORMAT_JSON;
