@@ -20,7 +20,7 @@ class PlaceController extends Controller
 	public $layout = 'main';
 /*>>>>>CLASS*/
 
-	public function actionFindPostCode(string $place, string $country_code)
+	public function actionFindPlace(string $place, string $country_code)
 	{
 		\Yii::$app->response->format = Response::FORMAT_JSON;
 		$models = Place::find()->where(['LIKE', 'name', $place])->asArray()->all();
