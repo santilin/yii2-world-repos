@@ -178,7 +178,7 @@ class SourceController extends Controller
 	} // actionImportPlaces
 /*>>>>>ACTION_IMPORTPLACES_END*/
 
-	public function actionImportarEspana()
+	public function actionImportarEspaña()
 	{
 		Yii::$app->db->createCommand("DELETE FROM postcodes")->queryAll();
 		Yii::$app->db->createCommand("DELETE FROM places")->queryAll();
