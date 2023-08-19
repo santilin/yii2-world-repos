@@ -138,24 +138,22 @@ class SourceController extends Controller
 			}
 		}
 
-		foreach( array_keys(self::COUNTRY_XX2ISO) as $cc ) {
-			if( $country && $cc != $country) {
-				continue;
-			}
-			$nuts = Yii::$app->db->createCommand("SELECT * FROM nuts WHERE nuts3_id like '{$cc}%'")->queryAll();
-			if( count($nuts) > 0 ) {
-				echo "Found " . count($nuts) . " localities for country $cc\n";
-				foreach( $nuts as $nut ) {
+		if ($country == "ES") {
+			$entidades = Yii::$app->db->createCommand("SELECT * FROM nuts WHERE nuts3_id like '{$cc}%'")->queryAll();
+			if( count($entidades) > 0 ) {
+				echo "Found " . count($entidades) . " localities for country $country\n";
+				foreach( $entidades as $entidad ) {
 					$values = [
-						'countries_id' => $this->lauToCountry($nut['nuts3_id']),
-						'nuts_code' => $this->lauToCode($nut),
-						'name' => $this->escapeSql($nut['lau_national']),
-						'latin_name' => $this->escapeSql($nut['lau_latin']),
-						'nuts3_id' => $nut['nuts3_id'],
-						'fua_id' => $nut['fua_id'],
-						'lau_id' => $nut['lau_id'],
-						'city_id' => $nut['city_id'],
-						'greater_city' => $nut['greater_city_id'],
+						'countries_id' => 724,
+						'level' => $this->entidadToLevel($entidad['TIPO']),
+						'nuts_code' => $this->lauToCode($entidad),
+						'name' => $this->escapeSql($entidad['NOMBRE']),
+						'name_es' => $this->escapeSql($entidad['NOMBRE']),
+						'admin2_code' => $this->escapeSql($entidad['COD_PROV']),
+						'admin2_name' => $this->escapeSql($entidad['PROVINCIA']),
+						'admin3_code' => $this->escapeSql($entidad['INEMUNI']),
+						'admin3_name' => $this->escapeSql($entidad['POBLACION']),
+						'national_id' => $entidad['CODIGOINE'],
 					];
 					$place = Place::find()->byCountryId($values['countries_id'])
 						->byNutsCode($values['nuts_code'])->one();
@@ -169,6 +167,42 @@ class SourceController extends Controller
 						exit();
 					} else {
 						echo "Saved {$place->nuts_code} {$place->name}\n";
+					}
+				}
+			}
+		} else {
+			foreach( array_keys(self::COUNTRY_XX2ISO) as $cc ) {
+				if( $country && $cc != $country) {
+					continue;
+				}
+				$nuts = Yii::$app->db->createCommand("SELECT * FROM nuts WHERE nuts3_id like '{$cc}%'")->queryAll();
+				if( count($nuts) > 0 ) {
+					echo "Found " . count($nuts) . " localities for country $cc\n";
+					foreach( $nuts as $nut ) {
+						$values = [
+							'countries_id' => $this->lauToCountry($nut['nuts3_id']),
+							'nuts_code' => $this->lauToCode($nut),
+							'name' => $this->escapeSql($nut['lau_national']),
+							'latin_name' => $this->escapeSql($nut['lau_latin']),
+							'nuts3_id' => $nut['nuts3_id'],
+							'fua_id' => $nut['fua_id'],
+							'lau_id' => $nut['lau_id'],
+							'city_id' => $nut['city_id'],
+							'greater_city' => $nut['greater_city_id'],
+						];
+						$place = Place::find()->byCountryId($values['countries_id'])
+							->byNutsCode($values['nuts_code'])->one();
+						if (!$place) {
+							$place = new Place;
+						}
+						$place->setAttributes($values);
+						$place->$name_field = $place->name;
+						if (!$place->save()) {
+							echo $place->getOneError();
+							exit();
+						} else {
+							echo "Saved {$place->nuts_code} {$place->name}\n";
+						}
 					}
 				}
 			}

@@ -117,25 +117,19 @@
 					"type": "places/name",
 					"is_nullable": true
 				}, {
-					"name": "nuts_code",
+					"name": "admin2_code",
 					"type": "string"
 				}, {
-					"name": "nuts3_id",
+					"name": "admin2_name",
 					"type": "string"
 				}, {
-					"name": "city_name",
+					"name": "admin3_code",
 					"type": "string"
 				}, {
-					"name": "greater_city",
+					"name": "admin3_name",
 					"type": "string"
 				}, {
-					"name": "city_id",
-					"type": "string"
-				}, {
-					"name": "lau_id",
-					"type": "string"
-				}, {
-					"name": "fua_id",
+					"name": "national_id",
 					"type": "string"
 				}
 			]
