@@ -93,6 +93,7 @@ class SourceController extends Controller
 	 */
 	public function actionImportarPlaces($country='ES')
 	{
+		$exitcode = ExitCode::OK;
 /*>>>>>ACTION_IMPORTARPLACES*/
 
 		Yii::$app->db->createCommand("DELETE FROM postcodes")->queryAll();
@@ -209,7 +210,7 @@ class SourceController extends Controller
 		}
 
 /*<<<<<ACTION_IMPORTARPLACES_END*/
-		return ExitCode::OK;
+		return $exitcode;
 	} // actionImportarPlaces
 /*>>>>>ACTION_IMPORTARPLACES_END*/
 
@@ -1039,6 +1040,7 @@ sql;
 	 */
 	public function actionImportarPaises($language='ES')
 	{
+		$exitcode = ExitCode::OK;
 /*>>>>>ACTION_IMPORTARPAISES*/
 		$csvFile = Yii::getAlias("@app/data/countries.csv");
 		if (($handle = fopen($csvFile, 'r')) !== false) {
@@ -1069,7 +1071,7 @@ sql;
 		}
 
 /*<<<<<ACTION_IMPORTARPAISES_END*/
-		return ExitCode::OK;
+		return $exitcode;
 	} // actionImportarPaises
 /*>>>>>ACTION_IMPORTARPAISES_END*/
 

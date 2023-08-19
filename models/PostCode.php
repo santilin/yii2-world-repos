@@ -1,6 +1,6 @@
 <?php
 /*<<<<<USES*/
-/*Template:Yii2App/models/Model.php*/
+/*Template:Yii2App/models/DbRecordModel.php*/
 namespace santilin\wrepos\models;
 
 use Yii;
@@ -16,7 +16,7 @@ use santilin\wrepos\models\Place;
  *
  * @property santilin\wrepos\models\Place $place // HasOne
  */
-class PostCode extends _BaseModel
+class PostCode extends \_BaseModel
 {
 	use \santilin\churros\ModelInfoTrait;
 	static public function tableName()
@@ -94,7 +94,7 @@ class PostCode extends _BaseModel
     } // rules
 /*>>>>>RULES_RETURN*/
 /*<<<<<HANDY_VALUES_PRE*/
-	public function handyFieldValues(string $field, string $format, ?string $model_format = 'short', string $scope=null)
+	public function handyFieldValues(string $field, string $format, ?string $model_format = 'short', ?string $scope=null)
 	{
 		$field_parts = explode('.', $field);
 		if( count($field_parts) > 1 ) {
@@ -141,15 +141,14 @@ class PostCode extends _BaseModel
 /*<<<<<DEFAULT_VALUES*/
 	public function setDefaultValues(bool $duplicating = false)
 	{
-		if (!$duplicating) {
-			$this->postcode = 0.0;
-		} else {
 
+		if (!$duplicating) { // Dont set these default values while duplicating
+			$this->postcode = 0.0;
 		}
 /*>>>>>DEFAULT_VALUES*/
-/*<<<<<DEFAULT_VALUES_RETURN*/
+/*<<<<<DEFAULT_VALUES.RETURN*/
 	} // setDefaultValues
-/*>>>>>DEFAULT_VALUES_RETURN*/
+/*>>>>>DEFAULT_VALUES.RETURN*/
 /*<<<<<BEHAVIORS*/
 	public function behaviors()
 	{

@@ -1,6 +1,6 @@
 <?php
 /*<<<<<USES*/
-/*Template:Yii2App/models/Model.php*/
+/*Template:Yii2App/models/DbRecordModel.php*/
 namespace santilin\wrepos\models;
 
 use Yii;
@@ -18,19 +18,17 @@ use santilin\wrepos\models\PostCode;
  * @property string $name_es // places/name
  * @property string $name_en // places/name
  * @property string $name_fr // places/name
- * @property string $nuts_code
- * @property string $nuts3_id
- * @property string $city_name
- * @property string $greater_city
- * @property string $city_id
- * @property string $lau_id
- * @property string $fua_id
+ * @property string $admin2_code
+ * @property string $admin2_name
+ * @property string $admin3_code
+ * @property string $admin3_name
+ * @property string $national_id
  * @property integer $countries_id
  *
  * @property santilin\wrepos\models\Country $country // HasOne
  * @property santilin\wrepos\models\PostCode[] $postCodes // BelongsToMany
  */
-class Place extends _BaseModel
+class Place extends \_BaseModel
 {
 	use \santilin\churros\ModelInfoTrait;
 	static public function tableName()
@@ -91,13 +89,11 @@ class Place extends _BaseModel
 			'name_es' => 'Name es',
 			'name_en' => 'Name en',
 			'name_fr' => 'Name fr',
-			'nuts_code' => 'Nuts code',
-			'nuts3_id' => 'Nuts3 id',
-			'city_name' => 'City name',
-			'greater_city' => 'Greater city',
-			'city_id' => 'City id',
-			'lau_id' => 'Lau id',
-			'fua_id' => 'Fua id',
+			'admin2_code' => 'Admin2 code',
+			'admin2_name' => 'Admin2 name',
+			'admin3_code' => 'Admin3 code',
+			'admin3_name' => 'Admin3 name',
+			'national_id' => 'National id',
 			'countries_id' => Country::getModelInfo('title'), // HasOne
 			'country' => Country::getModelInfo('title'), // HasOne
 		];
@@ -114,7 +110,7 @@ class Place extends _BaseModel
 			'req' => [['name','countries_id'], 'required', 'on' => $this->crudScenarios],
 			'def0'=>[['level'], 'default', 'value' => 0,'on' => $this->crudScenarios],
 			'int_level' => ['level', 'integer', 'on' => $this->crudScenarios],
-			'null' => [['name_es','name_en','name_fr','nuts_code','nuts3_id','city_name','greater_city','city_id','lau_id','fua_id'], 'default', 'value' => null],
+			'null' => [['name_es','name_en','name_fr','admin2_code','admin2_name','admin3_code','admin3_name','national_id'], 'default', 'value' => null],
 		];
 /*>>>>>RULES*/
 		// customize your rules here
@@ -123,7 +119,7 @@ class Place extends _BaseModel
     } // rules
 /*>>>>>RULES_RETURN*/
 /*<<<<<HANDY_VALUES_PRE*/
-	public function handyFieldValues(string $field, string $format, ?string $model_format = 'short', string $scope=null)
+	public function handyFieldValues(string $field, string $format, ?string $model_format = 'short', ?string $scope=null)
 	{
 		$field_parts = explode('.', $field);
 		if( count($field_parts) > 1 ) {
@@ -182,15 +178,14 @@ class Place extends _BaseModel
 /*<<<<<DEFAULT_VALUES*/
 	public function setDefaultValues(bool $duplicating = false)
 	{
-		if (!$duplicating) {
-			$this->level = 0;
-		} else {
 
+		if (!$duplicating) { // Dont set these default values while duplicating
+			$this->level = 0;
 		}
 /*>>>>>DEFAULT_VALUES*/
-/*<<<<<DEFAULT_VALUES_RETURN*/
+/*<<<<<DEFAULT_VALUES.RETURN*/
 	} // setDefaultValues
-/*>>>>>DEFAULT_VALUES_RETURN*/
+/*>>>>>DEFAULT_VALUES.RETURN*/
 /*<<<<<BEHAVIORS*/
 	public function behaviors()
 	{
@@ -227,25 +222,19 @@ class Place extends _BaseModel
 			"$relname.name_fr" => [ // string
 				'format' => 'raw',
 			],
-			"$relname.nuts_code" => [ // string
+			"$relname.admin2_code" => [ // string
 				'format' => 'raw',
 			],
-			"$relname.nuts3_id" => [ // string
+			"$relname.admin2_name" => [ // string
 				'format' => 'raw',
 			],
-			"$relname.city_name" => [ // string
+			"$relname.admin3_code" => [ // string
 				'format' => 'raw',
 			],
-			"$relname.greater_city" => [ // string
+			"$relname.admin3_name" => [ // string
 				'format' => 'raw',
 			],
-			"$relname.city_id" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.lau_id" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.fua_id" => [ // string
+			"$relname.national_id" => [ // string
 				'format' => 'raw',
 			],
 			"$relname.countries_id" => [ // HasOne
