@@ -89,9 +89,9 @@ class SourceController extends Controller
 	*/
 /*<<<<<ACTION_IMPORTPLACES*/
 	/**
-	 * Importador de lugares: provincias, municipios, etc.
+	 * Importador de lugares: provincias, municipios, etc. por países
 	 */
-	public function actionImportarPlaces($country)
+	public function actionImportPlaces($country='ES')
 	{
 		$exitcode = ExitCode::OK;
 /*>>>>>ACTION_IMPORTPLACES*/
@@ -175,10 +175,10 @@ class SourceController extends Controller
 
 /*<<<<<ACTION_IMPORTPLACES_END*/
 		return $exitcode;
-	} // actionImportarPlaces
+	} // actionImportPlaces
 /*>>>>>ACTION_IMPORTPLACES_END*/
 
-	public function actionImportarEspaña()
+	public function actionImportarEspana()
 	{
 		Yii::$app->db->createCommand("DELETE FROM postcodes")->queryAll();
 		Yii::$app->db->createCommand("DELETE FROM places")->queryAll();
@@ -1071,7 +1071,7 @@ sql;
 	/**
 	 * Importador de países por lenguajes
 	 */
-	public function actionImportarPaises($language='ES')
+	public function actionImportCountries($language='ES')
 	{
 		$exitcode = ExitCode::OK;
 /*>>>>>ACTION_IMPORTCOUNTRIES*/
@@ -1105,7 +1105,7 @@ sql;
 
 /*<<<<<ACTION_IMPORTCOUNTRIES_END*/
 		return $exitcode;
-	} // actionImportarPaises
+	} // actionImportCountries
 /*>>>>>ACTION_IMPORTCOUNTRIES_END*/
 
 

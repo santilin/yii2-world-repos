@@ -27,7 +27,7 @@
 			"access_filters": ["none"],
 			"title": "Repositories",
 			"namespace": "santilin\\wrepos",
-			"dest_path": "/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos",
+			"dest_path": "/home/santilin/devel/yii2base/santilin/yii2-world-repos",
 			"models": {
 				"Country": ["model", "migration"],
 				"Place": ["model", "migration"],
@@ -164,7 +164,7 @@
 				}
 			],
 			"actions": {
-				"ImportPlaces2" : {
+				"ImportPlaces" : {
 					"description": "Importador de lugares: provincias, municipios, etc. por países",
 					"arguments": [
 						{
