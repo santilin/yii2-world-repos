@@ -8,8 +8,8 @@ ES			ES62	ES620		Molina de Segura	30500--			Municipio 	30027					30027000000
 ES			ES62	ES620		Altorreal 							Otras entid	30027					30027001402
 
 
-
-
+# Geonames
+http://download.geonames.org/export/dump/
 
 
 COMM_LB_2016_4326.csv => Geolocalizacion3035.csv

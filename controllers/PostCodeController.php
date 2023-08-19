@@ -49,7 +49,7 @@ class PostCodeController extends Controller
 			$page = 1;
 		}
 		\Yii::$app->response->format = Response::FORMAT_JSON;
-		$sql = "SELECT pc.postcode as id, pc.postcode, pl.name FROM "
+		$sql = "SELECT pc.postcode as cp, pc.postcode, pl.name as municipio, '' as poblacion, substr(pc.postcode,1,2) as provincia FROM "
 		. PostCode::tableName() . 'pc INNER JOIN '
 		. Place::tableName() . 'pl ON pl.id=pc.places_id'
 		. " WHERE pc.postcode = :postcode OR pl.name LIKE :postcode_like";
@@ -60,11 +60,7 @@ class PostCodeController extends Controller
 			->bindValue(':postcode', $search)
 			->bindValue(':postcode_like', $search . '%')
 			->queryAll();
-		$ret = [];
-		foreach ($models as $model) {
-			$ret[] = [ 'value' => $model['name'], 'id' => $model['id'] ];
-		}
-		return $ret;
+		return $models;
 	}
 
 
