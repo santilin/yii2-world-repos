@@ -34,10 +34,6 @@ class PlaceQuery extends ActiveQuery
 		return $this->andWhere(['countries_id' => $country_id]);
 	}
 
-	public function byNutsCode(string $nuts_code)
-	{
-		return $this->andWhere(['nuts_code' => $nuts_code]);
-	}
 
 /*<<<<<END*/
 } // PlaceQuery

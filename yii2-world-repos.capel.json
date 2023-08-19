@@ -164,8 +164,8 @@
 				}
 			],
 			"actions": {
-				"ImportarPlaces" : {
-					"description": "Importador de lugares: provincias, municipios, etc.",
+				"ImportPlaces2" : {
+					"description": "Importador de lugares: provincias, municipios, etc. por países",
 					"arguments": [
 						{
 							"name": "country",
@@ -174,7 +174,7 @@
 						}
 					]
 				},
-				"ImportarPaises" : {
+				"ImportCountries" : {
 					"description": "Importador de países por lenguajes",
 					"arguments": [
 						{
@@ -189,4 +189,3 @@
 	}
 
 }
-
