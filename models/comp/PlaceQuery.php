@@ -34,6 +34,10 @@ class PlaceQuery extends ActiveQuery
 		return $this->andWhere(['countries_id' => $country_id]);
 	}
 
+	public function byAdmin2Code(string $a2code)
+	{
+		return $this->andWhere(['admin2_code' => $a2code]);
+	}
 
 /*<<<<<END*/
 } // PlaceQuery

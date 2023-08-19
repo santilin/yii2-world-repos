@@ -28,7 +28,7 @@ use santilin\wrepos\models\PostCode;
  * @property santilin\wrepos\models\Country $country // HasOne
  * @property santilin\wrepos\models\PostCode[] $postCodes // BelongsToMany
  */
-class Place extends \_BaseModel
+class Place extends _BaseModel
 {
 	use \santilin\churros\ModelInfoTrait;
 	static public function tableName()

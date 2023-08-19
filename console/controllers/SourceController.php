@@ -76,6 +76,7 @@ class SourceController extends Controller
 			die($lau);
 		}
 	}
+
 	private function lauToCode(array $nut_reg)
 	{
 		$ret = $nut_reg['nuts3_id']; // País hasta provincia
@@ -147,7 +148,7 @@ class SourceController extends Controller
 				foreach( $nuts as $nut ) {
 					$values = [
 						'countries_id' => $this->lauToCountry($nut['nuts3_id']),
-						'nuts_code' => $this->lauToCode($nut),
+						'nuts_code' => '', // $this->lauToCode($nut),
 						'name' => $this->escapeSql($nut['lau_national']),
 						'latin_name' => $this->escapeSql($nut['lau_latin']),
 						'nuts3_id' => $nut['nuts3_id'],
@@ -178,7 +179,7 @@ class SourceController extends Controller
 	} // actionImportPlaces
 /*>>>>>ACTION_IMPORTPLACES_END*/
 
-	public function actionImportarEspaña()
+	public function actionImportarEspana()
 	{
 		Yii::$app->db->createCommand("DELETE FROM postcodes")->queryAll();
 		Yii::$app->db->createCommand("DELETE FROM places")->queryAll();
@@ -186,9 +187,8 @@ class SourceController extends Controller
 		// Source provinces from nuts
 		$nuts3 = Yii::$app->db->createCommand("SELECT * FROM nuts3 WHERE NUTS_ID like 'ES%'")->queryAll();
 		if( count($nuts3) > 0 ) {
-			echo "Found " . count($nuts3) . " provinces for country $cc\n";
+			echo "Found " . count($nuts3) . " provinces for country ES\n";
 		}
-		$name_field = "name_" . strtolower($country);
 		foreach( $nuts3 as $nut ) {
 			if( strlen($nut['NUTS_ID']) == 3 ) {
 				continue; // north, etc
@@ -209,17 +209,15 @@ class SourceController extends Controller
 				$place = new Place;
 			}
 			$place->setAttributes($values);
-			$place->$name_field = $place->name;
 			if (!$place->save()) {
 				echo $place->getOneError();
 				exit();
 			}
 		}
-		return;
 
-		$entidades = Yii::$app->db->createCommand("SELECT * FROM nuts WHERE nuts3_id like '{$cc}%'")->queryAll();
+		$entidades = Place::getDb()->createCommand("SELECT * FROM entidades_es")->queryAll();
 		if( count($entidades) > 0 ) {
-			echo "Found " . count($entidades) . " localities for country $country\n";
+			echo "Found " . count($entidades) . " localities for country ES\n";
 			foreach( $entidades as $entidad ) {
 				$values = [
 					'countries_id' => 724,
@@ -234,12 +232,11 @@ class SourceController extends Controller
 					'national_id' => $entidad['CODIGOINE'],
 				];
 				$place = Place::find()->byCountryId($values['countries_id'])
-					->byNutsCode($values['nuts_code'])->one();
+					->andWhere(['national_id' => $values['national_id']])->one();
 				if (!$place) {
 					$place = new Place;
 				}
 				$place->setAttributes($values);
-				$place->$name_field = $place->name;
 				if (!$place->save()) {
 					echo $place->getOneError();
 					exit();
@@ -283,6 +280,18 @@ sql;
 			}
 		}
 	}
+
+	private function entidadToLevel($tipo)
+	{
+		switch($tipo) {
+		case 'Municipio':
+			return 3;
+		default:
+			echo "$tipo: tipo de entidad no reconocido\n";
+			exit(1);
+		}
+	}
+
 
 	private function nuts3Level($values)
 	{
