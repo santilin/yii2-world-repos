@@ -1,6 +1,6 @@
 <?php
 /*<<<<<USES*/
-/*Template:Yii2App/models/Model.php*/
+/*Template:Yii2App/models/DbRecordModel.php*/
 namespace santilin\wrepos\models;
 
 use Yii;
@@ -21,7 +21,7 @@ use santilin\wrepos\models\Place;
  *
  * @property santilin\wrepos\models\Place[] $places // BelongsToMany
  */
-class Country extends _BaseModel
+class Country extends \_BaseModel
 {
 	use \santilin\churros\ModelInfoTrait;
 	static public function tableName()
@@ -105,7 +105,7 @@ class Country extends _BaseModel
     } // rules
 /*>>>>>RULES_RETURN*/
 /*<<<<<HANDY_VALUES_PRE*/
-	public function handyFieldValues(string $field, string $format, ?string $model_format = 'short', string $scope=null)
+	public function handyFieldValues(string $field, string $format, ?string $model_format = 'short', ?string $scope=null)
 	{
 		$field_parts = explode('.', $field);
 		if( count($field_parts) > 1 ) {

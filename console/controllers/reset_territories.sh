@@ -1,6 +1,6 @@
 # Nuts_LUA
 DATADIR=data
-DB=runtime/repos.db
+DB=runtime/repos_aux.db
 if [ -f $HOME/.local/bin/xlsx2csv ]; then
 	XLS2CSV=$HOME/.local/bin/xlsx2csv
 else
@@ -24,8 +24,7 @@ dbf-rb -c $DATADIR/PCODE_2020_PT_SH.dbf > $DATADIR/post.csv 2>/dev/null
 
 
 pushd $DATADIR
-wget https://raw.githubusercontent.com/inigoflores/ds-codigos-postales/master/data/codigos_postales_municipios_join.csv
-mv codigos_postales_municipios_join.csv es_postcodes.csv
+wget https://raw.githubusercontent.com/inigoflores/ds-codigos-postales/master/data/codigos_postales_municipios_join.csv -O es_postcodes.csv
 popd
 
 rm $DB
