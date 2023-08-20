@@ -18,17 +18,16 @@ use santilin\wrepos\models\PostCode;
  * @property string $name_es // places/name
  * @property string $name_en // places/name
  * @property string $name_fr // places/name
- * @property string $admin2_code
- * @property string $admin2_name
- * @property string $admin3_code
- * @property string $admin3_name
+ * @property string $admin_code
+ * @property string $admin_sup_code
+ * @property string $admin_sup_name
  * @property string $national_id
  * @property integer $countries_id
  *
  * @property santilin\wrepos\models\Country $country // HasOne
  * @property santilin\wrepos\models\PostCode[] $postCodes // BelongsToMany
  */
-class Place extends _BaseModel
+class Place extends \santilin\wrepos\models\_BaseModel
 {
 	use \santilin\churros\ModelInfoTrait;
 	static public function tableName()
@@ -89,10 +88,9 @@ class Place extends _BaseModel
 			'name_es' => 'Name es',
 			'name_en' => 'Name en',
 			'name_fr' => 'Name fr',
-			'admin2_code' => 'Admin2 code',
-			'admin2_name' => 'Admin2 name',
-			'admin3_code' => 'Admin3 code',
-			'admin3_name' => 'Admin3 name',
+			'admin_code' => 'Admin code',
+			'admin_sup_code' => 'Admin sup code',
+			'admin_sup_name' => 'Admin sup name',
 			'national_id' => 'National id',
 			'countries_id' => Country::getModelInfo('title'), // HasOne
 			'country' => Country::getModelInfo('title'), // HasOne
@@ -110,7 +108,7 @@ class Place extends _BaseModel
 			'req' => [['name','countries_id'], 'required', 'on' => $this->crudScenarios],
 			'def0'=>[['level'], 'default', 'value' => 0,'on' => $this->crudScenarios],
 			'int_level' => ['level', 'integer', 'on' => $this->crudScenarios],
-			'null' => [['name_es','name_en','name_fr','admin2_code','admin2_name','admin3_code','admin3_name','national_id'], 'default', 'value' => null],
+			'null' => [['name_es','name_en','name_fr','admin_code','admin_sup_code','admin_sup_name','national_id'], 'default', 'value' => null],
 		];
 /*>>>>>RULES*/
 		// customize your rules here
@@ -222,16 +220,13 @@ class Place extends _BaseModel
 			"$relname.name_fr" => [ // string
 				'format' => 'raw',
 			],
-			"$relname.admin2_code" => [ // string
+			"$relname.admin_code" => [ // string
 				'format' => 'raw',
 			],
-			"$relname.admin2_name" => [ // string
+			"$relname.admin_sup_code" => [ // string
 				'format' => 'raw',
 			],
-			"$relname.admin3_code" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.admin3_name" => [ // string
+			"$relname.admin_sup_name" => [ // string
 				'format' => 'raw',
 			],
 			"$relname.national_id" => [ // string

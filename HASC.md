@@ -10,12 +10,14 @@ ES			ES62	ES620		Altorreal 							Otras entid	30027					30027001402
 
 # Geonames
 http://download.geonames.org/export/dump/
+Los ficheros de códigos postales no tienen tildes :(
 
 
 COMM_LB_2016_4326.csv => Geolocalizacion3035.csv
 
 Europa_Nuts_Jerarquia.xlsx => nuts.csv
 
+https://www.hr-softcom.eu/PCODE_2020_PT_SH.zip
 PCODE_2020_PT_SH.dbf => post.csv
 
 https://raw.githubusercontent.com/inigoflores/ds-codigos-postales/master/data/codigos_postales_municipios_join.csv => es_postcodes.csv

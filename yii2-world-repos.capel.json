@@ -46,7 +46,7 @@
 
 	"models" : {
 		"Country": {
-			"base_model_class": "_BaseModel",
+			"base_model_class": "\\santilin\\wrepos\\models\\_BaseModel",
 			"name_plural": "Countries",
 			"table_name": "countries",
 			"migration_timestamp": "220101_000100",
@@ -84,7 +84,7 @@
 			]
 		},
 		"Place": {
-			"base_model_class": "_BaseModel",
+			"base_model_class": "\\santilin\\wrepos\\models\\_BaseModel",
 			"table_name": "places",
 			"migration_timestamp": "220101_000200",
 			"relations": {
@@ -117,16 +117,13 @@
 					"type": "places/name",
 					"is_nullable": true
 				}, {
-					"name": "admin2_code",
+					"name": "admin_code",
 					"type": "string"
 				}, {
-					"name": "admin2_name",
+					"name": "admin_sup_code",
 					"type": "string"
 				}, {
-					"name": "admin3_code",
-					"type": "string"
-				}, {
-					"name": "admin3_name",
+					"name": "admin_sup_name",
 					"type": "string"
 				}, {
 					"name": "national_id",
@@ -135,7 +132,7 @@
 			]
 		},
 		"PostCode": {
-			"base_model_class": "_BaseModel",
+			"base_model_class": "\\santilin\\wrepos\\models\\_BaseModel",
 			"table_name": "postcodes",
 			"migration_timestamp": "220101_000300",
 			"relations": {

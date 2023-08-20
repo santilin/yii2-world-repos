@@ -21,7 +21,7 @@ use santilin\wrepos\models\Place;
  *
  * @property santilin\wrepos\models\Place[] $places // BelongsToMany
  */
-class Country extends \_BaseModel
+class Country extends \santilin\wrepos\models\_BaseModel
 {
 	use \santilin\churros\ModelInfoTrait;
 	static public function tableName()

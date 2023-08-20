@@ -30,10 +30,9 @@ class m220101_000200_capel_create_places_table extends Migration
 			'name_es' => $this->string()->null(),
 			'name_en' => $this->string()->null(),
 			'name_fr' => $this->string()->null(),
-			'admin2_code' => $this->string()->null(),
-			'admin2_name' => $this->string()->null(),
-			'admin3_code' => $this->string()->null(),
-			'admin3_name' => $this->string()->null(),
+			'admin_code' => $this->string()->null(),
+			'admin_sup_code' => $this->string()->null(),
+			'admin_sup_name' => $this->string()->null(),
 			'national_id' => $this->string()->null(),
 			'countries_id' => $this->tinyInteger()->notNull(),
 /*>>>>>COLUMNS*/

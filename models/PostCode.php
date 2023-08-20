@@ -16,7 +16,7 @@ use santilin\wrepos\models\Place;
  *
  * @property santilin\wrepos\models\Place $place // HasOne
  */
-class PostCode extends \_BaseModel
+class PostCode extends \santilin\wrepos\models\_BaseModel
 {
 	use \santilin\churros\ModelInfoTrait;
 	static public function tableName()
