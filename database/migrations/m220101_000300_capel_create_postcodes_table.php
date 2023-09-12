@@ -24,7 +24,7 @@ class m220101_000300_capel_create_postcodes_table extends Migration
 		$this->createTable('{{%postcodes}}', [
 /*>>>>>CREATE_TABLE*/
 /*<<<<<COLUMNS*/
-			'postcode' => $this->decimal(12)->notNull()->defaultValue(0.0),
+			'postcode' => $this->string(10)->notNull(),
 			'places_id' => $this->tinyInteger()->notNull(),
 /*>>>>>COLUMNS*/
 /*<<<<<END_CREATE_TABLE*/

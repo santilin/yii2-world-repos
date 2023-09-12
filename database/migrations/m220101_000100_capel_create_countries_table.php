@@ -25,8 +25,8 @@ class m220101_000100_capel_create_countries_table extends Migration
 /*>>>>>CREATE_TABLE*/
 /*<<<<<COLUMNS*/
 			'id' => $this->tinyInteger()->notNull() . ' PRIMARY KEY',
-			'iso2' => $this->string(2)->notNull(),
-			'iso3' => $this->string(3)->notNull(),
+			'iso2' => $this->char(2)->notNull(),
+			'iso3' => $this->char(3)->notNull(),
 			'name' => $this->string()->null(),
 			'name_es' => $this->string()->null(),
 			'name_en' => $this->string()->null(),

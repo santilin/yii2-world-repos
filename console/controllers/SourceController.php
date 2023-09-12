@@ -181,76 +181,77 @@ class SourceController extends Controller
 
 	public function actionImportarEspana()
 	{
-//  		Yii::$app->db->createCommand("DELETE FROM places")->queryAll();
-//
-// 		// Source provinces from nuts
-// 		$nuts3 = Yii::$app->db->createCommand("SELECT * FROM nuts3 WHERE NUTS_ID like 'ES%'")->queryAll();
-// 		if( count($nuts3) > 0 ) {
-// 			echo "Found " . count($nuts3) . " provinces for country ES\n";
-// 		}
-// 		foreach( $nuts3 as $nut ) {
-// 			if( strlen($nut['NUTS_ID']) == 3 ) {
-// 				continue; // Norte, sur, etc.
-// 			}
-// 			$level = $this->nuts3Level($nut);
-// 			$values = [
-// 				'countries_id' => $this->lauToCountry($nut['NUTS_ID']),
-// 				'name' => $this->escapeSql($nut['NUTS_NAME']),
-// 				'name_es' => $this->escapeSql($nut['NUTS_NAME']),
-// 				'level' => $level,
-// 			];
-// 			if ($level == 0) {
-// 				$place = Place::find()->byCountryId($values['countries_id'])
-// 					->andWhere(['name' => $nut['NUTS_NAME']])
-// 					->andWhere(['level' => $level])
-// 					->one();
-// 			} else if ($level == 4 ) {
-// 				continue; // Ibiza, etc.
-// 			} else {
-// 				$values['admin_code'] = $nut['NUTS_ID'];
-// 				$place = Place::find()->byCountryId($values['countries_id'])
-// 					->byAdminCode($values['admin_code'])
-// 					->andWhere(['level' => $level])
-// 					->one();
-// 			}
-// 			if (!$place) {
-// 				$place = new Place;
-// 			}
-// 			$place->setAttributes($values);
-// 			if (!$place->save()) {
-// 				echo $place->getOneError();
-// 			}
-// 		}
-//
-// 		// MUNICIPIOS
-// 		$entidades = Place::getDb()->createCommand("SELECT * FROM entidades_es WHERE TIPO='Municipio'")->queryAll();
-// 		if( count($entidades) > 0 ) {
-// 			echo "Found " . count($entidades) . " localities for country ES\n";
-// 			foreach( $entidades as $entidad ) {
-// 				$level = 4; // Municipio
-// 				$values = [
-// 					'countries_id' => 724,
-// 					'level' => $level,
-// 					'name' => $this->escapeSql($entidad['NOMBRE']),
-// 					'name_es' => $this->escapeSql($entidad['NOMBRE']),
-// 					'admin_code' => $this->escapeSql($entidad['INEMUNI']),
-// 					'national_id' => substr($entidad['CODIGOINE'],0,5)
-// 				];
-// 				$place = Place::find()->byCountryId($values['countries_id'])
-// 					->andWhere(['national_id' => $values['national_id']])->one();
-// 				if (!$place) {
-// 					$place = new Place;
-// 				}
-// 				$place->setAttributes($values);
-// 				if (!$place->save()) {
-// 					echo $place->getOneError();
-// 					exit();
-// 				} else {
-// 					echo "Saved {$place->admin_code} {$place->name}\n";
-// 				}
-// 			}
-// 		}
-/*
+ 		Yii::$app->db->createCommand("DELETE FROM postcodes")->queryAll();
+ 		Yii::$app->db->createCommand("DELETE FROM places")->queryAll();
+
+		// Source provinces from nuts
+		$nuts3 = Yii::$app->db->createCommand("SELECT * FROM nuts3 WHERE NUTS_ID like 'ES%'")->queryAll();
+		if( count($nuts3) > 0 ) {
+			echo "Found " . count($nuts3) . " provinces for country ES\n";
+		}
+		foreach( $nuts3 as $nut ) {
+			if( strlen($nut['NUTS_ID']) == 3 ) {
+				continue; // Norte, sur, etc.
+			}
+			$level = $this->nuts3Level($nut);
+			$values = [
+				'countries_id' => $this->lauToCountry($nut['NUTS_ID']),
+				'name' => $this->escapeSql($nut['NUTS_NAME']),
+				'name_es' => $this->escapeSql($nut['NUTS_NAME']),
+				'level' => $level,
+			];
+			if ($level == 0) {
+				$place = Place::find()->byCountryId($values['countries_id'])
+					->andWhere(['name' => $nut['NUTS_NAME']])
+					->andWhere(['level' => $level])
+					->one();
+			} else if ($level == 4 ) {
+				continue; // Ibiza, etc.
+			} else {
+				$values['admin_code'] = $nut['NUTS_ID'];
+				$place = Place::find()->byCountryId($values['countries_id'])
+					->byAdminCode($values['admin_code'])
+					->andWhere(['level' => $level])
+					->one();
+			}
+			if (!$place) {
+				$place = new Place;
+			}
+			$place->setAttributes($values);
+			if (!$place->save()) {
+				echo $place->getOneError();
+			}
+		}
+
+		// MUNICIPIOS
+		$entidades = Place::getDb()->createCommand("SELECT * FROM entidades_es WHERE TIPO='Municipio'")->queryAll();
+		if( count($entidades) > 0 ) {
+			echo "Found " . count($entidades) . " localities for country ES\n";
+			foreach( $entidades as $entidad ) {
+				$level = 4; // Municipio
+				$values = [
+					'countries_id' => 724,
+					'level' => $level,
+					'name' => $this->escapeSql($entidad['NOMBRE']),
+					'name_es' => $this->escapeSql($entidad['NOMBRE']),
+					'admin_code' => $this->escapeSql($entidad['INEMUNI']),
+					'national_id' => substr($entidad['CODIGOINE'],0,5)
+				];
+				$place = Place::find()->byCountryId($values['countries_id'])
+					->andWhere(['national_id' => $values['national_id']])->one();
+				if (!$place) {
+					$place = new Place;
+				}
+				$place->setAttributes($values);
+				if (!$place->save()) {
+					echo $place->getOneError();
+					exit();
+				} else {
+					echo "Saved {$place->admin_code} {$place->name}\n";
+				}
+			}
+		}
+
 		// ENTIDADES
 		$entidades = Place::getDb()->createCommand("SELECT * FROM entidades_es WHERE TIPO<>'Municipio' AND TIPO<>'Entidad colectiva'")->queryAll();
 		if( count($entidades) > 0 ) {
@@ -291,7 +292,7 @@ class SourceController extends Controller
 				}
 			}
 		}
-*/
+
 
 // Para geonames
 // select t.id, p.POSTCODE AS cp
@@ -303,12 +304,12 @@ class SourceController extends Controller
 select t.id, p.POSTCODE AS cp,t.name
 FROM post p INNER join places t on t.national_id=p.nsi_code AND CNTR_ID='ES'
 sql;
-// AND lau_nat = 'Alameda'
+// WHERE p.POSTCODE = '30140' OR t.name = 'Alacant/Alicante'
 		$command = Yii::$app->db->createCommand($sql_cp);
 		$cps = [];
 		$cursor = $command->query();
 		while ($row = $cursor->read() ) {
-			$cp = str_pad($row['cp'], 5, '0');
+			$cp = str_pad($row['cp'], 5, '0', STR_PAD_LEFT);
 			if (isset($cps[$row['id']])) {
 				if (!in_array($cp, $cps[$row['id']])) {
 					$cps[$row['id']][] = $cp;
