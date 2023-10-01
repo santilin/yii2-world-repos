@@ -3,8 +3,6 @@
 html,
 body {
 	height: 100%;
-}
-body {
 	color: inherit;
 	background-color: inherit;
 }
@@ -23,15 +21,6 @@ body {
 	border-top: 1px solid #ddd;
 	padding-top: 20px;
 }
-/*body.site a:not(.btn) {
- *	color: inherit;
- * }
- * body.site a:visited:not(.btn) {
- *	color: inherit;
- * }
- * body.site a:focus:not(.btn) {
- *	color: inherit;
- * }*/
 body.site .header {
 	color: inherit;
 	background-color: #e3f2fd;
@@ -83,7 +72,6 @@ body.site nav ol.breadcrumb .breadcrumb-item.active {
 .readonly {
 	background-color: #e9ecef;
 }
-
 /* churros formwizard */
 .churros-wizard .sw-main {
 	background-color: inherit;
@@ -112,9 +100,7 @@ body.site nav ol.breadcrumb .breadcrumb-item.active {
 	font-size: 21px;
 	padding: 14px 24px;
 }
-.grid-view th {
-	white-space: nowrap;
-}
+
 
 .hint-block {
 	display: block;
@@ -148,6 +134,20 @@ body.site nav ol.breadcrumb .breadcrumb-item.active {
 /*>>>>>MAIN*/
 /*<<<<<COMMON_STYLES*/
 @import "/css/app_common.css";
+body { /* bootstrap color is blue */
+	color: black;
+}
+.no-padding {
+	padding: 0 !important;
+}
+.no-horiz-margin {
+	margin-left: -15px !important;
+	margin-right: -15px !important;
+}
+.invalid {
+	color: white;
+	background-color:orange;
+}
 .hidden {
 	display:none;
 }
@@ -172,20 +172,6 @@ body.site nav ol.breadcrumb .breadcrumb-item.active {
 	.not-set {
 		visibility: hidden;
 	}
-}
-body { /* bootstrap color is blue */
-	color: black;
-}
-.no-padding {
-	padding: 0 !important;
-}
-.no-horiz-margin {
-	margin-left: -15px !important;
-	margin-right: -15px !important;
-}
-.invalid {
-	color: white;
-	background-color:orange;
 }
 .btn-cancel {
 	color: #fff;
@@ -212,7 +198,10 @@ body { /* bootstrap color is blue */
 }
 .custom-control.custom-checkbox {
 	margin-bottom: 1rem;
-	padding-left: 15px;
+/* 	padding-left: 15px; */
+}
+.form-buttons-group {
+	padding-left: 0.75rem;
 }
 /*>>>>>COMMON_STYLES*/
 /*<<<<<CUSTOM*/

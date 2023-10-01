@@ -9,11 +9,11 @@
 
 use yii\helpers\Html;
 use yii\bootstrap4\{Breadcrumbs,Nav,NavBar};
-use santilin\wrepos\assets\MainAsset;
+use santilin\wrepos\assets\SiteAsset;
 use santilin\churros\helpers\AppHelper;
 use santilin\churros\widgets\SessionAlert;
 
-MainAsset::register($this);
+SiteAsset::register($this);
 $company = $brand_name = Yii::$app->name;
 $created_by = 'Creado por Santilín con Yii' . Yii::getVersion();
 ?>
@@ -41,8 +41,7 @@ if( !YII_ENV_DEV && AppHelper::yiiparam('baseUrl') ) {
 ?>
 </head>
 <?php $this->beginBody() ?>
-<body class="site">
-
+<body class="site light">
 <div class="wrap">
 	<div class="container">
 		<?= SessionAlert::widget() ?>

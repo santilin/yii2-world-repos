@@ -18,7 +18,7 @@ class SiteController extends Controller
 	/**
 	 * @var $layout The layout for this controller
 	 */
-	public $layout = 'main';
+	public $layout = 'site';
 	/**
 	 * @inheritdoc
 	 */

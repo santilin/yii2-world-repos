@@ -29,13 +29,14 @@ use santilin\wrepos\models\PostCode;
  */
 class Place extends \santilin\wrepos\models\_BaseModel
 {
+	use \santilin\churros\RelationTrait;
 	use \santilin\churros\ModelInfoTrait;
+/*>>>>>CLASS*/
+/*<<<<<STATIC_INFO*/
 	static public function tableName()
 	{
 		return '{{%places}}';
 	}
-/*>>>>>CLASS*/
-/*<<<<<STATIC_INFO*/
 	static public $relations = [
 'country' => [ 'model' => 'Country', 'left' => 'places.countries_id', 'right' => 'countries.id', 'modelClass' => 'santilin\wrepos\models\Country', 'relatedTablename' => 'countries', 'join' => 'places.countries_id = countries.id', 'type' => 'HasOne'],
 'postCodes' => [ 'model' => 'PostCode', 'left' => 'places.id', 'right' => 'postcodes.places_id', 'modelClass' => 'santilin\wrepos\models\PostCode', 'relatedTablename' => 'postcodes', 'join' => 'places.id = postcodes.places_id', 'type' => 'BelongsToMany']
@@ -105,9 +106,9 @@ class Place extends \santilin\wrepos\models\_BaseModel
     public function rules()
     {
 		$rules = [
-			'req' => [['name','countries_id'], 'required', 'on' => $this->crudScenarios],
-			'def0'=>[['level'], 'default', 'value' => 0,'on' => $this->crudScenarios],
-			'int_level' => ['level', 'integer', 'on' => $this->crudScenarios],
+			'req' => [['name','countries_id'], 'required', 'on' => $this->getCrudScenarios()],
+			'def0'=>[['level'], 'default', 'value' => 0,'on' => $this->getCrudScenarios()],
+			'int_level' => ['level', 'integer', 'on' => $this->getCrudScenarios()],
 			'null' => [['name_es','name_en','name_fr','admin_code','admin_sup_code','admin_sup_name','national_id'], 'default', 'value' => null],
 		];
 /*>>>>>RULES*/

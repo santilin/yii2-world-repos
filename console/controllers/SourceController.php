@@ -92,7 +92,7 @@ class SourceController extends Controller
 	/**
 	 * Importador de lugares: provincias, municipios, etc. por países
 	 */
-	public function actionImportPlaces($country='ES')
+	public function actionImportPlaces(string $country='ES')
 	{
 		$exitcode = ExitCode::OK;
 /*>>>>>ACTION_IMPORTPLACES*/
@@ -1147,7 +1147,7 @@ sql;
 	/**
 	 * Importador de países por lenguajes
 	 */
-	public function actionImportCountries($language='ES')
+	public function actionImportCountries(string $language='ES')
 	{
 		$exitcode = ExitCode::OK;
 /*>>>>>ACTION_IMPORTCOUNTRIES*/

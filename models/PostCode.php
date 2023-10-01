@@ -11,20 +11,21 @@ use santilin\wrepos\models\Place;
 /**
  * This is the base model class for table "{{%postcodes}}".
  *
- * @property float $postcode // places/postcode
+ * @property string $postcode // places/postcode
  * @property integer $places_id
  *
  * @property santilin\wrepos\models\Place $place // HasOne
  */
 class PostCode extends \santilin\wrepos\models\_BaseModel
 {
+	use \santilin\churros\RelationTrait;
 	use \santilin\churros\ModelInfoTrait;
+/*>>>>>CLASS*/
+/*<<<<<STATIC_INFO*/
 	static public function tableName()
 	{
 		return '{{%postcodes}}';
 	}
-/*>>>>>CLASS*/
-/*<<<<<STATIC_INFO*/
 	static public $relations = [
 'place' => [ 'model' => 'Place', 'left' => 'postcodes.places_id', 'right' => 'places.id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'postcodes.places_id = places.id', 'type' => 'HasOne']
 	];
@@ -38,7 +39,7 @@ class PostCode extends \santilin\wrepos\models\_BaseModel
 				'title' => 'PostCode',
 				'title_plural' => 'PostCodes',
 				'code_field' => '',
-				'desc_field' => '',
+				'desc_field' => 'postcode',
 				'controller_name' => 'post-code',
 				'female' => true,
 				'record_desc_format_short' => '',
@@ -83,9 +84,8 @@ class PostCode extends \santilin\wrepos\models\_BaseModel
     public function rules()
     {
 		$rules = [
-			'req' => [['places_id'], 'required', 'on' => $this->crudScenarios],
-			'def0'=>[['postcode'], 'default', 'value' => 0.0,'on' => $this->crudScenarios],
-			'number_postcode'=>['postcode', 'number'],
+			'req' => [['postcode','places_id'], 'required', 'on' => $this->getCrudScenarios()],
+			'max_postcode'=>['postcode', 'string', 'max' => 10, 'on' => $this->getCrudScenarios()],
 		];
 /*>>>>>RULES*/
 		// customize your rules here
@@ -138,17 +138,6 @@ class PostCode extends \santilin\wrepos\models\_BaseModel
 		}
 	} // handyFieldValues
 /*>>>>>HANDY_VALUES_RETURN*/
-/*<<<<<DEFAULT_VALUES*/
-	public function setDefaultValues(bool $duplicating = false)
-	{
-
-		if (!$duplicating) { // Dont set these default values while duplicating
-			$this->postcode = 0.0;
-		}
-/*>>>>>DEFAULT_VALUES*/
-/*<<<<<DEFAULT_VALUES.RETURN*/
-	} // setDefaultValues
-/*>>>>>DEFAULT_VALUES.RETURN*/
 /*<<<<<BEHAVIORS*/
 	public function behaviors()
 	{
@@ -167,8 +156,8 @@ class PostCode extends \santilin\wrepos\models\_BaseModel
 		}
 		$ret = [
 
-			"$relname.postcode" => [ // decimal
-				'format' => 'decimal',
+			"$relname.postcode" => [ // string
+				'format' => 'raw',
 			],
 			"$relname.places_id" => [ // HasOne
 				'format' => 'integer',

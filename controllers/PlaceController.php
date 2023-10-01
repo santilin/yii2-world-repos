@@ -17,7 +17,7 @@ class PlaceController extends Controller
 	/**
 	 * @var $layout The layout for this controller
 	 */
-	public $layout = 'main';
+	public $layout = 'site';
 /*>>>>>CLASS*/
 
 	public function actionFindPlace(string $place, string $country_code)

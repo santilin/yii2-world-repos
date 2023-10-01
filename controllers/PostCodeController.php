@@ -19,7 +19,7 @@ class PostCodeController extends Controller
 	/**
 	 * @var $layout The layout for this controller
 	 */
-	public $layout = 'main';
+	public $layout = 'site';
 /*>>>>>CLASS*/
 
 	// Cant use Query because postcode has no id

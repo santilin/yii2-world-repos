@@ -23,13 +23,14 @@ use santilin\wrepos\models\Place;
  */
 class Country extends \santilin\wrepos\models\_BaseModel
 {
+	use \santilin\churros\NoRelationTrait;
 	use \santilin\churros\ModelInfoTrait;
+/*>>>>>CLASS*/
+/*<<<<<STATIC_INFO*/
 	static public function tableName()
 	{
 		return '{{%countries}}';
 	}
-/*>>>>>CLASS*/
-/*<<<<<STATIC_INFO*/
 	static public $relations = [
 'places' => [ 'model' => 'Place', 'left' => 'countries.id', 'right' => 'places.countries_id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'countries.id = places.countries_id', 'type' => 'BelongsToMany']
 	];
@@ -92,10 +93,10 @@ class Country extends \santilin\wrepos\models\_BaseModel
     public function rules()
     {
 		$rules = [
-			'req' => [['iso2','iso3'], 'required', 'on' => $this->crudScenarios],
+			'req' => [['iso2','iso3'], 'required', 'on' => $this->getCrudScenarios()],
 			'null' => [['name','name_es','name_en','name_fr'], 'default', 'value' => null],
-			'max_iso2'=>['iso2', 'string', 'max' => 2, 'on' => $this->crudScenarios],
-			'max_iso3'=>['iso3', 'string', 'max' => 3, 'on' => $this->crudScenarios],
+			'max_iso2'=>['iso2', 'string', 'max' => 2, 'on' => $this->getCrudScenarios()],
+			'max_iso3'=>['iso3', 'string', 'max' => 3, 'on' => $this->getCrudScenarios()],
 		];
 /*>>>>>RULES*/
 		// customize your rules here
@@ -178,10 +179,10 @@ class Country extends \santilin\wrepos\models\_BaseModel
 			"$relname.id" => [ // tinyInteger
 				'format' => 'integer',
 			],
-			"$relname.iso2" => [ // string
+			"$relname.iso2" => [ // char
 				'format' => 'raw',
 			],
-			"$relname.iso3" => [ // string
+			"$relname.iso3" => [ // char
 				'format' => 'raw',
 			],
 			"$relname.name" => [ // string

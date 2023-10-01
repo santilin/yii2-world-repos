@@ -13,7 +13,7 @@ class PostCodeQuery extends ActiveQuery
 	// Used in handyValues to sort select lists
 	public function defaultOrder()
 	{
-		$this->orderBy('');
+		$this->orderBy('postcode');
 /*>>>>>CLASS*/
 /*<<<<<DEFAULT_ORDER_RETURN*/
 		return $this;

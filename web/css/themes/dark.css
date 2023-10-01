@@ -1,0 +1,36 @@
+/*<<<<<MAIN*/
+pre {
+	color: white;
+}
+body.dark .dashboard-content {
+	background-color: black;
+	color: white;
+}
+
+body.dark .dashboard-nav {
+	background-color: #131139;
+	color: #d6a2a2;
+}
+
+body.dark .dashboard-toolbar {
+	background-color: #131139;
+	color: #d6a2a2;
+}
+
+body.dark .dashboard-footer {
+	padding-top: 1em;
+	background-color: #131139;
+	color: #d6a2a2;
+}
+
+body.dark .form-control {
+	background-color: lightgray;
+	color: black;
+	border-width: medium;
+}
+
+body.dark .form-control:active {
+	background-color: gray;
+	color: black;
+}
+/*>>>>>MAIN*/
