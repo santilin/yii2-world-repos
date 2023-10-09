@@ -43,23 +43,40 @@ class PostCodeController extends Controller
 // 		return  [ 'items' => $models, 'total_count' => 20 ];
 // 	}
 //
-	public function actionFindTypeAhead(string $search, int $page = 1, int $per_page = 5)
+	public function actionFindTypeAhead(string $search, int $page = 1, int $per_page = 10)
 	{
 		if( !$page) {
 			$page = 1;
 		}
 		\Yii::$app->response->format = Response::FORMAT_JSON;
-		$sql = "SELECT pc.postcode as cp, pc.postcode, pl.name as municipio, '' as poblacion, substr(pc.postcode,1,2) as provincia FROM "
-		. PostCode::tableName() . 'pc INNER JOIN '
-		. Place::tableName() . 'pl ON pl.id=pc.places_id'
-		. " WHERE pc.postcode = :postcode OR pl.name LIKE :postcode_like";
 		if ($page) {
-			$sql .= ' LIMIT ' . ($page-1) * $per_page . ",$per_page";
+			$limit = ' LIMIT ' . ($page-1) * $per_page . ",$per_page";
+		} else {
+			$limit = '';
 		}
-		$models = PostCode::getDb()->createCommand($sql)
-			->bindValue(':postcode', $search)
-			->bindValue(':postcode_like', $search . '%')
-			->queryAll();
+		$search = trim($search);
+		if (is_numeric($search) ) {
+			if (strlen($search)>=4) {
+				$sql = "SELECT COALESCE(pc.postcode,'') as cp, pc.postcode, pl.name as municipio, '' as poblacion, substr(pc.postcode,1,2) as codigo_provincia, plpr.name as provincia FROM "
+				. PostCode::tableName() . ' pc INNER JOIN ' . Place::tableName() . ' pl ON pl.id=pc.places_id LEFT JOIN ' . Place::tableName() . ' plpr ON pl.admin_sup_code=plpr.admin_code'
+				. " WHERE pc.postcode LIKE :postcode_like"
+				. $limit;
+				$models = PostCode::getDb()->createCommand($sql)
+					->bindValue(':postcode_like', $search . '%')
+					->queryAll();
+			}
+		} else {
+			$sql = "SELECT COALESCE(pc.postcode,'') as cp, pc.postcode, pl.name as municipio, '' as poblacion, substr(pc.postcode,1,2) as codigo_provincia, plpr.name as provincia"
+			. ' FROM ' . Place::tableName() . ' pl'
+			. ' LEFT JOIN ' . PostCode::tableName() . ' pc ON pl.id=pc.places_id'
+			. ' LEFT JOIN ' . Place::tableName() . ' plpr ON pl.admin_sup_code=plpr.admin_code'
+			. " WHERE pc.postcode = :postcode OR pl.name LIKE :postcode_like"
+			. $limit;
+			$models = PostCode::getDb()->createCommand($sql)
+				->bindValue(':postcode', $search)
+				->bindValue(':postcode_like', $search . '%')
+				->queryAll();
+		}
 		return $models;
 	}
 
