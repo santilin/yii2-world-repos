@@ -179,126 +179,205 @@ class SourceController extends Controller
 	} // actionImportPlaces
 /*>>>>>ACTION_IMPORTPLACES_END*/
 
+// 54;"Andalucía";2;"Andalucía";;;ES61;;;;724
+// 19;"Aragón";2;"Aragón";;;ES24;;;;724
+// 8;Principado de Asturias;3;Asturias;;;ES12;;;;724
+// 69;Canarias;2;Canarias;;;ES70;;;;724
+// 9;Cantabria;2;Cantabria;;;ES13;;;;724
+// 25;"Castilla y León";2;"Castilla y León";;;ES41;;;;724
+// 35;"Castilla-La Mancha";2;"Castilla-La Mancha";;;ES42;;;;724
+// 44;"Cataluña";2;"Cataluña";;;ES51;;;;724
+// 65;"Ciudad de Ceuta";2;"Ciudad de Ceuta";;;ES63;;;;724
+// 67;"Ciudad de Melilla";2;"Ciudad de Melilla";;;ES64;;;;724
+// 15;"Comunidad Foral de Navarra";2;"Comunidad Foral de Navarra";;;ES22;;;;724
+// 23;"Comunidad de Madrid";2;"Comunidad de Madrid";;;ES30;;;;724
+// 49;"Comunitat Valenciana";2;"Comunitat Valenciana";;;ES52;;;;724
+// 1;"España";0;"España";;;;;;;724
+// 41;Extremadura;2;Extremadura;;;ES43;;;;724
+// 2;Galicia;2;Galicia;;;ES11;;;;724
+// 53;"Illes Balears";2;"Illes Balears";;;ES53;;;;724
+// 17;"La Rioja";2;"La Rioja";;;ES23;;;;724
+// 11;"País Vasco";2;"País Vasco";;;ES21;;;;724
+
+	const ES_PROVINCES = [
+		'01' => 'ES211', // Araba/Álava
+		'02' => 'ES421', // Albacete
+		'03' => 'ES521', // Alacant/Alicante
+		'04' => 'ES611', // Almería
+		'05' => 'ES411', // Ávila
+		'06' => 'ES431', // Badajoz
+		'07' => 'ES530', // Illes Balears
+		'08' => 'ES511', // Barcelona
+		'09' => 'ES412', // Burgos
+		'10' => 'ES432', // Cáceres
+		'11' => 'ES612', // Cádiz
+		'12' => 'ES522', // Castelló/Castellón
+		'13' => 'ES422', // Ciudad Real
+		'14' => 'ES613', // Córdoba
+		'15' => 'ES111', // A Coruña
+		'16' => 'ES423', // Cuenca
+		'17' => 'ES512', // Girona
+		'18' => 'ES614', // Granada
+		'19' => 'ES424', // Guadalajara
+		'20' => 'ES212', // Gipuzkoa
+		'21' => 'ES615', //Huelva
+		'22' => 'ES241', //Huesca
+		'23' => 'ES616', // Jaén
+		'24' => 'ES413', // León
+		'25' => 'ES513', // Lleida
+		'26' => 'ES230', // La Rioja
+		'27' => 'ES112', // Lugo
+		'28' => 'ES300', // Madrid
+		'29' => 'ES617', // Málaga
+		'30' => 'ES620', // Murcia
+		'31' => 'ES220', // Navarra
+		'32' => 'ES113', // Ourense
+		'33' => 'ES120', // Asturias
+		'34' => 'ES414', // Palencia
+		'35' => 'ES701', // Las Palmas
+		'36' => 'ES114', // Pontevedra
+		'37' => 'ES415', // Salamanca
+		'38' => 'ES702', // Santa Cruz de Tenerife
+		'39' => 'ES130', // Cantabria
+		'40' => 'ES416', // Segovia
+		'41' => 'ES618', // Sevilla
+		'42' => 'ES417', // Soria
+		'43' => 'ES514', // Tarragona
+		'44' => 'ES242', // Teruel
+		'45' => 'ES425', // Toledo
+		'46' => 'ES523', // Valencia
+		'47' => 'ES418', // Valladolid
+		'48' => 'ES213', // Bizkaia
+		'49' => 'ES419', // Zamora
+		'50' => 'ES243', // Zaragoza
+		'51' => 'ES630', // Ceuta
+		'52' => 'ES640', // Melilla
+	];
+
+
 	public function actionImportarEspana()
 	{
- 		Yii::$app->db->createCommand("DELETE FROM postcodes")->queryAll();
- 		Yii::$app->db->createCommand("DELETE FROM places")->queryAll();
+//  		Yii::$app->db->createCommand("DELETE FROM postcodes")->queryAll();
+//  		Yii::$app->db->createCommand("DELETE FROM places")->queryAll();
+//
+// 		// Source provinces from nuts
+// 		$nuts3 = Yii::$app->db->createCommand("SELECT * FROM nuts3 WHERE NUTS_ID like 'ES%'")->queryAll();
+// 		if( count($nuts3) > 0 ) {
+// 			echo "Found " . count($nuts3) . " provinces for country ES\n";
+// 		}
+// 		foreach( $nuts3 as $nut ) {
+// 			if( strlen($nut['NUTS_ID']) == 3 ) {
+// 				continue; // Norte, sur, etc.
+// 			}
+// 			$level = $this->nuts3Level($nut);
+// 			$values = [
+// 				'countries_id' => $this->lauToCountry($nut['NUTS_ID']),
+// 				'name' => $this->escapeSql($nut['NUTS_NAME']),
+// 				'name_es' => $this->escapeSql($nut['NUTS_NAME']),
+// 				'level' => $level,
+// 			];
+// 			if ($level == 0) {
+// 				$place = Place::find()->byCountryId($values['countries_id'])
+// 					->andWhere(['name' => $nut['NUTS_NAME']])
+// 					->andWhere(['level' => $level])
+// 					->one();
+// 			} else if ($level == 4 ) {
+// 				continue; // Ibiza, etc.
+// 			} else {
+// 				$values['admin_code'] = $nut['NUTS_ID'];
+// 				$place = Place::find()->byCountryId($values['countries_id'])
+// 					->byAdminCode($values['admin_code'])
+// 					->andWhere(['level' => $level])
+// 					->one();
+// 			}
+// 			if (!$place) {
+// 				$place = new Place;
+// 			}
+// 			$place->setAttributes($values);
+// 			if (!$place->save()) {
+// 				echo $place->getOneError();
+// 			}
+// 		}
+//
+// 		// MUNICIPIOS
+// 		$entidades = Place::getDb()->createCommand("SELECT * FROM entidades_es WHERE TIPO='Municipio'")->queryAll();
+// 		if( count($entidades) > 0 ) {
+// 			echo "Found " . count($entidades) . " localities for country ES\n";
+// 			foreach( $entidades as $entidad ) {
+// 				$level = 4; // Municipio
+// 				$values = [
+// 					'countries_id' => 724,
+// 					'level' => $level,
+// 					'name' => $this->escapeSql($entidad['NOMBRE']),
+// 					'name_es' => $this->escapeSql($entidad['NOMBRE']),
+// 					'admin_code' => $this->escapeSql($entidad['INEMUNI']),
+// 					'national_id' => substr($entidad['CODIGOINE'],0,5),
+// 					'admin_sup_code' => self::ES_PROVINCES[$entidad['COD_PROV']],
+// 				];
+// 				$place = Place::find()->byCountryId($values['countries_id'])
+// 					->andWhere(['national_id' => $values['national_id']])->one();
+// 				if (!$place) {
+// 					$place = new Place;
+// 				}
+// 				$place->setAttributes($values);
+// 				if (!$place->save()) {
+// 					echo $place->getOneError();
+// 					exit();
+// 				} else {
+// 					echo "Saved {$place->admin_code} {$place->name}\n";
+// 				}
+// 			}
+// 		}
 
-		// Source provinces from nuts
-		$nuts3 = Yii::$app->db->createCommand("SELECT * FROM nuts3 WHERE NUTS_ID like 'ES%'")->queryAll();
-		if( count($nuts3) > 0 ) {
-			echo "Found " . count($nuts3) . " provinces for country ES\n";
-		}
-		foreach( $nuts3 as $nut ) {
-			if( strlen($nut['NUTS_ID']) == 3 ) {
-				continue; // Norte, sur, etc.
-			}
-			$level = $this->nuts3Level($nut);
-			$values = [
-				'countries_id' => $this->lauToCountry($nut['NUTS_ID']),
-				'name' => $this->escapeSql($nut['NUTS_NAME']),
-				'name_es' => $this->escapeSql($nut['NUTS_NAME']),
-				'level' => $level,
-			];
-			if ($level == 0) {
-				$place = Place::find()->byCountryId($values['countries_id'])
-					->andWhere(['name' => $nut['NUTS_NAME']])
-					->andWhere(['level' => $level])
-					->one();
-			} else if ($level == 4 ) {
-				continue; // Ibiza, etc.
-			} else {
-				$values['admin_code'] = $nut['NUTS_ID'];
-				$place = Place::find()->byCountryId($values['countries_id'])
-					->byAdminCode($values['admin_code'])
-					->andWhere(['level' => $level])
-					->one();
-			}
-			if (!$place) {
-				$place = new Place;
-			}
-			$place->setAttributes($values);
-			if (!$place->save()) {
-				echo $place->getOneError();
-			}
-		}
-
-		// MUNICIPIOS
-		$entidades = Place::getDb()->createCommand("SELECT * FROM entidades_es WHERE TIPO='Municipio'")->queryAll();
-		if( count($entidades) > 0 ) {
-			echo "Found " . count($entidades) . " localities for country ES\n";
-			foreach( $entidades as $entidad ) {
-				$level = 4; // Municipio
-				$values = [
-					'countries_id' => 724,
-					'level' => $level,
-					'name' => $this->escapeSql($entidad['NOMBRE']),
-					'name_es' => $this->escapeSql($entidad['NOMBRE']),
-					'admin_code' => $this->escapeSql($entidad['INEMUNI']),
-					'national_id' => substr($entidad['CODIGOINE'],0,5)
-				];
-				$place = Place::find()->byCountryId($values['countries_id'])
-					->andWhere(['national_id' => $values['national_id']])->one();
-				if (!$place) {
-					$place = new Place;
-				}
-				$place->setAttributes($values);
-				if (!$place->save()) {
-					echo $place->getOneError();
-					exit();
-				} else {
-					echo "Saved {$place->admin_code} {$place->name}\n";
-				}
-			}
-		}
-
-		// ENTIDADES
-		$entidades = Place::getDb()->createCommand("SELECT * FROM entidades_es WHERE TIPO<>'Municipio' AND TIPO<>'Entidad colectiva'")->queryAll();
-		if( count($entidades) > 0 ) {
-			echo "Found " . count($entidades) . " localities for country ES\n";
-			foreach( $entidades as $entidad ) {
-				$values = [
-					'countries_id' => 724,
-					'level' => $this->entidadToLevel($entidad['TIPO']),
-					'name' => $this->escapeSql($entidad['NOMBRE']),
-					'name_es' => $this->escapeSql($entidad['NOMBRE']),
-					'national_id' => $entidad['CODIGOINE'],
-				];
-				$place = Place::find()->byCountryId($values['countries_id'])
-					->andWhere(['name' => $entidad['NOMBRE']])
-					->andWhere(['admin_sup_code' => $entidad['INEMUNI']])
-					->one();
-				if (!$place) {
-					$municipio = Place::find()->byCountryId($values['countries_id'])
-						->andWhere(['national_id' => $entidad['INEMUNI']])->one();
-					if (!$municipio) {
-						echo $entidad['INEMUNI'] . ": municipio no encontrado";
-						exit(1);
-					}
-					if ($municipio->name == $entidad['NOMBRE']) {
-						continue;
-					}
-					$place = new Place;
-					$place->admin_sup_code = $municipio->admin_code;
-					$place->admin_sup_name = $municipio->name;
-					$place->admin_code = $entidad['CODIGOINE'];
-					$place->setAttributes($values);
-					if (!$place->save()) {
-						echo $place->getOneError();
-						exit();
-					} else {
-						echo "Saved {$place->admin_code} {$place->name}\n";
-					}
-				}
-			}
-		}
-
+// 		// ENTIDADES
+// 		$entidades = Place::getDb()->createCommand("SELECT * FROM entidades_es WHERE TIPO<>'Municipio' AND TIPO<>'Entidad colectiva'")->queryAll();
+// 		if( count($entidades) > 0 ) {
+// 			echo "Found " . count($entidades) . " localities for country ES\n";
+// 			foreach( $entidades as $entidad ) {
+// 				$values = [
+// 					'countries_id' => 724,
+// 					'level' => $this->entidadToLevel($entidad['TIPO']),
+// 					'name' => $this->escapeSql($entidad['NOMBRE']),
+// 					'name_es' => $this->escapeSql($entidad['NOMBRE']),
+// 					'national_id' => $entidad['CODIGOINE'],
+// 				];
+// 				$place = Place::find()->byCountryId($values['countries_id'])
+// 					->andWhere(['name' => $entidad['NOMBRE']])
+// 					->andWhere(['admin_sup_code' => $entidad['INEMUNI']])
+// 					->one();
+// 				if (!$place) {
+// 					$municipio = Place::find()->byCountryId($values['countries_id'])
+// 						->andWhere(['national_id' => $entidad['INEMUNI']])->one();
+// 					if (!$municipio) {
+// 						echo $entidad['INEMUNI'] . ": municipio no encontrado";
+// 						exit(1);
+// 					}
+// 					if ($municipio->name == $entidad['NOMBRE']) {
+// 						continue;
+// 					}
+// 					$place = new Place;
+// 					$place->admin_sup_code = $municipio->admin_code;
+// 					$place->admin_sup_name = $municipio->name;
+// 					$place->admin_code = $entidad['CODIGOINE'];
+// 					$place->setAttributes($values);
+// 					if (!$place->save()) {
+// 						echo $place->getOneError();
+// 						exit();
+// 					} else {
+// 						echo "Saved {$place->admin_code} {$place->name}\n";
+// 					}
+// 				} else {
+// 					echo "Already exists {$entidad['NOMBRE']}\n";
+// 				}
+// 			}
+// 		}
 
 // Para geonames
 // select t.id, p.POSTCODE AS cp
 // FROM geonames_es p inner join places t on t.national_id=p.admin3_code
 // ORDER BY cp
 
+		// Rellenar códigos postales desde la tabla post
  		Yii::$app->db->createCommand("DELETE FROM postcodes")->execute();
 		$sql_cp = <<<sql
 select t.id, p.POSTCODE AS cp,t.name
@@ -336,6 +415,10 @@ sql;
 				}
 			}
 		}
+
+		// Rellenar códigos postales desde la tabla
+
+
 	}
 
 	private function entidadToLevel($tipo)
