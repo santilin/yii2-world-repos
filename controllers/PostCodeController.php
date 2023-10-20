@@ -35,7 +35,7 @@ SELECT pc.postcode, plpr.name as nuts3, pl.name as nuts4, '' as nuts5, substr(pc
 FROM $postcode_tbl pc
 	INNER JOIN $place_tbl pl ON pl.id=pc.places_id
 	LEFT JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
-WHERE pc.postcode LIKE :postcode_like AND pl.level = 4
+WHERE pc.postcode LIKE :postcode_like AND pl.level = 4 /* :place_like */
 UNION
 SELECT pc.postcode, plpr.name, plmun.name, pl.name, substr(pc.postcode,1,2)
 FROM $postcode_tbl pc
@@ -51,16 +51,35 @@ SELECT pc.postcode, plpr.name as nuts3, pl.name as nuts4, '' as nuts5, substr(pc
 FROM $postcode_tbl pc
 	INNER JOIN $place_tbl pl ON pl.id=pc.places_id
 	LEFT JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
-WHERE pc.postcode LIKE :postcode_like OR pl.name LIKE :postcode_like AND pl.level = 4
+WHERE (pc.postcode LIKE :postcode_like OR pl.name LIKE :place_like) AND pl.level = 4
 UNION
 SELECT pc.postcode, plpr.name, plmun.name, pl.name, substr(pc.postcode,1,2)
 FROM $postcode_tbl pc
 	INNER JOIN $place_tbl pl ON pl.id=pc.places_id
 	LEFT JOIN $place_tbl plmun ON pl.admin_sup_code=plmun.admin_code AND plmun.level = 4
 	LEFT JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
-WHERE pc.postcode LIKE :postcode_like OR pl.name LIKE :postcode_like AND pl.level >= 5
+WHERE (pc.postcode LIKE :postcode_like OR pl.name LIKE :place_like) AND pl.level IN (5,6)
+UNION
+SELECT GROUP_CONCAT(pc.postcode), plpr.name, plmun.name, pl.name, substr(pc.postcode,1,2)
+FROM $place_tbl pl
+	INNER JOIN $place_tbl plmun ON pl.admin_sup_code=plmun.admin_code AND plmun.level = 4
+		LEFT JOIN $postcode_tbl pc ON plmun.id=pc.places_id
+	INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
+WHERE (pc.postcode LIKE :postcode_like OR pl.name LIKE :place_like) AND pl.level >= 5
+GROUP BY 2,3,4,5
+HAVING COUNT(pc.postcode)=1
+UNION
+SELECT '', plpr.name, plmun.name, pl.name, substr(pc.postcode,1,2)
+FROM $place_tbl pl
+	INNER JOIN $place_tbl plmun ON pl.admin_sup_code=plmun.admin_code AND plmun.level = 4
+		LEFT JOIN $postcode_tbl pc ON plmun.id=pc.places_id
+	INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
+WHERE (pc.postcode LIKE :postcode_like OR pl.name LIKE :place_like) AND pl.level >= 5
+GROUP BY 2,3,4,5
+HAVING COUNT(pc.postcode)>1
 SQL;
-		}
+
+	}
 		if (!empty($sql)) {
 			if ($per_page != 0) {
 				if ($page == 0 ) {
@@ -70,6 +89,7 @@ SQL;
 			}
 			$models = PostCode::getDb()->createCommand($sql)
 				->bindValue(':postcode_like', $search . '%')
+				->bindValue(':place_like', "%$search%")
 				->queryAll();
 		} else {
 			$models = [];
