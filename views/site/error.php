@@ -1,13 +1,13 @@
 <?php
 /*<<<<<USES*/
 /* var yii\web\View $this */
-/* @var $title string */
+/* @var $name string */
 /* @var $message string */
 /* @var Exception $exception */
 
 use yii\helpers\Html;
 
-$this->title = $title??'Error';
+$this->title = $name??'Error';
 ?>
 <div class="site-error">
 

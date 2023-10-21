@@ -53,11 +53,15 @@ class SiteController extends Controller
 	{
 		$exception = Yii::$app->errorHandler->exception;
 		if ($exception !== null) {
-			$error = $exception->statusCode;
-			try {
-				return $this->render( "error$error", [ 'name' => $error, 'message' => $exception->getMessage(), 'exception' => $exception] );
-			} catch(ViewNotFoundException $e) {
-				return $this->render( "error", [ 'name' => $error, 'message' => $exception->getMessage(), 'exception' => $exception] );
+			if( $exception instanceof \yii\web\HttpException) {
+				$error = $exception->statusCode;
+				try {
+					return $this->render( "error$error", [ 'name' => 'Error', 'message' => $exception->getMessage(), 'exception' => $exception] );
+				} catch(ViewNotFoundException $e) {
+					return $this->render( "error", [ 'name' => 'Error', 'message' => $exception->getMessage(), 'exception' => $exception] );
+				}
+			} else {
+				return $this->render( "error", [ 'name' => 'Error', 'message' => $exception->getMessage(), 'exception' => $exception] );
 			}
 		}
 	}

@@ -95,6 +95,7 @@ class Place extends \santilin\wrepos\models\_BaseModel
 			'national_id' => 'National id',
 			'countries_id' => Country::getModelInfo('title'), // HasOne
 			'country' => Country::getModelInfo('title'), // HasOne
+			'PostCode' => PostCode::getModelInfo('title_plural'), // belongstomany
 		];
 /*>>>>>LABELS*/
 		// customize your labels here

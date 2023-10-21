@@ -24,10 +24,17 @@ class PostCodeController extends Controller
 
 	public function actionFindTypeAhead(string $search, int $page = 1, int $per_page = 10)
 	{
+		$models = [];
 		$search = trim($search);
 		$postcode_tbl = PostCode::tableName();
 		$place_tbl = Place::tableName();
 		$sql = '';
+		if ($per_page != 0) {
+			if ($page == 0 ) {
+				$page = 1;
+			}
+			$sql_limit = ' LIMIT ' . ($page-1) * $per_page . ",$per_page";
+		}
 		if (is_numeric($search) ) {
 			if (strlen($search)>=4) {
 				$sql = <<<SQL
@@ -44,6 +51,9 @@ FROM $postcode_tbl pc
 	LEFT JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
 WHERE pc.postcode LIKE :postcode_like AND pl.level >= 5
 SQL;
+				$models = PostCode::getDb()->createCommand($sql. $sql_limit)
+				->bindValue(':postcode_like', $search . '%')
+				->queryAll();
 			}
 		} else {
 				$sql = <<<SQL
@@ -78,21 +88,10 @@ WHERE (pc.postcode LIKE :postcode_like OR pl.name LIKE :place_like) AND pl.level
 GROUP BY 2,3,4,5
 HAVING COUNT(pc.postcode)>1
 SQL;
-
-	}
-		if (!empty($sql)) {
-			if ($per_page != 0) {
-				if ($page == 0 ) {
-					$page = 1;
-				}
-				$sql .= ' LIMIT ' . ($page-1) * $per_page . ",$per_page";
-			}
-			$models = PostCode::getDb()->createCommand($sql)
-				->bindValue(':postcode_like', $search . '%')
-				->bindValue(':place_like', "%$search%")
-				->queryAll();
-		} else {
-			$models = [];
+				$models = PostCode::getDb()->createCommand($sql)
+					->bindValue(':postcode_like', $search . '%')
+					->bindValue(':place_like', "%$search%")
+					->queryAll();
 		}
 		\Yii::$app->response->format = Response::FORMAT_JSON;
 		return $models;

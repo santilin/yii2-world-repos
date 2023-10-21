@@ -1,8 +1,8 @@
 <?php
 /*<<<<<USES*/
-/*Template:Yii2App/assets/MainAsset.php*/
+/*Template:Yii2App/assets/SiteAsset.php*/
 /**
- * BS4 Asset for the 'main' layout
+ * BS4 Asset for the 'site' layout
  */
 namespace santilin\wrepos\assets;
 
@@ -14,12 +14,13 @@ use yii\web\AssetBundle;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class MainAsset extends AssetBundle
+class SiteAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
 		'css/site.css',
+		'css/themes/light.css',
 /*>>>>>USES*/
 /*<<<<<JS*/
         // Add your custom css here

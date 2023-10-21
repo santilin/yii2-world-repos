@@ -82,6 +82,7 @@ class Country extends \santilin\wrepos\models\_BaseModel
 			'name_es' => 'Name es',
 			'name_en' => 'Name en',
 			'name_fr' => 'Name fr',
+			'Place' => Place::getModelInfo('title_plural'), // belongstomany
 		];
 /*>>>>>LABELS*/
 		// customize your labels here

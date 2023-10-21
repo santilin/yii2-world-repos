@@ -66,7 +66,6 @@ body.site nav ol.breadcrumb .breadcrumb-item.active {
 .form-control:focus {
 	color: inherit;
 	background-color: inherit;
-	font-size: larger;
 }
 .form-control::placeholder { opacity:0.5; }
 .readonly {
