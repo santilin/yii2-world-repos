@@ -1,0 +1,2 @@
+- Usar todas las localidades de ES.txt (Geonames)
+-
