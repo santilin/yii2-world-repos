@@ -71,3 +71,10 @@ torres devel test
 ```
 
 [//]: # (>>>>>USUARIAS)
+
+
+# Import places to your application
+```
+ATTACH DATABASE 'vendor/santilin/yii2-world-repos/runtime/repos.db' AS repos;
+insert into territorios SELECT null, coalesce(admin_code,''), name_es, level, null, null, null, null from repos.places where level<=4;
+```

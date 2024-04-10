@@ -1,6 +1,7 @@
 {
 	"name": "world-repos",
 	"version": "0.0.1",
+	"schema-version": "0.1.0",
 	"charset": "utf8",
 	"language": "es-ES",
 	"languages": [ "es-ES"],
