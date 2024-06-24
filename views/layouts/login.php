@@ -1,11 +1,14 @@
 <?php
 /*<<<<<USES*/
 /*Template:Yii2App/layouts/login.php*/
-/* @var \yii\web\View $this*/
-/* @var string $content */
+/**
+ * Yii2App Bootstrap4 'login' layout
+ * @var \yii\web\View $this
+ * @var string $content
+*/
 
 use yii\helpers\{Html,Url};
-use yii\widgets\Breadcrumbs;
+use yii\bootstrap4\Breadcrumbs;
 use app\assets\LoginAsset;
 use santilin\churros\helpers\AppHelper;
 use santilin\churros\widgets\SessionAlert;
@@ -27,9 +30,6 @@ $created_by = 'Creado por Santilín con Yii' . Yii::getVersion();
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <?php
 echo $this->registerCsrfMetaTags();
-if( !YII_ENV_DEV && AppHelper::yiiparam('baseUrl') ) {
-	echo '<base href="' . AppHelper::yiiparam('baseUrl') . "\">\n";
-}
 ?>
 	<title><?= Html::encode($this->title) ?></title>
 	<?php $this->head() ?>
@@ -39,35 +39,39 @@ if( !YII_ENV_DEV && AppHelper::yiiparam('baseUrl') ) {
 ?>
 </head>
 <?php $this->beginBody() ?>
-<body class="site">
-<div class="header">
-<div class="text-center">
+<body class="site" data-bs-theme="light">
+<header aria-hidden=true>
 <?php
 /*>>>>>BEGINBODY*/
-/*<<<<<JUMBOTRON*/
+/*<<<<<BREADCRUMBS*/
 	echo Breadcrumbs::widget([
 		'homeLink' => [ 'label' => Yii::t('app', 'World repositories'), 'url' => ['/']],
-		'links' => $this->params['breadcrumbs']?? [ 'Inicio' ] ]); ?>
-	<h1><?= (isset(Yii::$app->params['logo']) ? Html::a(Html::img(Yii::$app->params['logo'], ['id' => 'app-logo']), ['/']) : '') . '&nbsp;&nbsp;' . Yii::$app->name ?></h1>
-</div><!--jumbotron-->
+		'links' => $this->params['breadcrumbs']?? [ 'Inicio' ],
+		'options' => ['class' => 'breadcrumb justify-content-center'] ]);
+?>
+<h1 class=text-center><?= (isset(Yii::$app->params['logo']) ? Html::img(Yii::$app->params['logo'], ['id' => 'app-logo']) : '') . '<br>' . Yii::$app->name ?></h1>
+</header>
+<main aria-label="contenido">
 <?php
-/*>>>>>JUMBOTRON*/
+/*>>>>>BREADCRUMBS*/
 /*<<<<<CONTENT*/
 echo SessionAlert::widget();
-echo $content;
+?>
+<?php
+echo str_replace('<div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">',
+				 '<div class="col-md-4 offset-md-4 col-sm-6 offset-sm-3">', $content);
 /*>>>>>CONTENT*/
 /*<<<<<ENDBODY*/
 ?>
-</div>
-</div>
-<footer class="footer">
+</main>
+<footer aria-hidden=true>
 <?php
 /*>>>>>ENDBODY*/
 /*<<<<<FOOTER*/
 ?>
 	<div class="container">
-		<p class="pull-left">&copy; <?= $company ?>, <?= date('Y') ?></p>
-		<p class="pull-right"><?= $created_by ?></p>
+		<p class="float-sm-left">&copy; <?= $company ?>, <?= date('Y') ?></p>
+		<p class="float-sm-right"><?= $created_by ?></p>
 	</div>
 </footer>
 <?=	$this->endBody(); ?>

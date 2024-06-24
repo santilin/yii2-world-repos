@@ -15,11 +15,10 @@ World repos of all kinds: countries, cities ,villages, etc.
 * Configurar config/db.php
 
 ```
-mkdir -pm 777 web/uploads
 mkdir -m 777 web/assets
-mkdir -pm 777 runtime/logs runtime/HTML
-cd runtime
-ln -s ../web/uploads .;
+mkdir -pm 777 runtime/logs runtime/HTML runtime/uploads
+cd web
+ln -s ../runtime/uploads .
 cd ..
 \# sqlite3
 if [ -f runtime/world-repos.db ]; then

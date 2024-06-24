@@ -1,18 +1,13 @@
 /*<<<<<MAIN*/
 pre {
-	color: white;
+	color: #f1f1f1;
 }
 body.dark .dashboard-content {
 	background-color: black;
-	color: white;
+	color: #f1f1f1;
 }
 
 body.dark .dashboard-nav {
-	background-color: #131139;
-	color: #d6a2a2;
-}
-
-body.dark .dashboard-toolbar {
 	background-color: #131139;
 	color: #d6a2a2;
 }
@@ -23,28 +18,24 @@ body.dark .dashboard-footer {
 	color: #d6a2a2;
 }
 
-body.dark .form-control {
-	background-color: lightgray;
-	color: black;
-	border-width: medium;
-}
-
 body.dark .form-control:active {
 	background-color: gray;
 	color: black;
 }
 body.dark .form-control {
 	background-color: #212529;
-	color: #878b8f;
+	color: #f1f1f1;
 	background-clip: padding-box;
 	border: var(--bs-border-width) solid var(--bs-border-color);
 	border-radius: var(--bs-border-radius);
 	transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
-
+body.dark .form-group input:focus, body.dark .form-group select:focus {
+	background-color: #447483;
+}
 body.dark .form-control-plaintext {
 	background-color: black;
-	color: white;
+	color: #f1f1f1;
 	padding: 0.375rem 0.75rem;
 	border: 1px solid #ced4da;
 	border-radius: 0.25rem;

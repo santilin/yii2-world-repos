@@ -2,18 +2,18 @@
 /*<<<<<USES*/
 /*Template:Yii2App/layouts/site.php*/
 /**
- * Yii2App Site Bootstrap4 (default) layout
+ * Yii2App Bootstrap5 'site' layout
  * @var \yii\web\View $this
  * @var string $content
  */
 
-use yii\helpers\Html;
-use yii\bootstrap4\{Breadcrumbs,Nav,NavBar};
-use santilin\wrepos\assets\SiteAsset;
+use yii\helpers\{Html,Url};
+use yii\bootstrap5\{Breadcrumbs,Nav,NavBar};
+use santilin\wrepos\assets\0Asset;
 use santilin\churros\helpers\AppHelper;
 use santilin\churros\widgets\SessionAlert;
 
-SiteAsset::register($this);
+0Asset::register($this);
 $company = $brand_name = Yii::$app->name;
 $created_by = 'Creado por Santilín con Yii' . Yii::getVersion();
 ?>
@@ -29,9 +29,6 @@ $created_by = 'Creado por Santilín con Yii' . Yii::getVersion();
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 <?php
 echo $this->registerCsrfMetaTags();
-if( !YII_ENV_DEV && AppHelper::yiiparam('baseUrl') ) {
-	echo '<base href="' . AppHelper::yiiparam('baseUrl') . "\">\n";
-}
 ?>
 	<title><?= Html::encode($this->title) ?></title>
 	<?php $this->head() ?>
@@ -42,13 +39,13 @@ $company = "Santilín";
 ?>
 </head>
 <?php $this->beginBody() ?>
-<body class="site light">
-<div class="wrap">
-<div class="header">
+<body class="0" data-bs-theme="light">
+<div class="container">
+<header aria-label='World repositories'>
 <?php
 $home_link = null;
-if( '' != '' ) {
-	$home_link = [ 'label' => Yii::t('app', 'Repositories'), 'url' => ['/']];
+if( '0' != 'site' ) {
+	$home_link = [ 'label' => Yii::t('app', 'Repositories'), 'url' => ['/0']];
 }
 $navbar_options = [
 	'brandLabel' => '<span>' . (isset(Yii::$app->params['logo'])
@@ -56,7 +53,8 @@ $navbar_options = [
 		. $brand_name,
 	'brandUrl' => Yii::$app->homeUrl,
 	'options' => [
-		'class' => 'nav navbar navbar-expand-md navbar-light',
+		'class' => 'navbar navbar-expand-md',
+		'aria-label' => 'Menú principal',
 	],
 ];
 /*>>>>>BODY*/
@@ -65,17 +63,13 @@ $items_main = []; // Main menu
 $login_menu = [];
 $login_items = [];
 $user_component = '' != '' ? Yii::$app->get('user') : null;
-if( $user_component ) {
-	$username = $user_component->getIdentity() ? $user_component->getIdentity()->username : '';
-} else {
-	$user_name = 'Invitada';
-}
+$username = $user_component?->getIdentity()?->username ?: '';
 /*>>>>>MENU_USER*/
 /*<<<<<LOGINMENU*/
 if( count($login_items) == 1 ) {
-	$login_menu = reset($login_items);
+	$login_menu[] = reset($login_items);
 } else if( count($login_items) > 1 ) {
-	$login_menu = [ 'label' => $username ?: Yii::t('app', 'Acceso'), 'url' => '#', 'items' => $login_items, 'visible' => true ];
+	$login_menu[] = [ 'label' => $username ?: Yii::t('app', 'Acceso'), 'url' => '#', 'items' => $login_items, 'visible' => true ];
 }
 /*>>>>>LOGINMENU*/
 /*<<<<<MENUITEMS_PRE*/
@@ -86,7 +80,7 @@ if( count($login_items) == 1 ) {
 /*>>>>>MENUITEMS*/
 /*<<<<<NAVMENUS*/
 $nav_menu_options = [
-	'options' => ['class' => 'navbar-nav ml-auto mt-2 mt-lg-0' ],
+	'options' => ['class' => 'navbar-nav ms-auto' ],
 	'items' => array_merge(	$items_main),
 ];
 NavBar::begin($navbar_options);
@@ -97,27 +91,33 @@ NavBar::end();
 /*>>>>>MENU_BEGIN*/
 /*<<<<<MENU_END*/
 	?>
-</div><!--header-->
-	<div class="container">
-		<?= Breadcrumbs::widget([
-			'homeLink' => $home_link,
-			'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-		]) ?>
-		<?= SessionAlert::widget() ?>
-		<?= $content ?>
-	</div>
-</div>
-<footer class="footer">
+</header>
+<main aria-label='Contenido'>
+	<?= Breadcrumbs::widget([
+		'homeLink' => $home_link,
+		'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+		'options' => [ 'aria' => [ 'hidden' => 'true' ]],
+	]) ?>
+	<?= SessionAlert::widget() ?>
+	<?= $content ?>
+</main>
+<footer aria-label='Pié de página' class="footer mt-auto py-3">
 <?php
 /*>>>>>MENU_END*/
 /*<<<<<FOOTER*/
 ?>
-	<div class="container">
-		<p class="float-sm-left">&copy; <?= $company ?>, <?= date('Y') ?></p>
-		<p class="float-sm-right"><?= $created_by ?></p>
+	<hr/>
+	<div class="row">
+		<div class="col-sm-6">
+			<p class="text-start">&copy; <?= $company ?>, <?= date('Y') ?></p>
+		</div>
+		<div class="col-sm-6">
+			<p class="text-end"><?= $created_by ?></p>
+		</div>
 	</div>
 </footer>
 <?php $this->endBody() ?>
+</div><!-- container-->
 </body>
 </html>
 <?php $this->endPage();
@@ -125,7 +125,7 @@ NavBar::end();
 /*<<<<<PROFILES_LINKS*/
 if( $user_component ) {
 	foreach( \app\components\Capel::modulesWithAccess($user_component) as $km => $name ) {
-		$login_items[$km] = ['label' => Yii::t('app', $name), 'url' => Url::to('/$km') ];
+		$login_items[$km] = ['label' => Yii::t('app', $name), 'url' => Url::to("/$km") ];
 	}
 }
 /*>>>>>PROFILES_LINKS*/

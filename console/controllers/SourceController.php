@@ -14,7 +14,7 @@ use santilin\wrepos\models\{Country,Place,PostCode};
 /**
  * world-repos console commands
  *
- * @author Santilín <santi@noviolento.es>
+ * @author Santilín
  * @since 1.0
  */
 class SourceController extends Controller

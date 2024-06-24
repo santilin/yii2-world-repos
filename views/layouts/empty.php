@@ -2,18 +2,17 @@
 /*<<<<<USES*/
 /*Template:Yii2App/layouts/empty.php*/
 /**
- * Yii2App Empty Bootstrap4 (default) layout
+ * Yii2App Empty Bootstrap5 'empty' layout
  * @var \yii\web\View $this
  * @var string $content
  */
 
 use yii\helpers\Html;
-use yii\bootstrap4\{Breadcrumbs,Nav,NavBar};
-use santilin\wrepos\assets\SiteAsset;
+use santilin\wrepos\assets\0Asset;
 use santilin\churros\helpers\AppHelper;
 use santilin\churros\widgets\SessionAlert;
 
-SiteAsset::register($this);
+0Asset::register($this);
 $company = $brand_name = Yii::$app->name;
 $created_by = 'Creado por Santilín con Yii' . Yii::getVersion();
 ?>
@@ -25,13 +24,9 @@ $created_by = 'Creado por Santilín con Yii' . Yii::getVersion();
 	<meta name="description" content="World repositories" />
 	<meta name="author" content="world-repos" />
     <meta charset="<?= Yii::$app->charset ?>" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 <?php
 echo $this->registerCsrfMetaTags();
-if( !YII_ENV_DEV && AppHelper::yiiparam('baseUrl') ) {
-	echo '<base href="' . AppHelper::yiiparam('baseUrl') . "\">\n";
-}
 ?>
 	<title><?= Html::encode($this->title) ?></title>
 	<?php $this->head() ?>
@@ -42,11 +37,9 @@ if( !YII_ENV_DEV && AppHelper::yiiparam('baseUrl') ) {
 </head>
 <?php $this->beginBody() ?>
 <body class="site light">
-<div class="wrap">
-	<div class="container">
-		<?= SessionAlert::widget() ?>
-		<?= $content ?>
-	</div>
+<div class="container">
+	<?= SessionAlert::widget() ?>
+	<?= $content ?>
 </div>
 <footer class="footer">
 <?php

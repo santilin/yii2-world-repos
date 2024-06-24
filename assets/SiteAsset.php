@@ -2,7 +2,7 @@
 /*<<<<<USES*/
 /*Template:Yii2App/assets/SiteAsset.php*/
 /**
- * BS4 Asset for the 'site' layout
+ * bs5 Asset for the 'site' layout
  */
 namespace santilin\wrepos\assets;
 
@@ -14,19 +14,20 @@ use yii\web\AssetBundle;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class SiteAsset extends AssetBundle
+class 0Asset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-		'css/site.css',
-		'css/themes/light.css',
+        'css/themes/light.css',
+		'css/0_site.css',
+		'css/0_site_print.css',
 /*>>>>>USES*/
 /*<<<<<JS*/
         // Add your custom css here
 	];
     public $js = [
-		'js/site.js',
+		'js/0_site.js',
 /*>>>>>JS*/
 /*<<<<<DEPENDS*/
         // Add your custom js here
@@ -34,8 +35,9 @@ class SiteAsset extends AssetBundle
     public $depends = [
         'yii\web\YiiAsset',
 		'yii\web\JqueryAsset',
-        'yii\bootstrap4\BootstrapAsset',
-		'yii\bootstrap4\BootstrapPluginAsset',
+        'yii\bootstrap5\BootstrapAsset',
+		'yii\bootstrap5\BootstrapPluginAsset',
+		'yii\bootstrap5\BootstrapIconAsset',
 		'rmrevin\yii\fontawesome\AssetBundle',
 /*>>>>>DEPENDS*/
 /*<<<<<DEPENDS_END*/

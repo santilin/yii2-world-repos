@@ -1,188 +1,222 @@
 {
-	"name": "world-repos",
-	"version": "0.0.1",
-	"charset": "utf8",
-	"language": "es-ES",
-	"languages": [ "es-ES"],
-	"prod_vendor_path": "/home/santilin/devel/yii2base/vendor",
-	"source_language": "es",
-	"currency_code": "EUR",
-	"definitions_path": "capel",
-	"description": "World repositories",
-	"package_doc_block": "yii2-world-repos",
-	"params": {
-		"adminEmail": "software@noviolento.es",
-		"testEmail": "software@noviolento.es",
-		"baseUrl": "http://noviolentismo.org",
-		"develURL": "http://trivel.test",
-		"testUrl": "http://trivel.test",
-		"publicUploadsDir": "@web/uploads/",
-		"privateUploadsDir": "@app/runtime/uploads/"
-	},
-
-	"outputs" : [
-		{
-			"enabled": true,
-			"type": "Yii2StandAloneModule",
-			"access_filters": ["none"],
-			"title": "Repositories",
-			"namespace": "santilin\\wrepos",
-			"dest_path": "/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos",
-			"models": {
-				"Country": ["model", "migration"],
-				"Place": ["model", "migration"],
-				"PostCode": ["model", "migration"]
-			},
-			"controllers": {
-				"Place": {
-					"type": "Empty"
-				},
-				"PostCode": {
-					"type": "Empty"
-				}
-			}
-		}
-	],
-
-	"models" : {
-		"Country": {
-			"base_model_class": "\\santilin\\wrepos\\models\\_BaseModel",
-			"name_plural": "Countries",
-			"table_name": "countries",
-			"migration_timestamp": "220101_000100",
-			"fields": [
-				{
-					"name": "id",
-					"type": "key/primary/tiny"
-				}, {
-					"name": "iso2",
-					"type": "places/country/iso2_code",
-					"is_nullable": false,
-					"is_code": true
-				}, {
-					"name": "iso3",
-					"type": "places/country/iso3_code",
-					"is_nullable": false,
-					"is_code": false
-				}, {
-					"name": "name",
-					"type": "places/country/name",
-					"is_desc": true
-				}, {
-					"name": "name_es",
-					"type": "places/country/name",
-					"is_desc": true
-				}, {
-					"name": "name_en",
-					"type": "places/country/name",
-					"is_desc": true
-				}, {
-					"name": "name_fr",
-					"type": "places/country/name",
-					"is_desc": true
-				}
-			]
-		},
-		"Place": {
-			"base_model_class": "\\santilin\\wrepos\\models\\_BaseModel",
-			"table_name": "places",
-			"migration_timestamp": "220101_000200",
-			"relations": {
-				"Country": { "type": "HasOne", "is_nullable": false, "is_code": true }
-			},
-			"fields": [
-				{
-					"name": "id",
-					"type": "key/primary/tiny"
-				}, {
-					"name": "name",
-					"type": "places/name",
-					"is_nullable": false,
-					"is_desc": true
-				}, {
-					"name": "level",
-					"type": "tinyInteger",
-					"is_nullable": false,
-					"default_value": 0
-				}, {
-					"name": "name_es",
-					"type": "places/name",
-					"is_nullable": true
-				}, {
-					"name": "name_en",
-					"type": "places/name",
-					"is_nullable": true
-				}, {
-					"name": "name_fr",
-					"type": "places/name",
-					"is_nullable": true
-				}, {
-					"name": "admin_code",
-					"type": "string"
-				}, {
-					"name": "admin_sup_code",
-					"type": "string"
-				}, {
-					"name": "admin_sup_name",
-					"type": "string"
-				}, {
-					"name": "national_id",
-					"type": "string"
-				}
-			]
-		},
-		"PostCode": {
-			"base_model_class": "\\santilin\\wrepos\\models\\_BaseModel",
-			"table_name": "postcodes",
-			"migration_timestamp": "220101_000300",
-			"relations": {
-				"Place": { "type": "HasOne", "is_nullable": false }
-			},
-			"fields": [
-				{
-					"name": "postcode",
-					"type": "places/postcode",
-					"is_nullable": false
-				}
-			]
-		}
-	},
-	"commands": {
-		"Source": {
-			"options": [
-				{
-					"name": "dryRun",
-					"type": "bool",
-					"default_value": true
-				}, {
-					"name": "abortOnError",
-					"type": "bool",
-					"default_value": true
-				}
-			],
-			"actions": {
-				"ImportPlaces" : {
-					"description": "Importador de lugares: provincias, municipios, etc. por países",
-					"arguments": [
-						{
-							"name": "country",
-							"type": "string",
-							"default_value": "ES"
-						}
-					]
-				},
-				"ImportCountries" : {
-					"description": "Importador de países por lenguajes",
-					"arguments": [
-						{
-							"name": "language",
-							"type": "string",
-							"default_value": "ES"
-						}
-					]
-				}
-			}
-		}
-	}
-
+    "name": "world-repos",
+    "schema_version": "0.1.3",
+    "version": "0.0.1",
+    "charset": "utf8",
+    "language": "es-ES",
+    "languages": [
+        "es-ES"
+    ],
+    "prod_vendor_path": "/home/santilin/devel/yii2base/vendor",
+    "source_language": "es",
+    "currency_code": "EUR",
+    "definitions_path": "capel",
+    "description": "World repositories",
+    "package_doc_block": "yii2-world-repos",
+    "params": {
+        "adminEmail": "software@noviolento.es",
+        "testEmail": "software@noviolento.es",
+        "baseUrl": "http://noviolentismo.org",
+        "develURL": "http://trivel.test",
+        "testUrl": "http://trivel.test",
+        "publicUploadsDir": "@web/uploads/",
+        "privateUploadsDir": "@app/runtime/uploads/"
+    },
+    "outputs": [
+        {
+            "enabled": true,
+            "type": "Yii2StandAloneModule",
+            "access_filters": [
+                "none"
+            ],
+            "title": "Repositories",
+            "namespace": "santilin\\wrepos",
+            "dest_path": "/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos",
+            "models": {
+                "Country": [
+                    "model",
+                    "migration"
+                ],
+                "Place": [
+                    "model",
+                    "migration"
+                ],
+                "PostCode": [
+                    "model",
+                    "migration"
+                ]
+            },
+            "controllers": {
+                "Place": {
+                    "type": "Empty"
+                },
+                "PostCode": {
+                    "type": "Empty"
+                }
+            }
+        }
+    ],
+    "models": {
+        "Country": {
+            "base_model_class": "\\santilin\\wrepos\\models\\_BaseModel",
+            "name_plural": "Countries",
+            "table_name": "countries",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "key/primary/tiny"
+                },
+                {
+                    "name": "iso2",
+                    "type": "places/country/iso2_code",
+                    "is_nullable": false,
+                    "is_code": true
+                },
+                {
+                    "name": "iso3",
+                    "type": "places/country/iso3_code",
+                    "is_nullable": false,
+                    "is_code": false
+                },
+                {
+                    "name": "name",
+                    "type": "places/country/name",
+                    "is_desc": true
+                },
+                {
+                    "name": "name_es",
+                    "type": "places/country/name",
+                    "is_desc": true
+                },
+                {
+                    "name": "name_en",
+                    "type": "places/country/name",
+                    "is_desc": true
+                },
+                {
+                    "name": "name_fr",
+                    "type": "places/country/name",
+                    "is_desc": true
+                }
+            ],
+            "model_hierarchy": "21.179.076.500"
+        },
+        "Place": {
+            "base_model_class": "\\santilin\\wrepos\\models\\_BaseModel",
+            "table_name": "places",
+            "relations": {
+                "Country": {
+                    "type": "HasOne",
+                    "is_nullable": false,
+                    "is_code": true
+                }
+            },
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "key/primary/tiny"
+                },
+                {
+                    "name": "name",
+                    "type": "places/name",
+                    "is_nullable": false,
+                    "is_desc": true
+                },
+                {
+                    "name": "level",
+                    "type": "tinyInteger",
+                    "is_nullable": false,
+                    "default_value": 0
+                },
+                {
+                    "name": "name_es",
+                    "type": "places/name",
+                    "is_nullable": true
+                },
+                {
+                    "name": "name_en",
+                    "type": "places/name",
+                    "is_nullable": true
+                },
+                {
+                    "name": "name_fr",
+                    "type": "places/name",
+                    "is_nullable": true
+                },
+                {
+                    "name": "admin_code",
+                    "type": "string"
+                },
+                {
+                    "name": "admin_sup_code",
+                    "type": "string"
+                },
+                {
+                    "name": "admin_sup_name",
+                    "type": "string"
+                },
+                {
+                    "name": "national_id",
+                    "type": "string"
+                }
+            ],
+            "model_hierarchy": "21.179.076.500"
+        },
+        "PostCode": {
+            "base_model_class": "\\santilin\\wrepos\\models\\_BaseModel",
+            "table_name": "postcodes",
+            "relations": {
+                "Place": {
+                    "type": "HasOne",
+                    "is_nullable": false
+                }
+            },
+            "fields": [
+                {
+                    "name": "postcode",
+                    "type": "places/postcode",
+                    "is_nullable": false
+                }
+            ],
+            "model_hierarchy": "21.179.076.500"
+        }
+    },
+    "commands": {
+        "Source": {
+            "options": [
+                {
+                    "name": "dryRun",
+                    "type": "bool",
+                    "default_value": true
+                },
+                {
+                    "name": "abortOnError",
+                    "type": "bool",
+                    "default_value": true
+                }
+            ],
+            "actions": {
+                "ImportPlaces": {
+                    "description": "Importador de lugares: provincias, municipios, etc. por países",
+                    "arguments": [
+                        {
+                            "name": "country",
+                            "type": "string",
+                            "default_value": "ES"
+                        }
+                    ]
+                },
+                "ImportCountries": {
+                    "description": "Importador de países por lenguajes",
+                    "arguments": [
+                        {
+                            "name": "language",
+                            "type": "string",
+                            "default_value": "ES"
+                        }
+                    ]
+                }
+            }
+        }
+    }
 }

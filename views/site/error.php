@@ -18,7 +18,7 @@ $this->title = $name??'Error';
     </div>
 
 <?php
-if (YII_ENV_DEV && isset($exception) && $exception->getPrevious()) {
+if ((YII_ENV_TEST||YII_ENV_DEV) && isset($exception) && $exception->getPrevious()) {
 ?>
     <p>
         <?= Yii::$app->request->absoluteUrl ?>
