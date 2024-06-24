@@ -27,6 +27,16 @@ class PlaceController extends Controller
 		return $models;
 	}
 
+	public function actionFindDegurba(string $mun_id, string $country = 'ES')
+	{
+		$p = new Place; // to get the db object
+		$db = p->getDb();
+		$db->createCommand("SELECT * FROM entidades_es WHERE INEMUNI = ?", [$mun_id])
+				->queryAll();
+		return $db;
+	}
+
+
 /*<<<<<CLASS_END*/
 } // class SiteController
 /*>>>>>CLASS_END*/
