@@ -15,6 +15,7 @@ use santilin\churros\widgets\SessionAlert;
 
 0Asset::register($this);
 $company = $brand_name = Yii::$app->name;
+$copyright_symbol = '&copy;';
 $created_by = 'Creado por Santilín con Yii' . Yii::getVersion();
 ?>
 <?php $this->beginPage() ?>
@@ -62,8 +63,9 @@ $navbar_options = [
 $items_main = []; // Main menu
 $login_menu = [];
 $login_items = [];
-$user_component = '' != '' ? Yii::$app->get('user') : null;
+$user_component = Yii::$app->get('user', false);
 $username = $user_component?->getIdentity()?->username ?: '';
+$user_is_admin = AppHelper::userIsAdmin();
 /*>>>>>MENU_USER*/
 /*<<<<<LOGINMENU*/
 if( count($login_items) == 1 ) {
@@ -109,7 +111,7 @@ NavBar::end();
 	<hr/>
 	<div class="row">
 		<div class="col-sm-6">
-			<p class="text-start">&copy; <?= $company ?>, <?= date('Y') ?></p>
+			<p class="text-start"><?=$copyright_symbol?> <?= $company ?>, <?= date('Y') ?></p>
 		</div>
 		<div class="col-sm-6">
 			<p class="text-end"><?= $created_by ?></p>

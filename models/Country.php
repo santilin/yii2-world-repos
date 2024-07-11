@@ -41,13 +41,14 @@ class Country extends \santilin\wrepos\models\_BaseModel
 	{
 		if (static::$_model_info == [] ) {
 			$mi = [
+				'model_name' => 'Country',
 				'title' => 'Country',
-				'title_plural' => 'Countrys',
+				'title_plural' => 'Countries',
 				'code_field' => 'iso2',
 				'desc_field' => 'name',
 				'controller_name' => 'country',
 				'female' => true,
-				'record_desc_format_short' => '{iso2}, {name}',
+				'record_desc_format_short' => '{iso2}',
 				'record_desc_format_medium' => '{iso2}, {name}',
 				'record_desc_format_long' => '{iso2}, {name}, {name_es}, {name_en}, {name_fr}'
 			];
@@ -82,22 +83,22 @@ class Country extends \santilin\wrepos\models\_BaseModel
 			'name_es' => 'Name es',
 			'name_en' => 'Name en',
 			'name_fr' => 'Name fr',
-			'Place' => Place::getModelInfo('title_plural'), // belongstomany
+			'places' => Place::getModelInfo('title_plural'), // belongstomany
 		];
 /*>>>>>LABELS*/
 		// customize your labels here
-/*<<<<<LABELS_RETURN*/
+/*<<<<<LABELS.RETURN*/
  		return $labels;
 	} // attributeLabels
-/*>>>>>LABELS_RETURN*/
+/*>>>>>LABELS.RETURN*/
 /*<<<<<RULES*/
     public function rules()
     {
 		$rules = [
 			'req' => [['iso2','iso3'], 'required', 'on' => $this->getCrudScenarios()],
-			'null' => [['name','name_es','name_en','name_fr'], 'default', 'value' => null],
 			'max_iso2'=>['iso2', 'string', 'max' => 2, 'on' => $this->getCrudScenarios()],
 			'max_iso3'=>['iso3', 'string', 'max' => 3, 'on' => $this->getCrudScenarios()],
+			'null' => [['name','name_es','name_en','name_fr'], 'default', 'value' => null],
 		];
 /*>>>>>RULES*/
 		// customize your rules here
@@ -107,25 +108,24 @@ class Country extends \santilin\wrepos\models\_BaseModel
     } // rules
 /*>>>>>RULES_RETURN*/
 /*<<<<<HANDY_VALUES_PRE*/
-	public function handyFieldValues(string $field, string $format, ?string $model_format = 'short', ?string $scope=null)
+	public function handyFieldValues(string $field, string $format,
+		string $model_format = 'medium', array|string $scope=null, string $filter_fields = '')
 	{
 		$field_parts = explode('.', $field);
-		if( count($field_parts) > 1 ) {
+		if (count($field_parts) > 1) {
 			$table = array_shift($field_parts);
 			$rel_model_name = static::$relations[$table]['modelClass'];
 			$rel_model = new $rel_model_name;
-			return $rel_model->handyFieldValues(implode('.', $field_parts), $format, $scope);
+			return $rel_model->handyFieldValues(implode('.', $field_parts), $format, $model_format, $scope);
 		}
 		$ret = null;
-		$scope_args = [];
-		if( is_array($scope) ) {
-			$scope_func = array_shift($scope);
-			$scope_args = $scope;
+		if (is_array($scope)) {
+			$scope_func = array_shift($scope); $scope_args = $scope;
 		} else {
-			$scope_func = $scope;
+			$scope_func = $scope; $scope_args = [];
 		}
 /*>>>>>HANDY_VALUES_PRE*/
-/*<<<<<HANDY_VALUES*/
+/*<<<<<HANDY_VALUES.BODY*/
 		if( $field == 'places' ) { // hasMany
 			$q = Place::find();
 			$q->defaultOrder();
@@ -134,23 +134,30 @@ class Country extends \santilin\wrepos\models\_BaseModel
 			}
 			$models = $q->all();
 			$ret = [];
-			foreach($models as $model) {
-				$ret[$model->getPrimaryKey()] = $model->recordDesc($model_format);
+			if (empty($filter_fields)) {
+				foreach($models as $model) {
+					$ret[$model->getPrimaryKey()] = $model->recordDesc($model_format);
+				}
+			} else {
+				$fflds = explode(',',$filter_fields);
+				foreach($models as $model) {
+					$ret[$model->getPrimaryKey()] = array_merge([$model->recordDesc($model_format)], array_values($model->getAttributes($fflds)));
+				}
 			}
 		}
-/*>>>>>HANDY_VALUES*/
-/*<<<<<HANDY_VALUES_RETURN*/
-		if( $ret === null ) {
-			return $this->defaultHandyFieldValues($field, $format, $model_format, $scope);
+/*>>>>>HANDY_VALUES.BODY*/
+/*<<<<<HANDY_VALUES.RETURN*/
+		if ($ret === null) {
+			return parent::handyFieldValues($field, $format, $model_format, $scope, $filter_fields);
 		} else {
-			if( $format ) {
+			if ($format) {
 				return $this->formatHandyFieldValues($field, $ret, $format);
 			} else {
 				return $ret;
 			}
 		}
 	} // handyFieldValues
-/*>>>>>HANDY_VALUES_RETURN*/
+/*>>>>>HANDY_VALUES.RETURN*/
 /*<<<<<BEHAVIORS*/
 	public function behaviors()
 	{
@@ -161,50 +168,7 @@ class Country extends \santilin\wrepos\models\_BaseModel
 		return $behaviors;
     } // behaviors
 /*>>>>>BEHAVIORS.RETURN*/
-/*<<<<<REPORT_COLUMNS*/
-	static public function allReportColumns($relname = null)
-	{
-		if( $relname === null ) {
-			$relname = 'countries';
-		}
-		$ret = [
-			"$relname.desc_long" => [
-				'attribute' => "CONCAT($relname.iso2, ', ', $relname.name, ', ', $relname.name_es, ', ', $relname.name_en, ', ', $relname.name_fr)",
-				'label' => static::getModelInfo('title'),
-			],
-
-			"$relname.desc_short" => [
-				'attribute' => "CONCAT($relname.iso2, ', ', $relname.name)",
-				'label' => static::getModelInfo('title'),
-			],
-			"$relname.id" => [ // tinyInteger
-				'format' => 'integer',
-			],
-			"$relname.iso2" => [ // char
-				'format' => 'raw',
-			],
-			"$relname.iso3" => [ // char
-				'format' => 'raw',
-			],
-			"$relname.name" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.name_es" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.name_en" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.name_fr" => [ // string
-				'format' => 'raw',
-			],
-		];
-/*>>>>>REPORT_COLUMNS*/
 		// Tweak or add report fields here
-/*<<<<<REPORT_COLUMNS.END*/
-		return $ret;
-	}
-/*>>>>>REPORT_COLUMNS.END*/
 /*<<<<<RELATIONS*/
 	/**
 	 * The keys of the array refer to the attributes of the record associated
