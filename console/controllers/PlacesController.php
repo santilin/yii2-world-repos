@@ -23,9 +23,9 @@ class PlacesController extends Controller
 {
 	/** The version of this command */
 	const VERSION = '0.0.1';
-	public $abortOnError = false;
-	public $dryRun = false;
-	public $wrepos_dbname = false;
+	public bool $dryRun = true;
+	public bool $abortOnError = true;
+	public string $wrepos_dbname = 'wrepos';
 /*>>>>>MAIN*/
 /*<<<<<OPTIONS*/
     /**
@@ -33,7 +33,7 @@ class PlacesController extends Controller
      */
     public function options($actionID)
     {
-		$own_options = ['abortOnError','dryRun','wrepos_dbname'];
+		$own_options = ['dryRun','abortOnError','wrepos_dbname'];
 /*>>>>>OPTIONS*/
 /*<<<<<OPTIONS_END*/
         return array_merge(parent::options($actionID), $own_options);
@@ -110,6 +110,9 @@ INSERT INTO $table SELECT $s_fields FROM $places_tablename WHERE $sql_conds
 sql;
 		$rows = Place::instance()->getDb()->createCommand($sql)->execute();
 		$this->stdout("Imported $rows places to $table\n");
+/*
+delete from territorios; insert into territorios SELECT "id" as "id","name" as "nombre",coalesce("admin_sup_code",'')||'-'||coalesce("admin_code",'') as "nuts_code", level as nivel FROM wrepos.`places` WHERE countries_id=724 and nivel <= 4 order by 3
+*/
 
 /*<<<<<ACTION_IMPORTPLACES_END*/
 		return $exitcode;

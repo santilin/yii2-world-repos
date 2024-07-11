@@ -21,8 +21,8 @@ class SourceController extends Controller
 {
 	/** The version of this command */
 	const VERSION = '0.0.1';
-	public $abortOnError = false;
-	public $dryRun = false;
+	public bool $dryRun = true;
+	public bool $abortOnError = true;
 /*>>>>>MAIN*/
 	private function escapeSql($str)
 	{
@@ -35,7 +35,7 @@ class SourceController extends Controller
      */
     public function options($actionID)
     {
-		$own_options = ['abortOnError','dryRun'];
+		$own_options = ['dryRun','abortOnError'];
 /*>>>>>OPTIONS*/
 /*<<<<<OPTIONS_END*/
         return array_merge(parent::options($actionID), $own_options);
