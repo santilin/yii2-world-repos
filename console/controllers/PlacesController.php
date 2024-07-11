@@ -8,6 +8,10 @@ use yii\helpers\Console;
 use yii\console\ExitCode;
 use yii\console\Controller;
 /*>>>>>USES*/
+
+use santilin\churros\helpers\AppHelper;
+use santilin\wrepos\models\{Place,Country};
+
 /*<<<<<MAIN*/
 /**
  * world-repos console commands
@@ -21,6 +25,7 @@ class PlacesController extends Controller
 	const VERSION = '0.0.1';
 	public $abortOnError = false;
 	public $dryRun = false;
+	public $wrepos_dbname = false;
 /*>>>>>MAIN*/
 /*<<<<<OPTIONS*/
     /**
@@ -28,7 +33,7 @@ class PlacesController extends Controller
      */
     public function options($actionID)
     {
-		$own_options = ['abortOnError','dryRun'];
+		$own_options = ['abortOnError','dryRun','wrepos_dbname'];
 /*>>>>>OPTIONS*/
 /*<<<<<OPTIONS_END*/
         return array_merge(parent::options($actionID), $own_options);
@@ -61,7 +66,7 @@ class PlacesController extends Controller
 	/**
 	 * Importador de países por lenguajes
 	 */
-	public function actionImportCountries(string $language='ES')
+	public function actionImportCountries(string $table, array $fields, string $language='ES')
 	{
 		$exitcode = ExitCode::OK;
 /*>>>>>ACTION_IMPORTCOUNTRIES*/
@@ -73,10 +78,39 @@ class PlacesController extends Controller
 	/**
 	 * Importador de lugares: provincias, municipios, etc. por países
 	 */
-	public function actionImportPlaces(string $country='ES')
+	public function actionImportPlaces(string $table, array $fields, string $conds, string $country='ES')
 	{
 		$exitcode = ExitCode::OK;
 /*>>>>>ACTION_IMPORTPLACES*/
+
+		$select_fields = [];
+		foreach ($fields as $field) {
+			list($orig, $dest) = AppHelper::splitString($field, ':');
+			if (empty($dest)) {
+				$this->stderr( "$field: wrong format. Must be orig_field:dest_field\n");
+				exit(1);
+			}
+			$select_fields[] = "\"$orig\" as \"$dest\"";
+		}
+		$this->wrepos_dbname = 'main';
+		$places_tablename = $this->wrepos_dbname . '.' . Place::tableName();
+		$country_tablename = $this->wrepos_dbname . '.' . Country::tableName();
+		$s_fields = implode(',',$select_fields);
+		$country_id = Country::instance()->getDb()->createCommand("SELECT id FROM $country_tablename WHERE iso2='$country' or iso3='$country' or name='$country'")->queryScalar();
+		if (!$country_id) {
+			$this->stderr( "$country: country not found\n");
+			exit(1);
+		}
+		$sql_conds = "countries_id=$country_id";
+		if (!empty($conds) && $conds != 'null') {
+			$sql_conds .= " AND $conds";
+		}
+		$sql = <<<sql
+INSERT INTO $table SELECT $s_fields FROM $places_tablename WHERE $sql_conds
+sql;
+		$rows = Place::instance()->getDb()->createCommand($sql)->execute();
+		$this->stdout("Imported $rows places to $table\n");
+
 /*<<<<<ACTION_IMPORTPLACES_END*/
 		return $exitcode;
 	} // actionImportPlaces

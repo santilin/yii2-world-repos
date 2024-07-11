@@ -55,6 +55,16 @@ class SourceController extends Controller
 	} // actionIndex
 /*>>>>>ACTION_INDEX_END*/
 
+
+	public function beforeAction($action)
+	{
+		if (Yii::$app->id != 'world-repos') {
+			$this->stderr("Forbidden\n");
+			exit(1);
+		}
+		return parent::beforeAction();
+	}
+
 /*<<<<<PRINT_HELP_MESSAGE*/
     /**
      * Show help message.

@@ -229,12 +229,29 @@
                     "name": "abortOnError",
                     "type": "bool",
                     "default_value": true
+                },
+                {
+                    "name": "wrepos_dbname",
+                    "type": "string",
+                    "default_value": "wrepos"
                 }
             ],
             "actions": {
                 "ImportPlaces": {
                     "description": "Importador de lugares: provincias, municipios, etc. por países",
                     "arguments": [
+                        {
+                            "name": "table",
+                            "type": "string"
+                        },
+                        {
+                            "name": "fields",
+                            "type": "array"
+                        },
+                        {
+                            "name": "conds",
+                            "type": "string"
+                        },
                         {
                             "name": "country",
                             "type": "string",
@@ -245,6 +262,14 @@
                 "ImportCountries": {
                     "description": "Importador de países por lenguajes",
                     "arguments": [
+                        {
+                            "name": "table",
+                            "type": "string"
+                        },
+                        {
+                            "name": "fields",
+                            "type": "array"
+                        },
                         {
                             "name": "language",
                             "type": "string",
