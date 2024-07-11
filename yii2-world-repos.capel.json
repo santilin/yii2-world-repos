@@ -217,6 +217,42 @@
                     ]
                 }
             }
+        },
+        "Places": {
+            "options": [
+                {
+                    "name": "dryRun",
+                    "type": "bool",
+                    "default_value": true
+                },
+                {
+                    "name": "abortOnError",
+                    "type": "bool",
+                    "default_value": true
+                }
+            ],
+            "actions": {
+                "ImportPlaces": {
+                    "description": "Importador de lugares: provincias, municipios, etc. por países",
+                    "arguments": [
+                        {
+                            "name": "country",
+                            "type": "string",
+                            "default_value": "ES"
+                        }
+                    ]
+                },
+                "ImportCountries": {
+                    "description": "Importador de países por lenguajes",
+                    "arguments": [
+                        {
+                            "name": "language",
+                            "type": "string",
+                            "default_value": "ES"
+                        }
+                    ]
+                }
+            }
         }
     }
 }

@@ -372,14 +372,14 @@ class SourceController extends Controller
 			}
 		}
 
-Para geonames
-select t.id, p.POSTCODE AS cp
-FROM geonames_es p inner join places t on t.national_id=p.admin3_code
-ORDER BY cp
+// Para geonames
+// select t.id, p.POSTCODE AS cp
+// FROM geonames_es p inner join places t on t.national_id=p.admin3_code
+// ORDER BY cp
 
  		Yii::$app->db->createCommand("DELETE FROM postcodes")->execute();
 
-		Rellenar códigos postales desde la tabla post
+		// Rellenar códigos postales desde la tabla post
 		$sql_cp = <<<sql
 select t.id, p.POSTCODE AS cp, t.name
 FROM post p INNER join places t on t.national_id=p.nsi_code AND CNTR_ID='ES'
