@@ -14,15 +14,15 @@ use santilin\wrepos\models\{Country,Place,PostCode};
 /**
  * world-repos console commands
  *
- * @author Santilín <santi@noviolento.es>
+ * @author Santilín
  * @since 1.0
  */
 class SourceController extends Controller
 {
 	/** The version of this command */
 	const VERSION = '0.0.1';
-	public $abortOnError = false;
-	public $dryRun = false;
+	public bool $dryRun = true;
+	public bool $abortOnError = true;
 /*>>>>>MAIN*/
 	private function escapeSql($str)
 	{
@@ -35,7 +35,7 @@ class SourceController extends Controller
      */
     public function options($actionID)
     {
-		$own_options = ['abortOnError','dryRun'];
+		$own_options = ['dryRun','abortOnError'];
 /*>>>>>OPTIONS*/
 /*<<<<<OPTIONS_END*/
         return array_merge(parent::options($actionID), $own_options);
@@ -54,6 +54,16 @@ class SourceController extends Controller
 		return ExitCode::OK;
 	} // actionIndex
 /*>>>>>ACTION_INDEX_END*/
+
+
+	public function beforeAction($action)
+	{
+		if (Yii::$app->id != 'world-repos') {
+			$this->stderr("Forbidden\n");
+			exit(1);
+		}
+		return parent::beforeAction();
+	}
 
 /*<<<<<PRINT_HELP_MESSAGE*/
     /**
@@ -372,14 +382,14 @@ class SourceController extends Controller
 			}
 		}
 
-Para geonames
-select t.id, p.POSTCODE AS cp
-FROM geonames_es p inner join places t on t.national_id=p.admin3_code
-ORDER BY cp
+// Para geonames
+// select t.id, p.POSTCODE AS cp
+// FROM geonames_es p inner join places t on t.national_id=p.admin3_code
+// ORDER BY cp
 
  		Yii::$app->db->createCommand("DELETE FROM postcodes")->execute();
 
-		Rellenar códigos postales desde la tabla post
+		// Rellenar códigos postales desde la tabla post
 		$sql_cp = <<<sql
 select t.id, p.POSTCODE AS cp, t.name
 FROM post p INNER join places t on t.national_id=p.nsi_code AND CNTR_ID='ES'

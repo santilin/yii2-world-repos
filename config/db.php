@@ -10,7 +10,7 @@ $db_params = [
 ];
 /*>>>>>CONFIG*/
 // $db_params['dsn'] = 'mysql:host=localhost;dbname=world-repositories_db';
-$db_params['dsn'] = 'sqlite:@app/runtime/repos.db';
+$db_params['dsn'] = 'sqlite:@app/runtime/wrepos.db';
 /*<<<<<RETURN*/
 return $db_params;
 /*>>>>>RETURN*/

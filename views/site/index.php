@@ -33,7 +33,7 @@ if( !empty($welcome) ) : ?>
         <h1><?=$welcome?></h1>
 
     </div><!--jumbotron-->
-<?php endif
+<?php endif;
 /*>>>>>WELCOME*/
 /*<<<<<BODY_CONTENT*/
 ?>

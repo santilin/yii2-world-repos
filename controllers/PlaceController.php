@@ -27,6 +27,32 @@ class PlaceController extends Controller
 		return $models;
 	}
 
+	public function actionIdIne(string $nombre)
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$p = new Place; // to get the db object
+		$db = $p->getDb();
+		return $db->createCommand("SELECT * FROM entidades_es WHERE NOMBRE = :nombre AND TIPO = 'Municipio'", ['nombre' => $nombre])->queryOne();
+	}
+
+	public function actionDegurbaMunicipioPorIdIne(string $mun_id)
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$p = new Place; // to get the db object
+		$db = $p->getDb();
+		return $db->createCommand("SELECT * FROM entidades_es WHERE INEMUNI = :mun_id", ['mun_id' => $mun_id])->queryOne();
+	}
+
+	public function actionDegurbaEntidadesPorIdIne(string $mun_id)
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$p = new Place; // to get the db object
+		$db = $p->getDb();
+		$municipio = $db->createCommand("SELECT * FROM entidades_es WHERE INEMUNI LIKE :mun_id", ['mun_id' => "$mun_id%"])->queryAll();
+		return $municipio;
+	}
+
+
 /*<<<<<CLASS_END*/
 } // class SiteController
 /*>>>>>CLASS_END*/

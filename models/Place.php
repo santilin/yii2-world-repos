@@ -49,13 +49,14 @@ class Place extends \santilin\wrepos\models\_BaseModel
 	{
 		if (static::$_model_info == [] ) {
 			$mi = [
+				'model_name' => 'Place',
 				'title' => 'Place',
 				'title_plural' => 'Places',
 				'code_field' => 'id',
 				'desc_field' => 'name',
 				'controller_name' => 'place',
 				'female' => true,
-				'record_desc_format_short' => '{country}, {name}',
+				'record_desc_format_short' => '{country}',
 				'record_desc_format_medium' => '{country}, {name}',
 				'record_desc_format_long' => '{country}, {name}'
 			];
@@ -95,22 +96,22 @@ class Place extends \santilin\wrepos\models\_BaseModel
 			'national_id' => 'National id',
 			'countries_id' => Country::getModelInfo('title'), // HasOne
 			'country' => Country::getModelInfo('title'), // HasOne
-			'PostCode' => PostCode::getModelInfo('title_plural'), // belongstomany
+			'postCodes' => PostCode::getModelInfo('title_plural'), // belongstomany
 		];
 /*>>>>>LABELS*/
 		// customize your labels here
-/*<<<<<LABELS_RETURN*/
+/*<<<<<LABELS.RETURN*/
  		return $labels;
 	} // attributeLabels
-/*>>>>>LABELS_RETURN*/
+/*>>>>>LABELS.RETURN*/
 /*<<<<<RULES*/
     public function rules()
     {
 		$rules = [
 			'req' => [['name','countries_id'], 'required', 'on' => $this->getCrudScenarios()],
-			'def0'=>[['level'], 'default', 'value' => 0,'on' => $this->getCrudScenarios()],
-			'int_level' => ['level', 'integer', 'on' => $this->getCrudScenarios()],
+			'int_level' => ['level', 'integer', 'min' => -128, 'max' => 127, 'on' => $this->getCrudScenarios()],
 			'null' => [['name_es','name_en','name_fr','admin_code','admin_sup_code','admin_sup_name','national_id'], 'default', 'value' => null],
+			'def_level'=>['level', 'default', 'value' => 0,'on' => $this->getCrudScenarios()],
 		];
 /*>>>>>RULES*/
 		// customize your rules here
@@ -119,25 +120,24 @@ class Place extends \santilin\wrepos\models\_BaseModel
     } // rules
 /*>>>>>RULES_RETURN*/
 /*<<<<<HANDY_VALUES_PRE*/
-	public function handyFieldValues(string $field, string $format, ?string $model_format = 'short', ?string $scope=null)
+	public function handyFieldValues(string $field, string $format,
+		string $model_format = 'medium', array|string $scope=null, string $filter_fields = '')
 	{
 		$field_parts = explode('.', $field);
-		if( count($field_parts) > 1 ) {
+		if (count($field_parts) > 1) {
 			$table = array_shift($field_parts);
 			$rel_model_name = static::$relations[$table]['modelClass'];
 			$rel_model = new $rel_model_name;
-			return $rel_model->handyFieldValues(implode('.', $field_parts), $format, $scope);
+			return $rel_model->handyFieldValues(implode('.', $field_parts), $format, $model_format, $scope);
 		}
 		$ret = null;
-		$scope_args = [];
-		if( is_array($scope) ) {
-			$scope_func = array_shift($scope);
-			$scope_args = $scope;
+		if (is_array($scope)) {
+			$scope_func = array_shift($scope); $scope_args = $scope;
 		} else {
-			$scope_func = $scope;
+			$scope_func = $scope; $scope_args = [];
 		}
 /*>>>>>HANDY_VALUES_PRE*/
-/*<<<<<HANDY_VALUES*/
+/*<<<<<HANDY_VALUES.BODY*/
 		if( $field == 'countries_id' || $field == 'country' || $field == 'Country' ) { // HasOne
 			$q = Country::find();
 			$q->defaultOrder();
@@ -146,8 +146,15 @@ class Place extends \santilin\wrepos\models\_BaseModel
 			}
 			$models = $q->all();
 			$ret = [];
-			foreach($models as $model) {
-				$ret[$model->getPrimaryKey()] = $model->recordDesc($model_format);
+			if (empty($filter_fields)) {
+				foreach($models as $model) {
+					$ret[$model->getPrimaryKey()] = $model->recordDesc($model_format);
+				}
+			} else {
+				$fflds = explode(',',$filter_fields);
+				foreach($models as $model) {
+					$ret[$model->getPrimaryKey()] = array_merge([$model->recordDesc($model_format)], array_values($model->getAttributes($fflds)));
+				}
 			}
 		}
 		if( $field == 'postCodes' ) { // hasMany
@@ -158,27 +165,33 @@ class Place extends \santilin\wrepos\models\_BaseModel
 			}
 			$models = $q->all();
 			$ret = [];
-			foreach($models as $model) {
-				$ret[$model->getPrimaryKey()] = $model->recordDesc($model_format);
+			if (empty($filter_fields)) {
+				foreach($models as $model) {
+					$ret[$model->getPrimaryKey()] = $model->recordDesc($model_format);
+				}
+			} else {
+				$fflds = explode(',',$filter_fields);
+				foreach($models as $model) {
+					$ret[$model->getPrimaryKey()] = array_merge([$model->recordDesc($model_format)], array_values($model->getAttributes($fflds)));
+				}
 			}
 		}
-/*>>>>>HANDY_VALUES*/
-/*<<<<<HANDY_VALUES_RETURN*/
-		if( $ret === null ) {
-			return $this->defaultHandyFieldValues($field, $format, $model_format, $scope);
+/*>>>>>HANDY_VALUES.BODY*/
+/*<<<<<HANDY_VALUES.RETURN*/
+		if ($ret === null) {
+			return parent::handyFieldValues($field, $format, $model_format, $scope, $filter_fields);
 		} else {
-			if( $format ) {
+			if ($format) {
 				return $this->formatHandyFieldValues($field, $ret, $format);
 			} else {
 				return $ret;
 			}
 		}
 	} // handyFieldValues
-/*>>>>>HANDY_VALUES_RETURN*/
+/*>>>>>HANDY_VALUES.RETURN*/
 /*<<<<<DEFAULT_VALUES*/
 	public function setDefaultValues(bool $duplicating = false)
 	{
-
 		if (!$duplicating) { // Dont set these default values while duplicating
 			$this->level = 0;
 		}
@@ -196,59 +209,12 @@ class Place extends \santilin\wrepos\models\_BaseModel
 		return $behaviors;
     } // behaviors
 /*>>>>>BEHAVIORS.RETURN*/
-/*<<<<<REPORT_COLUMNS*/
-	static public function allReportColumns($relname = null)
-	{
-		if( $relname === null ) {
-			$relname = 'places';
-		}
-		$ret = [
-
-			"$relname.id" => [ // tinyInteger
-				'format' => 'integer',
-			],
-			"$relname.name" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.level" => [ // tinyInteger
-				'format' => 'integer',
-			],
-			"$relname.name_es" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.name_en" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.name_fr" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.admin_code" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.admin_sup_code" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.admin_sup_name" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.national_id" => [ // string
-				'format' => 'raw',
-			],
-			"$relname.countries_id" => [ // HasOne
-				'format' => 'integer',
-			],
-		];
-/*>>>>>REPORT_COLUMNS*/
 		// Tweak or add report fields here
-/*<<<<<REPORT_COLUMNS.END*/
-		return $ret;
-	}
-/*>>>>>REPORT_COLUMNS.END*/
 /*<<<<<RELATIONS*/
 	/**
 	 * The keys of the array refer to the attributes of the record associated
-	 *	with the `$class` model, while the values of the
-     * array refer to the corresponding attributes in **this** AR class.
+	 * with the `$class` model, while the values of the
+	 * array refer to the corresponding attributes in **this** AR class.
 	 */
 	public function getCountry()
 	{

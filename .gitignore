@@ -21,6 +21,7 @@ config/test_db.php
 config/smtp.php
 config/secrets.php
 config/local_console.php
+config/local_params.php
 config/local_web.php
 composer.lock
 web/uploads

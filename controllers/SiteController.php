@@ -5,6 +5,7 @@ namespace santilin\wrepos\controllers;
 
 use Yii;
 use yii\base\ViewNotFoundException;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\Response;
 /*>>>>>USES*/
@@ -24,6 +25,15 @@ class SiteController extends Controller
 	 */
     public $enableCsrfValidation = false;
 /*>>>>>MAIN*/
+/*<<<<<BEHAVIORS*/
+    public function behaviors()
+    {
+		$b = parent::behaviors();
+/*>>>>>BEHAVIORS*/
+/*<<<<<BEHAVIORS_END*/
+		return $b;
+	}
+/*>>>>>BEHAVIORS_END*/
 /*<<<<<MAINTENANCE_BEGIN_PAGE*/
 	/**
 
@@ -45,7 +55,7 @@ class SiteController extends Controller
 /*>>>>>MAINTENANCE_END_PAGE*/
 /*<<<<<ERROR*/
     /**
-     * Displays error page (customized for server codes: 4xx, 5xx) if view present en views/site.
+     * Displays error page (customized for server codes: 4xx, 5xx) if view present in views/site.
      *
      * @return string
      */
