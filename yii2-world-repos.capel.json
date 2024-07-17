@@ -160,7 +160,12 @@
                     "type": "string"
                 }
             ],
-            "model_hierarchy": "21.179.076.500"
+            "model_hierarchy": "21.179.076.500",
+            "forms": {
+                "_grid": null,
+                "_view": null,
+                "_form": null
+            }
         },
         "PostCode": {
             "base_model_class": "\\santilin\\wrepos\\models\\_BaseModel",
