@@ -69,6 +69,16 @@ class PlaceController extends Controller
 		return $municipio;
 	}
 
+	public function actionDegurbaEntidadesMenoresPorIdIne(string $mun_id)
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$p = new Place; // to get the db object
+		$db = $p->getDb();
+		$municipio = $db->createCommand("SELECT * FROM entidades_es WHERE level<6 AND INEMUNI LIKE :mun_id", ['mun_id' => "$mun_id%"])->queryAll();
+		return $municipio;
+	}
+
+
 
 /*<<<<<CLASS_END*/
 } // class SiteController
