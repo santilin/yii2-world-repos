@@ -20,6 +20,23 @@ class PlaceController extends Controller
 	public $layout = 'site';
 /*>>>>>CLASS*/
 
+	public function behaviors()
+	{
+		return array_merge(parent::behaviors, [
+			'corsFilter' => [
+				'class' => \yii\filters\Cors::class,
+				'cors' => [
+					'Origin' => ['*'],
+					'Access-Control-Request-Headers' => ['*'],
+					'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
+					'Access-Control-Allow-Credentials' => null,
+					'Access-Control-Max-Age' => 86400,
+					'Access-Control-Expose-Headers' => [],
+				],
+			],
+		]);
+	}
+
 	public function actionFindPlace(string $place, string $country_code)
 	{
 		\Yii::$app->response->format = Response::FORMAT_JSON;
