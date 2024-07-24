@@ -22,13 +22,13 @@ class PlaceController extends Controller
 
 	public function behaviors()
 	{
-		return array_merge(parent::behaviors, [
+		return array_merge(parent::behaviors(), [
 			'corsFilter' => [
 				'class' => \yii\filters\Cors::class,
 				'cors' => [
 					'Origin' => ['*'],
-					'Access-Control-Request-Headers' => ['*'],
-					'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
+					'Access-Control-Request-Headers' => ['strict-origin-when-cross-origin'],
+					'Access-Control-Request-Method' => ['GET'],
 					'Access-Control-Allow-Credentials' => null,
 					'Access-Control-Max-Age' => 86400,
 					'Access-Control-Expose-Headers' => [],
