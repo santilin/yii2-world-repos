@@ -109,7 +109,7 @@ class Country extends \santilin\wrepos\models\_BaseModel
 /*>>>>>RULES_RETURN*/
 /*<<<<<HANDY_VALUES_PRE*/
 	public function handyFieldValues(string $field, string $format,
-		string $model_format = 'medium', array|string $scope=null, string $filter_fields = '')
+		string $model_format = 'medium', array|string $scope=null, ?string $filter_fields = null)
 	{
 		$field_parts = explode('.', $field);
 		if (count($field_parts) > 1) {

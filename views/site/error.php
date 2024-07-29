@@ -14,7 +14,23 @@ $this->title = $name??'Error';
     <h1><?= Html::encode($this->title) ?></h1>
 
     <div class="alert alert-danger">
-        <?= nl2br(Html::encode($message)) ?>
+<?php
+    if (Yii::$app->user?->identity?->getIsAdmin()) {
+?>
+        <p><?= Yii::t('app', 'Como administrador/a,')?></p>
+<?php
+    } else if (!Yii::$app->user?->isGuest) {
+?>
+        <p><?= Yii::t('app', 'Como usuario/a,')?></p>
+<?php
+    } else {
+?>
+        <p><?= Yii::t('app', 'Como invitado/a,')?></p>
+<?php
+    }
+?>
+
+        <?= nl2br(Html::encode(mb_lcfirst($message))) ?>
     </div>
 
 <?php

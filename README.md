@@ -70,7 +70,6 @@ torres devel test
 ```
 
 [//]: # (>>>>>USUARIAS)
-
 # Import places to your application
 ```
 ATTACH DATABASE 'vendor/santilin/yii2-world-repos/runtime/wrepos.db' AS wrepos;

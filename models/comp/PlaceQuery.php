@@ -19,14 +19,6 @@ class PlaceQuery extends ActiveQuery
 		return $this;
 	}
 /*>>>>>DEFAULT_ORDER_RETURN*/
-/*<<<<<MINE_SCOPE*/
-	public function mine($model = null)
-	{
-/*>>>>>MINE_SCOPE*/
-/*<<<<<MINE_SCOPE.RETURN*/
-		return $this;
-	}
-/*>>>>>MINE_SCOPE.RETURN*/
 
 
 	public function byCountryId(int $country_id)

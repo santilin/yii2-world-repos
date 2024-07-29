@@ -10,8 +10,8 @@
 use yii\helpers\{Html,Url};
 use yii\bootstrap5\{Breadcrumbs,Nav,NavBar};
 use santilin\wrepos\assets\0Asset;
-use santilin\churros\helpers\AppHelper;
 use santilin\churros\widgets\SessionAlert;
+use app\helpers\UserHelper;
 
 0Asset::register($this);
 $company = $brand_name = Yii::$app->name;
@@ -65,7 +65,7 @@ $login_menu = [];
 $login_items = [];
 $user_component = Yii::$app->get('user', false);
 $username = $user_component?->getIdentity()?->username ?: '';
-$user_is_admin = AppHelper::userIsAdmin();
+$user_is_admin = UserHelper::userIsAdmin();
 /*>>>>>MENU_USER*/
 /*<<<<<LOGINMENU*/
 if( count($login_items) == 1 ) {
