@@ -22,6 +22,23 @@ class PostCodeController extends Controller
 	public $layout = 'site';
 /*>>>>>CLASS*/
 
+	public function behaviors()
+	{
+		return array_merge(parent::behaviors(), [
+			'corsFilter' => [
+				'class' => \yii\filters\Cors::class,
+				'cors' => [
+					'Origin' => ['*'],
+					'Access-Control-Request-Headers' => ['strict-origin-when-cross-origin'],
+					'Access-Control-Request-Method' => ['GET'],
+					'Access-Control-Allow-Credentials' => null,
+					'Access-Control-Max-Age' => 86400,
+					'Access-Control-Expose-Headers' => [],
+				],
+			],
+		]);
+	}
+
 	public function actionFindTypeAhead(string $search, int $page = 1, int $per_page = 10)
 	{
 		$models = [];
