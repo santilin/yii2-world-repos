@@ -114,23 +114,41 @@ SQL;
 		return $models;
 	}
 
-
-
-
 	// Cant use Query because postcode has no id
-	public function actionFindPostCode(string $postcode, string $country_code)
+	public function actionFindPostCode(string $postcode, int $country_code = 724)
 	{
 		\Yii::$app->response->format = Response::FORMAT_JSON;
-		$models = PostCode::getDb()->createCommand("SELECT * FROM "
-			. PostCode::tableName() . 'pc INNER JOIN '
-			. Place::tableName() . 'pl ON pl.id=pc.places_id'
-			. " WHERE pc.postcode = :postcode")
-			->bindValue(':postcode', $postcode)
+// 		$models = PostCode::getDb()->createCommand("SELECT * FROM "
+// 			. PostCode::tableName() . 'pc INNER JOIN '
+// 			. Place::tableName() . 'pl ON pl.id=pc.places_id'
+// 			. " WHERE pc.postcode = :postcode")
+// 			->bindValue(':postcode', $postcode)
+// 			->queryAll();
+// 		return $models;
+		$postcode_tbl = PostCode::tableName();
+		$place_tbl = Place::tableName();
+		$sql = <<<SQL
+SELECT pc.postcode, plpr.name as provincia, pl.name, '' as poblacion, substr(pc.postcode,1,2) as nuts3_code, pl.level
+FROM $postcode_tbl pc
+	INNER JOIN $place_tbl pl ON pl.id=pc.places_id
+	LEFT JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
+WHERE pc.postcode LIKE :postcode_like AND pl.level = 4 /* :place_like */
+UNION
+SELECT pc.postcode, plpr.name, plmun.name, plentidad.name, substr(pc.postcode,1,2), plentidad.level
+FROM $postcode_tbl pc
+	INNER JOIN $place_tbl pl ON pl.id=pc.places_id
+	INNER JOIN $place_tbl plentidad ON plentidad.admin_sup_code=pl.admin_code AND plentidad.level >= 5
+	LEFT JOIN $place_tbl plmun ON plentidad.admin_sup_code=plmun.admin_code AND plmun.level = 4
+	LEFT JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
+WHERE pc.postcode LIKE :postcode_like
+SQL;
+		$models = PostCode::getDb()->createCommand($sql)
+			->bindValue(':postcode_like', $postcode . '%')
 			->queryAll();
 		return $models;
 	}
 
-	public function actionFindPlace(string $place, string $country_code)
+	public function actionFindPlace(string $place, int $country_code = 724)
 	{
 		\Yii::$app->response->format = Response::FORMAT_JSON;
 		$models = PostCode::getDb()->createCommand("SELECT * FROM "
