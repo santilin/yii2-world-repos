@@ -7,10 +7,8 @@
     "languages": [
         "es-ES"
     ],
-    "prod_vendor_path": "/home/santilin/devel/yii2base/vendor",
     "source_language": "es",
     "currency_code": "EUR",
-    "definitions_path": "capel",
     "description": "World repositories",
     "package_doc_block": "yii2-world-repos",
     "params": {
@@ -22,8 +20,8 @@
         "publicUploadsDir": "@web/uploads/",
         "privateUploadsDir": "@app/runtime/uploads/"
     },
-    "outputs": [
-        {
+    "outputs": {
+        "site": {
             "enabled": true,
             "type": "Yii2StandAloneModule",
             "access_filters": [
@@ -55,7 +53,7 @@
                 }
             }
         }
-    ],
+    },
     "models": {
         "Country": {
             "base_model_class": "\\santilin\\wrepos\\models\\_BaseModel",

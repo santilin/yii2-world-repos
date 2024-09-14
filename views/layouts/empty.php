@@ -8,11 +8,11 @@
  */
 
 use yii\helpers\Html;
-use santilin\wrepos\assets\0Asset;
+use santilin\wrepos\assets\SiteAsset;
 use santilin\churros\helpers\AppHelper;
 use santilin\churros\widgets\SessionAlert;
 
-0Asset::register($this);
+SiteAsset::register($this);
 $company = $brand_name = Yii::$app->name;
 $created_by = 'Creado por Santilín con Yii' . Yii::getVersion();
 ?>

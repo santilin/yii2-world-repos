@@ -9,11 +9,11 @@
 
 use yii\helpers\{Html,Url};
 use yii\bootstrap5\{Breadcrumbs,Nav,NavBar};
-use santilin\wrepos\assets\0Asset;
+use santilin\wrepos\assets\SiteAsset;
 use santilin\churros\widgets\SessionAlert;
 use app\helpers\UserHelper;
 
-0Asset::register($this);
+SiteAsset::register($this);
 $company = $brand_name = Yii::$app->name;
 $copyright_symbol = '&copy;';
 $created_by = 'Creado por Santilín con Yii' . Yii::getVersion();
@@ -40,13 +40,13 @@ $company = "Santilín";
 ?>
 </head>
 <?php $this->beginBody() ?>
-<body class="0" data-bs-theme="light">
+<body class="site" data-bs-theme="light">
 <div class="container">
 <header aria-label='World repositories'>
 <?php
 $home_link = null;
-if( '0' != 'site' ) {
-	$home_link = [ 'label' => Yii::t('app', 'Repositories'), 'url' => ['/0']];
+if( 'site' != 'site' ) {
+	$home_link = [ 'label' => Yii::t('app', 'Repositories'), 'url' => ['/site']];
 }
 $navbar_options = [
 	'brandLabel' => '<span>' . (isset(Yii::$app->params['logo'])

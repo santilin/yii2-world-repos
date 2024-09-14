@@ -14,20 +14,20 @@ use yii\web\AssetBundle;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class 0Asset extends AssetBundle
+class SiteAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
         'css/themes/light.css',
-		'css/0_site.css',
-		'css/0_site_print.css',
+		'css/site_site.css',
+		'css/site_site_print.css',
 /*>>>>>USES*/
 /*<<<<<JS*/
         // Add your custom css here
 	];
     public $js = [
-		'js/0_site.js',
+		'js/site_site.js',
 /*>>>>>JS*/
 /*<<<<<DEPENDS*/
         // Add your custom js here

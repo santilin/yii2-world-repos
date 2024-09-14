@@ -9,7 +9,7 @@ README.md export-ignore
 config/db.php export-ignore
 config/test_db.php export-ignore
 config/smtp.php export-ignore
-config/test.php
+config/test.php export-ignore
 config/secrets.php export-ignore
 pre_deploy.h export-ignore
 *.xcf export-ignore
