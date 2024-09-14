@@ -246,7 +246,7 @@
                     "description": "Importador de lugares: provincias, municipios, etc. por países",
                     "arguments": [
                         {
-                            "name": "table",
+                            "name": "dest_model_name",
                             "type": "string"
                         },
                         {
@@ -255,7 +255,8 @@
                         },
                         {
                             "name": "conds",
-                            "type": "string"
+                            "type": "string",
+                            "is_nullable": true
                         },
                         {
                             "name": "country",
