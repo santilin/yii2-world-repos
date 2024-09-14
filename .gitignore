@@ -6,6 +6,7 @@ tests/_data
 tests/_support/_generated
 
 *.log
+!releases.log
 world-repos_*.torres
 *.kate-swp
 *~

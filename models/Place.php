@@ -22,7 +22,7 @@ use santilin\wrepos\models\PostCode;
  * @property string $admin_sup_code
  * @property string $admin_sup_name
  * @property string $national_id
- * @property integer $countries_id
+ * @property integer $countries_id // tinyInteger
  *
  * @property santilin\wrepos\models\Country $country // HasOne
  * @property santilin\wrepos\models\PostCode[] $postCodes // BelongsToMany
@@ -30,7 +30,9 @@ use santilin\wrepos\models\PostCode;
 class Place extends \santilin\wrepos\models\_BaseModel
 {
 	use \santilin\churros\RelationTrait;
-	use \santilin\churros\ModelInfoTrait;
+	use \santilin\churros\ModelInfoTrait {
+		handyFieldValues as trait_handyFieldValues;
+	}
 /*>>>>>CLASS*/
 /*<<<<<STATIC_INFO*/
 	static public function tableName()
@@ -52,7 +54,7 @@ class Place extends \santilin\wrepos\models\_BaseModel
 				'model_name' => 'Place',
 				'title' => 'Place',
 				'title_plural' => 'Places',
-				'code_field' => 'id',
+				'code_field' => 'countries_id',
 				'desc_field' => 'name',
 				'controller_name' => 'place',
 				'female' => true,
@@ -110,8 +112,10 @@ class Place extends \santilin\wrepos\models\_BaseModel
 		$rules = [
 			'req' => [['name','countries_id'], 'required', 'on' => $this->getCrudScenarios()],
 			'int_level' => ['level', 'integer', 'min' => -128, 'max' => 127, 'on' => $this->getCrudScenarios()],
+
+			'int_countries_id' => ['countries_id', 'integer', 'min' => -128, 'max' => 127, 'on' => $this->getCrudScenarios()],
 			'null' => [['name_es','name_en','name_fr','admin_code','admin_sup_code','admin_sup_name','national_id'], 'default', 'value' => null],
-			'def_level'=>['level', 'default', 'value' => 0,'on' => $this->getCrudScenarios()],
+			'def_level'=>['level', 'default', 'value' => 0, 'on' => $this->getCrudScenarios()],
 		];
 /*>>>>>RULES*/
 		// customize your rules here
@@ -179,7 +183,7 @@ class Place extends \santilin\wrepos\models\_BaseModel
 /*>>>>>HANDY_VALUES.BODY*/
 /*<<<<<HANDY_VALUES.RETURN*/
 		if ($ret === null) {
-			return parent::handyFieldValues($field, $format, $model_format, $scope, $filter_fields);
+			return $this->trait_handyFieldValues($field, $format, $model_format, $scope, $filter_fields);
 		} else {
 			if ($format) {
 				return $this->formatHandyFieldValues($field, $ret, $format);
@@ -190,7 +194,8 @@ class Place extends \santilin\wrepos\models\_BaseModel
 	} // handyFieldValues
 /*>>>>>HANDY_VALUES.RETURN*/
 /*<<<<<DEFAULT_VALUES*/
-	public function setDefaultValues(bool $duplicating = false)
+	// @param controller $context
+	public function setDefaultValues($context = null, bool $duplicating = false)
 	{
 		if (!$duplicating) { // Dont set these default values while duplicating
 			$this->level = 0;
@@ -218,7 +223,7 @@ class Place extends \santilin\wrepos\models\_BaseModel
 	 */
 	public function getCountry()
 	{
-		// country:Place HasOne(not null) Country: places.countries_id=>countries.id
+		// Place.country:HasOne(not null) Country: places.countries_id=>countries.id
 		return $this->hasOne(\santilin\wrepos\models\Country::class, ['id' => 'countries_id']);
 	}
 	/**
@@ -228,7 +233,7 @@ class Place extends \santilin\wrepos\models\_BaseModel
      */
 	public function getPostCodes()
 	{
-		// postCodes:Place BelongsToMany(inv)(not null) PostCode: places.id=>postcodes.places_id
+		// Place.postCodes:BelongsToMany(inv)(not null) PostCode: places.id=>postcodes.places_id
 		return $this->hasMany(\santilin\wrepos\models\PostCode::class, ['places_id' => 'id'])->inverseOf('place');
 	}
 /*>>>>>RELATIONS*/

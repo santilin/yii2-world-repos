@@ -49,9 +49,10 @@ class Place_Form extends Place
 	}
 /*>>>>>AFTER_SAVE.END*/
 /*<<<<<DEFAULT_VALUES*/
-	public function setDefaultValues(bool $duplicating = false)
+	// @param controller $context
+	public function setDefaultValues($context = null, bool $duplicating = false)
 	{
-		parent::setDefaultValues($duplicating);
+		parent::setDefaultValues($context, $duplicating);
 /*>>>>>DEFAULT_VALUES*/
 /*<<<<<DEFAULT_VALUES.PARENT*/
 

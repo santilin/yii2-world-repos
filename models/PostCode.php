@@ -12,14 +12,16 @@ use santilin\wrepos\models\Place;
  * This is the base model class for table "{{%postcodes}}".
  *
  * @property string $postcode // places/postcode
- * @property integer $places_id
+ * @property integer $places_id // tinyInteger
  *
  * @property santilin\wrepos\models\Place $place // HasOne
  */
 class PostCode extends \santilin\wrepos\models\_BaseModel
 {
 	use \santilin\churros\RelationTrait;
-	use \santilin\churros\ModelInfoTrait;
+	use \santilin\churros\ModelInfoTrait {
+		handyFieldValues as trait_handyFieldValues;
+	}
 /*>>>>>CLASS*/
 /*<<<<<STATIC_INFO*/
 	static public function tableName()
@@ -86,6 +88,7 @@ class PostCode extends \santilin\wrepos\models\_BaseModel
     {
 		$rules = [
 			'req' => [['postcode','places_id'], 'required', 'on' => $this->getCrudScenarios()],
+			'int_places_id' => ['places_id', 'integer', 'min' => -128, 'max' => 127, 'on' => $this->getCrudScenarios()],
 			'max_postcode'=>['postcode', 'string', 'max' => 10, 'on' => $this->getCrudScenarios()],
 		];
 /*>>>>>RULES*/
@@ -135,7 +138,7 @@ class PostCode extends \santilin\wrepos\models\_BaseModel
 /*>>>>>HANDY_VALUES.BODY*/
 /*<<<<<HANDY_VALUES.RETURN*/
 		if ($ret === null) {
-			return parent::handyFieldValues($field, $format, $model_format, $scope, $filter_fields);
+			return $this->trait_handyFieldValues($field, $format, $model_format, $scope, $filter_fields);
 		} else {
 			if ($format) {
 				return $this->formatHandyFieldValues($field, $ret, $format);
@@ -164,7 +167,7 @@ class PostCode extends \santilin\wrepos\models\_BaseModel
 	 */
 	public function getPlace()
 	{
-		// place:PostCode HasOne(not null) Place: postcodes.places_id=>places.id
+		// PostCode.place:HasOne(not null) Place: postcodes.places_id=>places.id
 		return $this->hasOne(\santilin\wrepos\models\Place::class, ['id' => 'places_id']);
 	}
 /*>>>>>RELATIONS*/

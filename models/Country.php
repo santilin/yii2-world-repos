@@ -24,7 +24,9 @@ use santilin\wrepos\models\Place;
 class Country extends \santilin\wrepos\models\_BaseModel
 {
 	use \santilin\churros\NoRelationTrait;
-	use \santilin\churros\ModelInfoTrait;
+	use \santilin\churros\ModelInfoTrait {
+		handyFieldValues as trait_handyFieldValues;
+	}
 /*>>>>>CLASS*/
 /*<<<<<STATIC_INFO*/
 	static public function tableName()
@@ -148,7 +150,7 @@ class Country extends \santilin\wrepos\models\_BaseModel
 /*>>>>>HANDY_VALUES.BODY*/
 /*<<<<<HANDY_VALUES.RETURN*/
 		if ($ret === null) {
-			return parent::handyFieldValues($field, $format, $model_format, $scope, $filter_fields);
+			return $this->trait_handyFieldValues($field, $format, $model_format, $scope, $filter_fields);
 		} else {
 			if ($format) {
 				return $this->formatHandyFieldValues($field, $ret, $format);
@@ -177,7 +179,7 @@ class Country extends \santilin\wrepos\models\_BaseModel
      */
 	public function getPlaces()
 	{
-		// places:Country BelongsToMany(inv)(not null) Place: countries.id=>places.countries_id
+		// Country.places:BelongsToMany(inv)(not null) Place: countries.id=>places.countries_id
 		return $this->hasMany(\santilin\wrepos\models\Place::class, ['countries_id' => 'id'])->inverseOf('country');
 	}
 /*>>>>>RELATIONS*/

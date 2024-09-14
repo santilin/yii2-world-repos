@@ -1,5 +1,6 @@
 /*<<<<<MAIN*/
 /*Template:Yii2App/web/css/site.css*/
+@import "/css/app_common.css";
 html,
 body {
 	color: inherit;
@@ -7,7 +8,6 @@ body {
 }
 /*>>>>>MAIN*/
 /*<<<<<COMMON_STYLES*/
-@import "/css/app_common.css";
 a {
 	text-decoration: none; /* Remove underline by default */
 }
@@ -126,3 +126,9 @@ legend {
 }
 */
 /*>>>>>FORMS*/
+/*<<<<<FIXES*/
+.editormd-fullscreen {
+  /* btn-group has position:relative and it looks like .editormd has z-index:200000 */
+  z-index: 10;
+}
+/*>>>>>FIXES*/

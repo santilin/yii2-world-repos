@@ -9,12 +9,13 @@ README.md export-ignore
 config/db.php export-ignore
 config/test_db.php export-ignore
 config/smtp.php export-ignore
+config/test.php
 config/secrets.php export-ignore
 pre_deploy.h export-ignore
 *.xcf export-ignore
 releases.log export-ignore
 codeception.yml export-ignore
 tests/** export-ignore
-tests/fixtures/unit/data export-ignore
-TODO export-ignore
+database/migrations/tests export-ignore
+TODO.md export-ignore
 #>>>>>YII2_CAPEL

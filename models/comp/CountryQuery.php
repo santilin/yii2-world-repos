@@ -8,13 +8,14 @@ use yii\db\ActiveQuery;
 use santilin\wrepos\models\Country;
 /*>>>>>USES*/
 /*<<<<<CLASS*/
-class CountryQuery extends ActiveQuery
+class CountryQuery extends ActiveQuery 
 {
+/*>>>>>CLASS*/
+/*<<<<<DEFAULT_ORDER*/
 	// Used in handyValues to sort select lists
 	public function defaultOrder()
 	{
-		$this->orderBy('iso2');
-/*>>>>>CLASS*/
+/*>>>>>DEFAULT_ORDER*/
 /*<<<<<DEFAULT_ORDER_RETURN*/
 		return $this;
 	}

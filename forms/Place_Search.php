@@ -16,11 +16,13 @@ use santilin\wrepos\models\Place;
  */
 class Place_Search extends Place
 {
+/*>>>>>CLASS*/
+/*<<<<<CLASS_BODY*/
 	use \santilin\churros\ModelSearchTrait;
-	protected $related_properties = [
+protected $related_properties = [
 		'country.id' => null,
 	];
-	protected $normal_attrs = [
+protected $normal_attrs = [
 		'admin_code' => 'LIKE',
 		'admin_sup_code' => 'LIKE',
 		'admin_sup_name' => 'LIKE',
@@ -33,7 +35,7 @@ class Place_Search extends Place
 		'name_fr' => 'LIKE',
 		'national_id' => 'LIKE',
 	];
-/*>>>>>CLASS*/
+/*>>>>>CLASS_BODY*/
 /*<<<<<SCENARIOS*/
     /**
      * @inheritdoc
@@ -51,14 +53,14 @@ class Place_Search extends Place
 	public function rules()
 	{
 		$rules = [
-			'safe'=>[['country','postCodes','country.id','admin_code','admin_sup_code','admin_sup_name','countries_id','id','level','name','name_en','name_es','name_fr','national_id'], 'safe'],
+			'safe'=>[['country','country.id','postCodes','admin_code','admin_sup_code','admin_sup_name','countries_id','id','level','name','name_en','name_es','name_fr','national_id'], 'safe'],
 		];
 		// add your custom rules below
 /*>>>>>RULES*/
-/*<<<<<RULES_RETURN*/
-        return $rules;
-    }
-/*>>>>>RULES_RETURN*/
+/*<<<<<RULES.RETURN*/
+		return $rules;
+	}
+/*>>>>>RULES.RETURN*/
 /*<<<<<ATTRIBUTE_LABELS*/
 	public function attributeLabels()
 	{
@@ -102,14 +104,14 @@ class Place_Search extends Place
 /*>>>>>SEARCH*/
 /*<<<<<SEARCH.LOAD*/
         $this->load($params);
-		// set if you do want to return any records when validation fails
 		if( $dataProvider->pagination ) {
-			$this->_gridPageSize = $dataProvider->pagination->pageSize = $params[$this->formName()]['_gridPageSize']??Yii::$app->session->get('GridPageSize', 10);
-			if( $this->_gridPageSize != 0 ) { // dont store All in session
-				Yii::$app->session->set('GridPageSize', $dataProvider->pagination->pageSize);
-			}
+ 			$this->_gridPageSize = $dataProvider->pagination->pageSize = $params['per-page']??Yii::$app->session->get('GridPageSize', 12);
+ 			if( $this->_gridPageSize != 0 ) { // dont store All in session
+ 				Yii::$app->session->set('GridPageSize', $dataProvider->pagination->pageSize);
+ 			}
 		}
-        $no_results_if_validation_fails = false;
+		// set if you do want to return any records when validation fails
+		$no_results_if_validation_fails = false;
 /*>>>>>SEARCH.LOAD*/
 /*<<<<<SEARCH_VALIDATE*/
         if ($no_results_if_validation_fails ) {
@@ -127,8 +129,11 @@ class Place_Search extends Place
 			$this->filterWhereRelated($query, $attr, $value, !$is_or);
 		}
 /*>>>>>SEARCH_FILTERS*/
+/*<<<<<DEFAULT_SORT*/
+		$dataProvider->sort->defaultOrder = ['countries_id' => SORT_ASC];
+/*>>>>>DEFAULT_SORT*/
 /*<<<<<SEARCH_SORTS*/
-		$dataProvider->sort->attributes['country'] = [
+		$dataProvider->sort->attributes['country.id'] = [
 			'asc' => [ 'as_country.iso2' => SORT_ASC ],
 			'desc' => [ 'as_country.iso2' => SORT_DESC ],
 		];
