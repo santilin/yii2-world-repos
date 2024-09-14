@@ -75,3 +75,7 @@ torres devel test
 ATTACH DATABASE 'vendor/santilin/yii2-world-repos/runtime/wrepos.db' AS wrepos;
 insert into territorios SELECT null, coalesce(admin_code,''), name_es, level, null, null, null, null from repos.places where level<=4;
 ```
+
+wrepos/places/import-places app\\models\\Territorio nombre:name,nuts_code:nuts_code,nivel:level level<6
+
+wrepos/places/import-places app\\models\\Territorio nombre:name,nuts_code:nuts_code,nivel:level

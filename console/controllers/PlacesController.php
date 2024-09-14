@@ -133,15 +133,23 @@ delete from territorios; insert into territorios SELECT "id" as "id","name" as "
 /*>>>>>ACTION_IMPORTPLACES*/
 
 		$select_fields = [];
+		$place_schema = Place::getTableSchema();
 		foreach ($fields as $field) {
-			list($orig, $dest) = AppHelper::splitString($field, ':');
+			list($dest, $orig) = AppHelper::splitString($field, ':');
 			if (empty($dest)) {
 				$this->stderr( "$field: wrong format. Must be orig_field:dest_field\n");
-				exit(1);
+				exit(ExitCode::DATAERR);
 			}
-			$select_fields[$dest] = $orig;
+			if ($orig == "nuts_code" || $orig == "code") {
+				$orig = "admin_code";
+			}
+			if (!$place_schema->getColumn($orig)) {
+				$this->stderr( "$orig: no field found in " . Place::tableName() . "\n");
+				exit(ExitCode::DATAERR);
+			}
+			$select_fields[$orig] = $dest;
 		}
-		$country_id = Country::find()->where(['or', [ 'iso2' => $country, 'iso3' => $country, 'name' => $country]])->scalar();
+		$country_id = Country::find()->where(['or', [ 'iso2' => $country], ['iso3' => $country], ['name' => $country]])->scalar();
 		if (!$country_id) {
 			$this->stderr( "$country: country not found\n");
 			exit(1);
@@ -155,20 +163,26 @@ delete from territorios; insert into territorios SELECT "id" as "id","name" as "
 			$dest_model = $dest_model_name::findOne($place->id);
 			if (!$dest_model) {
 				$dest_model = new $dest_model_name;
+				$dest_model->id = $place->id;
 			}
-			foreach ($select_fields as $dest_field => $orig_field) {
+			foreach ($select_fields as $orig_field => $dest_field) {
 				switch ($orig_field) {
-					case 'nuts_code':
-						$dest_model->$dest_field = implode('-', array_filter([$place->admin_sup_code,$place->admin_code]));
+					case 'admin_code':
+						if ($place->level < 6) {
+							$dest_model->$dest_field = implode('-', array_filter([$place->admin_sup_code,$place->admin_code]));
+						} else {
+							$dest_model->$dest_field = $place->admin_code;
+						}
 						break;
 					default:
 						$dest_model->$dest_field = $place->$orig_field;
 				}
 			}
 			if ($dest_model->save()) {
-				$this->stdout($dest_model->recordDesc('long') + ": imported");
+				$this->stdout($dest_model->recordDesc('long') . ": imported\n");
 			} else {
-				$this->stdout($dest_model->recordDesc('long') + ": error: " + $dest_model->getOneError());
+				$this->stderr($dest_model->recordDesc('long') . ": error: " . $dest_model->getOneError() . "\"");
+				exit(ExitCode::DATAERR);
 			}
 		}
 		$rows = count($places);

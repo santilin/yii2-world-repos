@@ -58,11 +58,11 @@ class SourceController extends Controller
 
 	public function beforeAction($action)
 	{
-		if (Yii::$app->id != 'world-repos') {
-			$this->stderr("Forbidden\n");
+		if (Yii::$app->id != 'wrepos') {
+			$this->stderr("Forbidden: you have to run this in the wrepos app\n");
 			exit(1);
 		}
-		return parent::beforeAction();
+		return parent::beforeAction($action);
 	}
 
 /*<<<<<PRINT_HELP_MESSAGE*/
@@ -291,6 +291,7 @@ class SourceController extends Controller
 					->andWhere(['name' => $nut['NUTS_NAME']])
 					->andWhere(['level' => $level])
 					->one();
+				$values['admin_code'] = 'ES';
 			} else if ($level == 4 ) {
 				continue; // Ibiza, etc.
 			} else {
@@ -310,11 +311,22 @@ class SourceController extends Controller
 		}
 
 		// MUNICIPIOS
-		$entidades = Place::getDb()->createCommand("SELECT * FROM entidades_es WHERE TIPO='Municipio'")->queryAll();
+		$entidades = Place::getDb()->createCommand("SELECT * FROM entidades_es WHERE TIPO='Municipio' OR TIPO = 'Capital de municipio' ORDER BY NOMBRE")->queryAll();
 		if( count($entidades) > 0 ) {
 			echo "Found " . count($entidades) . " localities for country ES\n";
+			$municipio_nombre = null;
+			$municipio_inemuni = null;
 			foreach( $entidades as $entidad ) {
-				$level = 4; // Municipio
+				if ($entidad['TIPO'] == 'Capital de municipio') {
+					if ($municipio_nombre == $entidad['NOMBRE'] && $municipio_inemuni == $entidad['INEMUNI']) {
+						continue;
+					}
+					$level = 5; // Capital de municipio
+				} else {
+					$level = 4; // Municipio
+				}
+				$municipio_nombre = $entidad['NOMBRE'];
+				$municipio_inemuni = $entidad['INEMUNI'];
 				$values = [
 					'countries_id' => 724,
 					'level' => $level,
@@ -339,8 +351,15 @@ class SourceController extends Controller
 			}
 		}
 
+saltar:
 		// ENTIDADES
-		$entidades = Place::getDb()->createCommand("SELECT * FROM entidades_es WHERE TIPO<>'Municipio' AND TIPO<>'Entidad colectiva'")->queryAll();
+		$entidades = Place::getDb()->createCommand(<<<sql
+SELECT GROUP_CONCAT(TIPO) AS TIPO, NOMBRE, CODIGOINE, INEMUNI FROM entidades_es
+	WHERE TIPO<>'Municipio' AND TIPO<>'Capital de municipio'
+	AND INEMUNI Like '30%'
+	GROUP BY NOMBRE, INEMUNI, SUBSTRING(CODIGOINE,9)
+sql
+			)->queryAll();
 		if( count($entidades) > 0 ) {
 			echo "Found " . count($entidades) . " localities for country ES\n";
 			foreach( $entidades as $entidad ) {
@@ -474,17 +493,20 @@ sql;
 
 	private function entidadToLevel($tipo)
 	{
-		switch($tipo) {
-		case 'Municipio':
+		$tipos = explode(',', $tipo);
+		if (in_array('Municipio', $tipos)) {
 			return 4;
-		case 'Capital de municipio':
+		} else if (in_array('Capital de municipio', $tipos)) {
 			return 5;
-		case 'Entidad singular':
+		} else if (in_array('Entidad colectiva', $tipos)) {
+			return 5;
+		} else if (in_array('Entidad singular', $tipos)) {
 			return 6;
-		case 'Diseminado':
-		case 'Otras entidades':
+		} else if (in_array('Diseminado', $tipos)) {
 			return 7;
-		default:
+		} else if (in_array('Otras entidades', $tipos)) {
+			return 5;
+		} else {
 			echo "$tipo: tipo de entidad no reconocido\n";
 			exit(1);
 		}

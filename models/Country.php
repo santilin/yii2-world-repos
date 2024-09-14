@@ -11,7 +11,7 @@ use santilin\wrepos\models\Place;
 /**
  * This is the base model class for table "{{%countries}}".
  *
- * @property integer $id // key/primary/tiny
+ * @property integer $id // key/primary/small
  * @property string $iso2 // places/country/iso2_code
  * @property string $iso3 // places/country/iso3_code
  * @property string $name // places/country/name

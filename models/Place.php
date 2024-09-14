@@ -22,7 +22,7 @@ use santilin\wrepos\models\PostCode;
  * @property string $admin_sup_code
  * @property string $admin_sup_name
  * @property string $national_id
- * @property integer $countries_id // tinyInteger
+ * @property integer $countries_id // smallInteger
  *
  * @property santilin\wrepos\models\Country $country // HasOne
  * @property santilin\wrepos\models\PostCode[] $postCodes // BelongsToMany
@@ -113,7 +113,7 @@ class Place extends \santilin\wrepos\models\_BaseModel
 			'req' => [['name','countries_id'], 'required', 'on' => $this->getCrudScenarios()],
 			'int_level' => ['level', 'integer', 'min' => -128, 'max' => 127, 'on' => $this->getCrudScenarios()],
 
-			'int_countries_id' => ['countries_id', 'integer', 'min' => -128, 'max' => 127, 'on' => $this->getCrudScenarios()],
+			'int_countries_id' => ['countries_id', 'integer', 'min' => -32768, 'max' => 32767, 'on' => $this->getCrudScenarios()],
 			'null' => [['name_es','name_en','name_fr','admin_code','admin_sup_code','admin_sup_name','national_id'], 'default', 'value' => null],
 			'def_level'=>['level', 'default', 'value' => 0, 'on' => $this->getCrudScenarios()],
 		];

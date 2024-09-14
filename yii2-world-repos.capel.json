@@ -62,7 +62,7 @@
             "fields": [
                 {
                     "name": "id",
-                    "type": "key/primary/tiny"
+                    "type": "key/primary/small"
                 },
                 {
                     "name": "iso2",
