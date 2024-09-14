@@ -66,7 +66,7 @@ class PlacesController extends Controller
 	/**
 	 * Importador de países por lenguajes
 	 */
-	public function actionImportCountries(string $table=null, array $fields=null, string $language='ES')
+	public function actionImportCountries(string $table, array $fields, string $language='ES')
 	{
 		$exitcode = ExitCode::OK;
 /*>>>>>ACTION_IMPORTCOUNTRIES*/
@@ -127,7 +127,7 @@ delete from territorios; insert into territorios SELECT "id" as "id","name" as "
 	/**
 	 * Importador de lugares: provincias, municipios, etc. por países
 	 */
-	public function actionImportPlaces(string $dest_model_name=null, array $fields=null, string $conds=null, string $country='ES')
+	public function actionImportPlaces(string $dest_model_name, array $fields, string $conds=null, string $country='ES')
 	{
 		$exitcode = ExitCode::OK;
 /*>>>>>ACTION_IMPORTPLACES*/
@@ -139,13 +139,9 @@ delete from territorios; insert into territorios SELECT "id" as "id","name" as "
 				$this->stderr( "$field: wrong format. Must be orig_field:dest_field\n");
 				exit(1);
 			}
-			$select_fields[$orig] = $dest;
+			$select_fields[$dest] = $orig;
 		}
-		$this->wrepos_dbname = 'main';
-		$places_tablename = $this->wrepos_dbname . '.' . Place::tableName();
-		$country_tablename = $this->wrepos_dbname . '.' . Country::tableName();
-		$s_fields = implode(',',$select_fields);
-		$country_id = Country::instance()->getDb()->createCommand("SELECT id FROM $country_tablename WHERE iso2='$country' or iso3='$country' or name='$country'")->queryScalar();
+		$country_id = Country::find()->where(['or', [ 'iso2' => $country, 'iso3' => $country, 'name' => $country]])->scalar();
 		if (!$country_id) {
 			$this->stderr( "$country: country not found\n");
 			exit(1);
@@ -154,13 +150,13 @@ delete from territorios; insert into territorios SELECT "id" as "id","name" as "
 		if (!empty($conds) && $conds != 'null') {
 			$sql_conds .= " AND $conds";
 		}
-		$places = Place::find()->where($sconds)->all();
+		$places = Place::find()->where($sql_conds)->all();
 		foreach ($places as $place) {
 			$dest_model = $dest_model_name::findOne($place->id);
 			if (!$dest_model) {
 				$dest_model = new $dest_model_name;
 			}
-			foreach ($select_fields as $orig_field => $dest_field) {
+			foreach ($select_fields as $dest_field => $orig_field) {
 				switch ($orig_field) {
 					case 'nuts_code':
 						$dest_model->$dest_field = implode('-', array_filter([$place->admin_sup_code,$place->admin_code]));
