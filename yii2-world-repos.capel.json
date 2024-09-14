@@ -9,7 +9,7 @@
     ],
     "source_language": "es",
     "currency_code": "EUR",
-    "description": "World repositories",
+        "description": "World repositories",
     "package_doc_block": "yii2-world-repos",
     "params": {
         "adminEmail": "software@noviolento.es",
@@ -254,7 +254,7 @@
                         {
                             "name": "conds",
                             "type": "string",
-                            "is_nullable": true
+                            "is_required": false
                         },
                         {
                             "name": "country",

@@ -66,7 +66,7 @@ class PlacesController extends Controller
 	/**
 	 * Importador de países por lenguajes
 	 */
-	public function actionImportCountries(string $table, array $fields, string $language='ES')
+	public function actionImportCountries(string $table=null, array $fields=null, string $language='ES')
 	{
 		$exitcode = ExitCode::OK;
 /*>>>>>ACTION_IMPORTCOUNTRIES*/
@@ -127,7 +127,7 @@ delete from territorios; insert into territorios SELECT "id" as "id","name" as "
 	/**
 	 * Importador de lugares: provincias, municipios, etc. por países
 	 */
-	public function actionImportPlaces(string $dest_model_name, array $fields, string $conds, string $country='ES')
+	public function actionImportPlaces(string $dest_model_name=null, array $fields=null, string $conds=null, string $country='ES')
 	{
 		$exitcode = ExitCode::OK;
 /*>>>>>ACTION_IMPORTPLACES*/
