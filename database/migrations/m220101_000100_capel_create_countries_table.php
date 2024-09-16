@@ -24,19 +24,21 @@ class m220101_000100_capel_create_countries_table extends Migration
 		$this->createTable('{{%countries}}', [
 /*>>>>>CREATE_TABLE*/
 /*<<<<<COLUMNS*/
-			'id' => $this->tinyInteger()->notNull() . ' PRIMARY KEY',
+			'id' => $this->smallInteger()->notNull(),
 			'iso2' => $this->char(2)->notNull(),
 			'iso3' => $this->char(3)->notNull(),
 			'name' => $this->string()->null(),
 			'name_es' => $this->string()->null(),
 			'name_en' => $this->string()->null(),
 			'name_fr' => $this->string()->null(),
+			'PRIMARY KEY (id)',
 /*>>>>>COLUMNS*/
 /*<<<<<END_CREATE_TABLE*/
 		// add more fields here
 		], $tableOptions);
 /*>>>>>END_CREATE_TABLE*/
 /*<<<<<CREATE_CONSTRAINTS*/
+
 		// creates index for column iso2
 		$this->createIndex(
             'yii2idx-countries-iso2',
@@ -61,7 +63,7 @@ class m220101_000100_capel_create_countries_table extends Migration
 		$this->createIndex(
             'yii2idx-countries-name_fr',
             '{{%countries}}',
-            'name_fr' );
+            'name_fr' ); // indexes
 /*>>>>>CREATE_CONSTRAINTS*/
 /*<<<<<SAFE_DOWN*/
     } // safeup
@@ -70,7 +72,7 @@ class m220101_000100_capel_create_countries_table extends Migration
 	{
 /*>>>>>SAFE_DOWN*/
 /*<<<<<DROP*/
-		$this->dropTable('{{%countries}}');
+		$this->dropTable('{{%countries}}'); // down_element
 /*>>>>>DROP*/
 /*<<<<<END*/
 	}

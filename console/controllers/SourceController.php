@@ -267,6 +267,7 @@ class SourceController extends Controller
 
 	public function actionImportarEspana()
 	{
+// goto saltar;
  		Yii::$app->db->createCommand("DELETE FROM postcodes")->queryAll();
  		Yii::$app->db->createCommand("DELETE FROM places")->queryAll();
 
@@ -311,7 +312,7 @@ class SourceController extends Controller
 		}
 
 		// MUNICIPIOS
-		$entidades = Place::getDb()->createCommand("SELECT * FROM entidades_es WHERE TIPO='Municipio' OR TIPO = 'Capital de municipio' ORDER BY NOMBRE")->queryAll();
+		$entidades = Place::getDb()->createCommand("SELECT * FROM entidades_es WHERE (TIPO='Municipio' OR TIPO = 'Capital de municipio') ORDER BY NOMBRE")->queryAll();
 		if( count($entidades) > 0 ) {
 			echo "Found " . count($entidades) . " localities for country ES\n";
 			$municipio_nombre = null;
@@ -337,6 +338,7 @@ class SourceController extends Controller
 					'admin_sup_code' => self::ES_PROVINCES[$entidad['COD_PROV']],
 				];
 				$place = Place::find()->byCountryId($values['countries_id'])
+					->andWhere(['name' => $values['name']])
 					->andWhere(['national_id' => $values['national_id']])->one();
 				if (!$place) {
 					$place = new Place;
@@ -351,52 +353,93 @@ class SourceController extends Controller
 			}
 		}
 
-saltar:
 		// ENTIDADES
-		$entidades = Place::getDb()->createCommand(<<<sql
-SELECT GROUP_CONCAT(TIPO) AS TIPO, NOMBRE, CODIGOINE, INEMUNI FROM entidades_es
+		$entidades_info = Place::getDb()->createCommand(<<<sql
+SELECT GROUP_CONCAT(CODIGOINE||':'||NOMBRE||':'||TIPO, ';') AS INFO, CODIGOINE, INEMUNI FROM entidades_es
 	WHERE TIPO<>'Municipio' AND TIPO<>'Capital de municipio'
-	AND INEMUNI Like '30%'
-	GROUP BY NOMBRE, INEMUNI, SUBSTRING(CODIGOINE,9)
+		AND CODIGOINE LIKE '30901000%'
+	GROUP BY SUBSTRING(CODIGOINE,1,8)
+	ORDER BY 1
 sql
 			)->queryAll();
-		if( count($entidades) > 0 ) {
-			echo "Found " . count($entidades) . " localities for country ES\n";
-			foreach( $entidades as $entidad ) {
-				$values = [
-					'countries_id' => 724,
-					'level' => $this->entidadToLevel($entidad['TIPO']),
-					'name' => $this->escapeSql($entidad['NOMBRE']),
-					'name_es' => $this->escapeSql($entidad['NOMBRE']),
-					'national_id' => $entidad['CODIGOINE'],
-				];
-				$place = Place::find()->byCountryId($values['countries_id'])
-					->andWhere(['name' => $entidad['NOMBRE']])
-					->andWhere(['admin_sup_code' => $entidad['INEMUNI']])
-					->one();
-				if (!$place) {
-					$municipio = Place::find()->byCountryId($values['countries_id'])
-						->andWhere(['national_id' => $entidad['INEMUNI']])->one();
-					if (!$municipio) {
-						echo $entidad['INEMUNI'] . ": municipio no encontrado";
-						exit(1);
+		if( count($entidades_info) > 0 ) {
+			echo "Found " . count($entidades_info) . " localities for country ES\n";
+			foreach ($entidades_info as $entidad_info ) {
+				$subentidades_info = explode(';', $entidad_info['INFO']);
+				$admin_codes = [];
+				$admin_names = [];
+				$old_name = null;
+				$ine_muni = $old_code = $entidad_info['INEMUNI'];
+				$old_level = 5;
+				$old_real_level = 5;
+				foreach ($subentidades_info as $sk => $subentidad_info) {
+					$subentidad = explode(':', $subentidad_info);
+					if (!isset($admin_names[$subentidad[1]])) {
+						$admin_names[$subentidad[1]] = true;
+						$admin_codes[$subentidad[0]] = $subentidad;
+						if (!isset($subentidad[2])) {
+							$love = true;
+						}
+						$level = $this->entidadToLevel($subentidad[2]);
+						if ($level>$old_level) {
+							$level++;
+						}
+						$admin_codes[$subentidad[0]]['level'] = $level;
+						if ($old_level < $level) {
+							$admin_codes[$subentidad[0]]['admin_sup_code'] = $old_code;
+							$old_code = $subentidad[0];
+						} else { // Buscar el admin_sup_code previo
+							$old_code = null;
+							foreach (array_reverse($admin_codes) as $ack => $admin_code) {
+								if ($admin_code['level'] < $level) {
+									$admin_codes[$subentidad[0]]['admin_sup_code'] = $admin_code[0];
+									$old_code = $subentidad[0];
+									break;
+								}
+							}
+							if (!$old_code) {
+								$admin_codes[$subentidad[0]]['admin_sup_code'] = $ine_muni;
+								$old_code = $subentidad[0];
+							}
+						}
+						$old_level = $level;
 					}
-					if ($municipio->name == $entidad['NOMBRE']) {
-						continue;
-					}
-					$place = new Place;
-					$place->admin_sup_code = $municipio->admin_code;
-					$place->admin_sup_name = $municipio->name;
-					$place->admin_code = $entidad['CODIGOINE'];
-					$place->setAttributes($values);
-					if (!$place->save()) {
-						echo $place->getOneError();
-						exit();
+				}
+				foreach ($admin_codes as $ak => $entidad) {
+					$entidad['national_id'] = $entidad['admin_code'] = $entidad[0];
+					unset($entidad[0]);
+					$entidad['name'] = $entidad['name_es'] = $entidad[1];
+					unset($entidad[1]);
+					unset($entidad[2]);
+					$entidad['countries_id'] = 724;
+					$place = Place::find()->byCountryId($entidad['countries_id'])
+						->andWhere(['name' => $entidad['name']])
+						->andWhere(['admin_sup_code' => $entidad['admin_sup_code']])
+						->one();
+					if (!$place) {
+						$municipio = Place::find()->byCountryId($entidad['countries_id'])
+							->andWhere(['national_id' => $ine_muni])->one();
+						if (!$municipio) {
+							echo $ine_muni . ": municipio no encontrado";
+							exit(1);
+						}
+						if ($municipio->name == $entidad['name']) {
+							continue; // Un diseminado del municipio
+						}
+						$place = new Place;
+						$place->setAttributes($entidad);
+						if ($place->name == "Ermita de Belen") {
+							$place->name = "Ermita de Belen";
+						}
+						if (!$place->save()) {
+							echo $place->getOneError();
+							exit();
+						} else {
+							echo "Saved {$place->admin_code} {$place->name}\n";
+						}
 					} else {
-						echo "Saved {$place->admin_code} {$place->name}\n";
+						echo "Already exists {$entidad['name']}\n";
 					}
-				} else {
-					echo "Already exists {$entidad['NOMBRE']}\n";
 				}
 			}
 		}
@@ -405,6 +448,8 @@ sql
 // select t.id, p.POSTCODE AS cp
 // FROM geonames_es p inner join places t on t.national_id=p.admin3_code
 // ORDER BY cp
+
+		return;
 
  		Yii::$app->db->createCommand("DELETE FROM postcodes")->execute();
 
@@ -493,23 +538,41 @@ sql;
 
 	private function entidadToLevel($tipo)
 	{
-		$tipos = explode(',', $tipo);
-		if (in_array('Municipio', $tipos)) {
-			return 4;
-		} else if (in_array('Capital de municipio', $tipos)) {
-			return 5;
-		} else if (in_array('Entidad colectiva', $tipos)) {
-			return 5;
-		} else if (in_array('Entidad singular', $tipos)) {
-			return 6;
-		} else if (in_array('Diseminado', $tipos)) {
-			return 7;
-		} else if (in_array('Otras entidades', $tipos)) {
-			return 5;
-		} else {
-			echo "$tipo: tipo de entidad no reconocido\n";
-			exit(1);
+		switch ($tipo) {
+			case 'Municipio':
+				return 4;
+			case 'Capital de municipio':
+				return 5;
+			case 'Entidad colectiva':
+				return 6;
+			case 'Entidad singular':
+				return 7;
+			case 'Otras entidades':
+				return 8;
+			case 'Diseminado':
+				return 9;
+			default:
+				echo "$tipo: tipo de entidad no reconocido\n";
+				exit(1);
 		}
+
+		// $tipos = explode(',', $tipo);
+		// if (in_array('Municipio', $tipos)) {
+		// 	return 4;
+		// } else if (in_array('Capital de municipio', $tipos)) {
+		// 	return 5;
+		// } else if (in_array('Entidad colectiva', $tipos)) {
+		// 	return 5;
+		// } else if (in_array('Entidad singular', $tipos)) {
+		// 	return 6;
+		// } else if (in_array('Diseminado', $tipos)) {
+		// 	return 6;
+		// } else if (in_array('Otras entidades', $tipos)) {
+		// 	return 6;
+		// } else {
+		// 	echo "$tipo: tipo de entidad no reconocido\n";
+		// 	exit(1);
+		// }
 	}
 
 

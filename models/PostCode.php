@@ -12,7 +12,7 @@ use santilin\wrepos\models\Place;
  * This is the base model class for table "{{%postcodes}}".
  *
  * @property string $postcode // places/postcode
- * @property integer $places_id // tinyInteger
+ * @property integer $places_id
  *
  * @property santilin\wrepos\models\Place $place // HasOne
  */
@@ -88,7 +88,7 @@ class PostCode extends \santilin\wrepos\models\_BaseModel
     {
 		$rules = [
 			'req' => [['postcode','places_id'], 'required', 'on' => $this->getCrudScenarios()],
-			'int_places_id' => ['places_id', 'integer', 'min' => -128, 'max' => 127, 'on' => $this->getCrudScenarios()],
+			'int_places_id' => ['places_id', 'integer', 'min' => -2147483648, 'max' => 2147483647, 'on' => $this->getCrudScenarios()],
 			'max_postcode'=>['postcode', 'string', 'max' => 10, 'on' => $this->getCrudScenarios()],
 		];
 /*>>>>>RULES*/

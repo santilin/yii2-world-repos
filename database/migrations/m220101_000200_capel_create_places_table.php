@@ -24,7 +24,7 @@ class m220101_000200_capel_create_places_table extends Migration
 		$this->createTable('{{%places}}', [
 /*>>>>>CREATE_TABLE*/
 /*<<<<<COLUMNS*/
-			'id' => $this->tinyInteger()->notNull() . ' PRIMARY KEY',
+			'id' => $this->integer()->notNull() . ' ' . $this->db->getSchema()->createQueryBuilder()->buildExpression(new \yii\db\Expression('AUTO_INCREMENT')),
 			'name' => $this->string()->notNull(),
 			'level' => $this->tinyInteger()->notNull()->defaultValue(0),
 			'name_es' => $this->string()->null(),
@@ -34,24 +34,26 @@ class m220101_000200_capel_create_places_table extends Migration
 			'admin_sup_code' => $this->string()->null(),
 			'admin_sup_name' => $this->string()->null(),
 			'national_id' => $this->string()->null(),
-			'countries_id' => $this->tinyInteger()->notNull(),
+			'countries_id' => $this->smallInteger()->notNull(),
+			'PRIMARY KEY (id)',
 /*>>>>>COLUMNS*/
 /*<<<<<END_CREATE_TABLE*/
 		// add more fields here
 		], $tableOptions);
 /*>>>>>END_CREATE_TABLE*/
 /*<<<<<CREATE_CONSTRAINTS*/
+
 		// creates index for column name
 		$this->createIndex(
             'yii2idx-places-name',
             '{{%places}}',
             'name' );
-		// creates index for relation countries_id
+		// creates index for relation country
 		$this->createIndex(
             'yii2idx-places-countries_id',
             '{{%places}}',
             'countries_id'
-		);
+		); // indexes
 		$this->addForeignKey(
             'yii2fk-places-countries_id',
             '{{%places}}',
@@ -60,7 +62,7 @@ class m220101_000200_capel_create_places_table extends Migration
             'id',
             'RESTRICT',
             'RESTRICT'
-        );
+        ); // foreign
 /*>>>>>CREATE_CONSTRAINTS*/
 /*<<<<<SAFE_DOWN*/
     } // safeup
@@ -69,7 +71,7 @@ class m220101_000200_capel_create_places_table extends Migration
 	{
 /*>>>>>SAFE_DOWN*/
 /*<<<<<DROP*/
-		$this->dropTable('{{%places}}');
+		$this->dropTable('{{%places}}'); // down_element
 /*>>>>>DROP*/
 /*<<<<<END*/
 	}

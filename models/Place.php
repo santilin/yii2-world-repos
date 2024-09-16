@@ -12,7 +12,7 @@ use santilin\wrepos\models\PostCode;
 /**
  * This is the base model class for table "{{%places}}".
  *
- * @property integer $id // key/primary/tiny
+ * @property integer $id // key/primary
  * @property string $name // places/name
  * @property integer $level // tinyInteger
  * @property string $name_es // places/name

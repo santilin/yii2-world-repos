@@ -25,19 +25,20 @@ class m220101_000300_capel_create_postcodes_table extends Migration
 /*>>>>>CREATE_TABLE*/
 /*<<<<<COLUMNS*/
 			'postcode' => $this->string(10)->notNull(),
-			'places_id' => $this->tinyInteger()->notNull(),
+			'places_id' => $this->integer()->notNull(),
 /*>>>>>COLUMNS*/
 /*<<<<<END_CREATE_TABLE*/
 		// add more fields here
 		], $tableOptions);
 /*>>>>>END_CREATE_TABLE*/
 /*<<<<<CREATE_CONSTRAINTS*/
-		// creates index for relation places_id
+
+		// creates index for relation place
 		$this->createIndex(
             'yii2idx-postcodes-places_id',
             '{{%postcodes}}',
             'places_id'
-		);
+		); // indexes
 		$this->addForeignKey(
             'yii2fk-postcodes-places_id',
             '{{%postcodes}}',
@@ -46,7 +47,7 @@ class m220101_000300_capel_create_postcodes_table extends Migration
             'id',
             'RESTRICT',
             'RESTRICT'
-        );
+        ); // foreign
 /*>>>>>CREATE_CONSTRAINTS*/
 /*<<<<<SAFE_DOWN*/
     } // safeup
@@ -55,7 +56,7 @@ class m220101_000300_capel_create_postcodes_table extends Migration
 	{
 /*>>>>>SAFE_DOWN*/
 /*<<<<<DROP*/
-		$this->dropTable('{{%postcodes}}');
+		$this->dropTable('{{%postcodes}}'); // down_element
 /*>>>>>DROP*/
 /*<<<<<END*/
 	}

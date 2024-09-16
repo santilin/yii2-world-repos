@@ -112,7 +112,7 @@
             "fields": [
                 {
                     "name": "id",
-                    "type": "key/primary/tiny"
+                    "type": "key/primary"
                 },
                 {
                     "name": "name",
