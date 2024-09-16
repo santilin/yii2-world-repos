@@ -267,9 +267,9 @@ class SourceController extends Controller
 
 	public function actionImportarEspana()
 	{
-// goto saltar;
+goto saltar;
  		Yii::$app->db->createCommand("DELETE FROM postcodes")->queryAll();
- 		Yii::$app->db->createCommand("DELETE FROM places")->queryAll();
+ 		Yii::$app->db->createCommand("DELETE FROM places WHERE countries_id = 724")->queryAll();
 
 		// Source provinces from nuts
 		$nuts3 = Yii::$app->db->createCommand("SELECT * FROM nuts3 WHERE NUTS_ID like 'ES%'")->queryAll();
@@ -312,28 +312,16 @@ class SourceController extends Controller
 		}
 
 		// MUNICIPIOS
-		$entidades = Place::getDb()->createCommand("SELECT * FROM entidades_es WHERE (TIPO='Municipio' OR TIPO = 'Capital de municipio') ORDER BY NOMBRE")->queryAll();
+		$entidades = Place::getDb()->createCommand("SELECT * FROM entidades_es WHERE TIPO='Municipio'")->queryAll();
 		if( count($entidades) > 0 ) {
 			echo "Found " . count($entidades) . " localities for country ES\n";
-			$municipio_nombre = null;
-			$municipio_inemuni = null;
 			foreach( $entidades as $entidad ) {
-				if ($entidad['TIPO'] == 'Capital de municipio') {
-					if ($municipio_nombre == $entidad['NOMBRE'] && $municipio_inemuni == $entidad['INEMUNI']) {
-						continue;
-					}
-					$level = 5; // Capital de municipio
-				} else {
-					$level = 4; // Municipio
-				}
-				$municipio_nombre = $entidad['NOMBRE'];
-				$municipio_inemuni = $entidad['INEMUNI'];
 				$values = [
 					'countries_id' => 724,
-					'level' => $level,
-					'name' => $this->escapeSql($entidad['NOMBRE']),
-					'name_es' => $this->escapeSql($entidad['NOMBRE']),
-					'admin_code' => $this->escapeSql($entidad['INEMUNI']),
+					'level' => 4,
+					'name' => $entidad['NOMBRE'],
+					'name_es' => $entidad['NOMBRE'],
+					'admin_code' => $entidad['INEMUNI'],
 					'national_id' => substr($entidad['CODIGOINE'],0,5),
 					'admin_sup_code' => self::ES_PROVINCES[$entidad['COD_PROV']],
 				];
@@ -353,11 +341,13 @@ class SourceController extends Controller
 			}
 		}
 
+
+//  		Yii::$app->db->createCommand("DELETE FROM places WHERE level>4")->queryAll();
+
 		// ENTIDADES
 		$entidades_info = Place::getDb()->createCommand(<<<sql
 SELECT GROUP_CONCAT(CODIGOINE||':'||NOMBRE||':'||TIPO, ';') AS INFO, CODIGOINE, INEMUNI FROM entidades_es
-	WHERE TIPO<>'Municipio' AND TIPO<>'Capital de municipio'
-		AND CODIGOINE LIKE '30901000%'
+	WHERE TIPO<>'Municipio'
 	GROUP BY SUBSTRING(CODIGOINE,1,8)
 	ORDER BY 1
 sql
@@ -370,30 +360,34 @@ sql
 				$admin_names = [];
 				$old_name = null;
 				$ine_muni = $old_code = $entidad_info['INEMUNI'];
-				$old_level = 5;
-				$old_real_level = 5;
+				$municipio = Place::find()->byCountryId(724)
+					->andWhere(['national_id' => $ine_muni])
+					->one();
+				$admin_names[$municipio->name] = true;
+				$admin_codes[$ine_muni] = [ $ine_muni, $municipio->name, null, 'working_level' => 4, 'level' => 4];
+				$old_level = $real_level = 4;
 				foreach ($subentidades_info as $sk => $subentidad_info) {
 					$subentidad = explode(':', $subentidad_info);
 					if (!isset($admin_names[$subentidad[1]])) {
 						$admin_names[$subentidad[1]] = true;
 						$admin_codes[$subentidad[0]] = $subentidad;
-						if (!isset($subentidad[2])) {
-							$love = true;
-						}
 						$level = $this->entidadToLevel($subentidad[2]);
 						if ($level>$old_level) {
-							$level++;
-						}
-						$admin_codes[$subentidad[0]]['level'] = $level;
-						if ($old_level < $level) {
 							$admin_codes[$subentidad[0]]['admin_sup_code'] = $old_code;
 							$old_code = $subentidad[0];
+							$real_level = $real_level + 1;
+							$admin_codes[$subentidad[0]]['working_level'] = $level;
+							$admin_codes[$subentidad[0]]['level'] = $real_level;
 						} else { // Buscar el admin_sup_code previo
 							$old_code = null;
+							$admin_codes[$subentidad[0]]['working_level'] = $level;
 							foreach (array_reverse($admin_codes) as $ack => $admin_code) {
-								if ($admin_code['level'] < $level) {
+								if ($admin_code['working_level'] < $level) {
 									$admin_codes[$subentidad[0]]['admin_sup_code'] = $admin_code[0];
 									$old_code = $subentidad[0];
+									$real_level = $admin_code['level'] + 1;
+									$admin_codes[$subentidad[0]]['working_level'] = $level;
+									$admin_codes[$subentidad[0]]['level'] = $real_level;
 									break;
 								}
 							}
@@ -406,6 +400,10 @@ sql
 					}
 				}
 				foreach ($admin_codes as $ak => $entidad) {
+					if ($ak == $ine_muni) { // saltar municipio
+						continue;
+					}
+					unset($entidad['working_level']);
 					$entidad['national_id'] = $entidad['admin_code'] = $entidad[0];
 					unset($entidad[0]);
 					$entidad['name'] = $entidad['name_es'] = $entidad[1];
@@ -428,9 +426,6 @@ sql
 						}
 						$place = new Place;
 						$place->setAttributes($entidad);
-						if ($place->name == "Ermita de Belen") {
-							$place->name = "Ermita de Belen";
-						}
 						if (!$place->save()) {
 							echo $place->getOneError();
 							exit();
@@ -449,8 +444,7 @@ sql
 // FROM geonames_es p inner join places t on t.national_id=p.admin3_code
 // ORDER BY cp
 
-		return;
-
+saltar:
  		Yii::$app->db->createCommand("DELETE FROM postcodes")->execute();
 
 		// Rellenar códigos postales desde la tabla post

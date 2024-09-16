@@ -70,7 +70,22 @@ torres devel test
 ```
 
 [//]: # (>>>>>USUARIAS)
+
+
+
+# Create source database
+
+```
+tar -jxvf data.tar.bz2
+./yii migrate/fresh --interactive=0
+sqlite3 runtime/wrepos.db -init console/controllers/import_territories.cfg
+./yii source/import-countries
+./yii source/importar-espana
+```
+
 # Import places to your application
+
+## Manual
 ```
 ATTACH DATABASE 'vendor/santilin/yii2-world-repos/runtime/wrepos.db' AS wrepos;
 insert into territorios SELECT null, coalesce(admin_code,''), name_es, level, null, null, null, null from repos.places where level<=4;
