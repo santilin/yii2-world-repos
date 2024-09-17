@@ -74,34 +74,33 @@ SQL;
 			}
 		} else {
 				$sql = <<<SQL
-SELECT pc.postcode, plpr.name as nuts3, pl.name as nuts4, '' as nuts5, substr(pc.postcode,1,2) as nuts3_code
-FROM $postcode_tbl pc
-	INNER JOIN $place_tbl pl ON pl.id=pc.places_id
-	LEFT JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
-WHERE (pl.name LIKE :place_like) AND pl.level = 4
-UNION
-SELECT GROUP_CONCAT(pc.postcode), plpr.name, plmun.name, pl.name, substr(pc.postcode,1,2)
-FROM $place_tbl pl
-	INNER JOIN $place_tbl plmun ON pl.admin_sup_code=plmun.admin_code AND plmun.level = 4
-		LEFT JOIN $postcode_tbl pc ON plmun.id=pc.places_id
-	INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
-WHERE (pl.name LIKE :place_like) AND pl.level = 5
-GROUP BY 2,3,4,5
-HAVING COUNT(pc.postcode)=1
-UNION
-SELECT pc.postcode, plpr.name, plmun.name, plent.name, substr(pc.postcode,1,2)
-FROM $place_tbl pl
-	INNER JOIN $place_tbl plent ON pl.admin_sup_code=plent.admin_code AND plent.level = 5
-	INNER JOIN $place_tbl plmun ON plent.admin_sup_code=plmun.admin_code AND plmun.level = 4
-		LEFT JOIN $postcode_tbl pc ON plmun.id=pc.places_id
-	INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
-WHERE (pl.name LIKE :place_like) AND pl.level > 5
-GROUP BY 2,3,4,5
-HAVING COUNT(pc.postcode)>1
+SELECT pl.id, plpr.name as nuts3, pl.name as nuts4, '' as nuts5
+	FROM $place_tbl pl
+		INNER JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
+	WHERE (pl.name LIKE :place_like) AND pl.level = 4
+	UNION
+	SELECT plmun.id, plpr.name, plmun.name, pl.name
+	FROM $place_tbl pl
+		INNER JOIN $place_tbl plmun ON pl.admin_sup_code=plmun.admin_code AND plmun.level = 4
+		INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
+	WHERE (pl.name LIKE :place_like) AND pl.level = 5
+	UNION
+	SELECT plent.id, plpr.name, plmun.name, plent.name || '|' || pl.name
+	FROM $place_tbl pl
+		INNER JOIN $place_tbl plent ON pl.admin_sup_code=plent.admin_code AND plent.level = 5
+		INNER JOIN $place_tbl plmun ON plent.admin_sup_code=plmun.admin_code AND plmun.level = 4
+		INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
+	WHERE (pl.name LIKE :place_like) AND pl.level >= 6
 SQL;
-				$models = PostCode::getDb()->createCommand($sql)
+			$places = PostCode::getDb()->createCommand($sql)
 					->bindValue(':place_like', "%$search%")
 					->queryAll();
+			foreach ($places as $place) {
+				$place['nuts3'] = '(' . $place['nuts3'] . ')';
+				$place['postcode'] = PostCode::findPlacePostCode($place['id']);
+				$place['nuts5'] = str_replace('|', ', ', $place['nuts5']);
+				$models[] = $place;
+			}
 		}
 		\Yii::$app->response->format = Response::FORMAT_JSON;
 		return $models;

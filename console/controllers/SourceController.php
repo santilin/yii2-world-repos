@@ -267,7 +267,6 @@ class SourceController extends Controller
 
 	public function actionImportarEspana()
 	{
-goto saltar;
  		Yii::$app->db->createCommand("DELETE FROM postcodes")->queryAll();
  		Yii::$app->db->createCommand("DELETE FROM places WHERE countries_id = 724")->queryAll();
 
@@ -444,8 +443,8 @@ sql
 // FROM geonames_es p inner join places t on t.national_id=p.admin3_code
 // ORDER BY cp
 
-saltar:
- 		Yii::$app->db->createCommand("DELETE FROM postcodes")->execute();
+// saltar:
+//  		Yii::$app->db->createCommand("DELETE FROM postcodes")->execute();
 
 		// Rellenar códigos postales desde la tabla post
 		$sql_cp = <<<sql

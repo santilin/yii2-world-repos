@@ -171,6 +171,22 @@ class PostCode extends \santilin\wrepos\models\_BaseModel
 		return $this->hasOne(\santilin\wrepos\models\Place::class, ['id' => 'places_id']);
 	}
 /*>>>>>RELATIONS*/
+
+	static public function findPlacePostCode(int $places_id): string
+	{
+		$postcode = PostCode::findOne(['places_id' => $places_id]);
+		if ($postcode) {
+			return $postcode->postcode;
+		} else {
+			$sup_place = Place::findSupPlaceById($places_id);
+			if ($sup_place) {
+				return self::findPlacePostCode($sup_place->id);
+			}
+		}
+		return '';
+	}
+
+
 /*<<<<<END*/
 } // class PostCode
 /*>>>>>END*/

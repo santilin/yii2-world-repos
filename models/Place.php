@@ -237,6 +237,18 @@ class Place extends \santilin\wrepos\models\_BaseModel
 		return $this->hasMany(\santilin\wrepos\models\PostCode::class, ['places_id' => 'id'])->inverseOf('place');
 	}
 /*>>>>>RELATIONS*/
+
+	static public function findSupPlaceById(int $places_id): ?Place
+	{
+		$place = self::findOne($places_id);
+		if ($place && $place->admin_sup_code) {
+			return self::findOne(['admin_code' => $place->admin_sup_code]);
+		} else {
+			return null;
+		}
+	}
+
+
 /*<<<<<END*/
 } // class Place
 /*>>>>>END*/
