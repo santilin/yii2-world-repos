@@ -1,7 +1,7 @@
 SELECT DISTINCT c1.NOMBRE ||':'||c2.NOMBRE
 FROM entidades_es c1
 JOIN entidades_es c2 ON
-c1.CODIGOINE LIKE '4%' AND c2.CODIGOINE LIKE '4%' AND
+substring(c1.CODIGOINE,1,9)  = substring(c2.CODIGOINE,1,9) and
 REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
     LOWER(c1.NOMBRE),
     'ï', 'i'),
@@ -33,246 +33,201 @@ REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
 WHERE c1.NOMBRE <> c2.NOMBRE ORDER BY 1;
 
 
-A Amarelá:A Amarela
-A Baiúca:A Baiuca
-A Campá:A Campa
-A Forxá:A Forxa
-A Gándara:A Gandara
-A Martiñá:A Martiña
-A Mó:A Mo
-A Quintá:A Quinta
-As Pedras:AS Pedras
+AS Pedras:As Pedras
+Alqueria:Alquería
 Alquería:Alqueria
+Altritar:Altrítar
 Altrítar:Altritar
-Ambás:Ambas
-Andía:Andia
-Anzó:Anzo
-Areás:Areas
-Armentía:Armentia
-Arrés:Arres
-Arró:Arro
 As Pedras:AS Pedras
-As Quintás:As Quintas
-Augüera:Auguera
-Baió:Baio
+Balmeon:Balmeón
 Balmeón:Balmeon
+Barranco del Talayon:Barranco del Talayón
 Barranco del Talayón:Barranco del Talayon
-Barri Colomer:Barrí Colomer
+Barrio de la Concepcion:Barrio de la Concepción
 Barrio de la Concepción:Barrio de la Concepcion
+Base Aerea:Base Aérea
 Base Aérea:Base Aerea
+Belmez:Bélmez
+Boedo de Castrejon:Boedo de Castrejón
 Boedo de Castrejón:Boedo de Castrejon
-Bouzoá:Bouzoa
+Busfrio:Busfrío
 Busfrío:Busfrio
-Bustió:Bustio
-Béjar:Bejar
 Bélmez:Belmez
+Cabarceno:Cabárceno
 Cabárceno:Cabarceno
-Cabó:Cabo
-Cadós:Cados
-Camporrélls:Camporrells
-Can Bargalló:Can Bargallo
-Can Lluís:Can Lluis
-Candaíl:Candail
-Carballás:Carballas
-Carbayín:Carbayin
-Carnés:Carnes
+Carretera de Chinchon:Carretera de Chinchón
 Carretera de Chinchón:Carretera de Chinchon
-Carrió:Carrio
+Casa de los Garcia:Casa de los García
 Casa de los García:Casa de los Garcia
-Casas de Cementerio de Nuestro Padre Jesús:Casas de Cementerio de Nuestro Padre Jesus
-Casasoá:Casasoa
+Casas de Cementerio de Nuestro Padre Jesus:Casas de Cementer
+Casas de Cementerio de Nuestro Padre Jesús:Casas de Cementer
+Casillas de las Erias:Casillas de las Erías
 Casillas de las Erías:Casillas de las Erias
+Castaño de Eiris:Castaño de Eirís
 Castaño de Eirís:Castaño de Eiris
+Castrejon:Castrejón
 Castrejón:Castrejon
-Celeiró:Celeiro
-Celeirós:Celeiros
+Consolacion:Consolación
 Consolación:Consolacion
+Corbera D'ebre:Corbera d'Ebre
 Corbera d'Ebre:Corbera D'ebre
+Cortijo del Marques:Cortijo del Marqués
 Cortijo del Marqués:Cortijo del Marques
-Cortés:Cortes
-Corzós:Corzos
-Corés:Cores
-Covás:Covas
+Cuarto de Sanchez Arjona:Cuarto de Sánchez Arjona
 Cuarto de Sánchez Arjona:Cuarto de Sanchez Arjona
-Cuíña:Cuiña
+Dehesa de Hernan Vicente:Dehesa de Hernán Vicente
 Dehesa de Hernán Vicente:Dehesa de Hernan Vicente
-Eirós:Eiros
-El Cabañín:El Cabañin
+El Cabron:El Cabrón
 El Cabrón:El Cabron
+El Campeton:El Campetón
 El Campetón:El Campeton
+El Cerrajon:El Cerrajón
 El Cerrajón:El Cerrajon
-El Charcón:El Charcon
+El Encin y la Canaleja:El Encín y la Canaleja
 El Encín y la Canaleja:El Encin y la Canaleja
+El Far D'empordà:El Far d'Empordà
+El Far D'empordà:El Far d'empordà
 El Far d'Empordà:El Far D'empordà
 El Far d'Empordà:El Far d'empordà
+El Far d'empordà:El Far D'empordà
+El Far d'empordà:El Far d'Empordà
+El Groo:El Gróo
 El Gróo:El Groo
-El Mas Reixac:el Mas Reixac
-El Mas Serra:el Mas Serra
-El Molí:El Moli
-El Palomar:el Palomar
-El Perelló:el Perelló
+El Pingarron:El Pingarrón
 El Pingarrón:El Pingarron
-El Pla de Baix:el Pla de Baix
-El Pla:el Pla
-El Poblenou:el Poblenou
+El Principe:El Príncipe
+El Príncipe:El Principe
+El Sauco:El Saúco
 El Saúco:El Sauco
-El Serrat de Castellnou:el Serrat de Castellnou
-El Tossalet:el Tossalet
-El Veïnat de Dalt:el Veïnat de Dalt
 Els Manous:els Manous
-Els Masets:els Masets
+Els Masos de Tamurcia:Els Masos de Tamúrcia
 Els Masos de Tamúrcia:Els Masos de Tamurcia
-Els Masos:els Masos
-Els Vilars:els Vilars
-Erías:Erias
-Ferreirós:Ferreiros
+Fresneu:Fresnéu
 Fresnéu:Fresneu
+Gillue:Gillué
 Gillué:Gillue
-Goía:Goia
+Grau I Platja:Grau i Platja
 Grau i Platja:Grau I Platja
-Gúa:Gua
-H.Ontoria:H.ontoria
-Hoya de Aríñez:Hoya de Ariñez
-I.N.T.A.:I.n.t.a.
+Instituto Leprologico:Instituto Leprológico
 Instituto Leprológico:Instituto Leprologico
+Jemingomez:Jemingómez
 Jemingómez:Jemingomez
-L'Amunt:l'Amunt
-L'Estació:L'Estació
-L'Estany:l'Estany
-L'Horta:l'Horta
-L.Lúmés:L.Lumés
-L.Lúmés:L.lumés
-La Mercoria:LA Mercoria
-La Beguda Alta:la Beguda Alta
+LA Mercoria:La Mercoria
 La Bisbal d'Empordà:La Bisbal d'empordà
-La Forcá:La Forca
-La Güería:La Güeria
+La Bisbal d'empordà:La Bisbal d'Empordà
 La Joncosa del Montmell:la Joncosa del Montmell
-La Jonquera:la Jonquera
+La Jurisdiccion:La Jurisdicción
 La Jurisdicción:La Jurisdiccion
-La Maerá:La Maera
-La Mallá:La Malla
+La Mare de Deu del Bosc:La Mare de Déu del Bosc
 La Mare de Déu del Bosc:La Mare de Deu del Bosc
 La Mercoria:LA Mercoria
-La Móra:La Mora
+La Partija-Santa Monica:La Partija-Santa Mónica
 La Partija-Santa Mónica:La Partija-Santa Monica
-La Quemá:La Quema
-La Rectoria:la Rectoria
-La Rozá:La Roza
 La Torre de l'Espanyol:la Torre de l'Espanyol
-La Vall:la Vall
+La Vega de Santa Maria:La Vega de Santa María
 La Vega de Santa María:La Vega de Santa Maria
-La Virreina:la Virreina
-Lagrán:Lagran
-Larráun:Larraun
-Les Cases Noves:les Cases Noves
-Les Pinedes de l'Armengol:les Pinedes de l'Armengol
+Llamargon:Llamargón
 Llamargón:Llamargon
-Lougarés:Lougares
-Lubián:Lubian
-Lusío:Lusio
+Macian:Macián
 Macián:Macian
+Maraon:Maraón
 Maraón:Maraon
+Maria Aparicio:María Aparicio
+Martin Vicente:Martín Vicente
 Martín Vicente:Martin Vicente
 María Aparicio:Maria Aparicio
-Mas d'En Puig:Mas d'en Puig
-Masía de la Tejería:Masia de la Tejeria
+Masia de la Tejería:Masía de la Tejeria
+Masía de la Tejeria:Masia de la Tejería
+Mina de la Concepcion:Mina de la Concepción
 Mina de la Concepción:Mina de la Concepcion
-Moás:Moas
+Moli de Ger:Molí de Ger
+Molins:Molíns
 Molí de Ger:Moli de Ger
 Molíns:Molins
 Mont-Ras:Mont-ras
+Mont-ras:Mont-Ras
+Montecalderon:Montecalderón
 Montecalderón:Montecalderon
-Monterréi:Monterrei
+Moron I Mola:Moron i Mola
 Moron i Mola:Moron I Mola
-Mosteiró:Mosteiro
+Muñon:Muñón
 Muñón:Muñon
+Navalrincon:Navalrincón
 Navalrincón:Navalrincon
+O Muiñovedro:O Muíñovedro
 O Muíñovedro:O Muiñovedro
-O Terrón:O Terron
-Orderías:Orderias
-Os Bouzós:Os Bouzos
-Os Campós:Os Campos
+Os Curras:Os Currás
 Os Currás:Os Curras
-Palaciós:Palacios
 Palau-Solità i Plegamans:Palau-solità i Plegamans
-Pardiñás:Pardiñas
-Pazó:Pazo
-Pexeirós:Pexeiros
+Palau-solità i Plegamans:Palau-Solità i Plegamans
+Pilar de Jaravia:Pilar de Jaravía
 Pilar de Jaravía:Pilar de Jaravia
+Pinilla de Los Moros:Pinilla de los Moros
 Pinilla de los Moros:Pinilla de Los Moros
-Pinós:Pinos
-Piñeirós:Piñeiros
+Prado del Rincon:Prado del Rincón
 Prado del Rincón:Prado del Rincon
+Pueblica de Campean:Pueblica de Campeán
 Pueblica de Campeán:Pueblica de Campean
+Puentes del Alagon:Puentes del Alagón
 Puentes del Alagón:Puentes del Alagon
+Puerto de la Anunciacion:Puerto de la Anunciación
 Puerto de la Anunciación:Puerto de la Anunciacion
-Quintá:Quinta
-Quintás:Quintas
+Rambla del Marques:Rambla del Marqués
 Rambla del Marqués:Rambla del Marques
-Ramirás:Ramiras
 Riba-Roja d'Ebre:Riba-roja d'Ebre
-Ribás:Ribas
+Riba-roja d'Ebre:Riba-Roja d'Ebre
+Rincón del Marques:Rincón del Marqués
 Rincón del Marqués:Rincón del Marques
+Roman:Román
 Román:Roman
-Rozá:Roza
-Rúa de Francos:Rua de Francos
-Salgueirós:Salgueiros
+Salto de Torrejon:Salto de Torrejón
 Salto de Torrejón:Salto de Torrejon
-San Agustín:San Agustin
+San Andres:San Andrés
 San Andrés:San Andres
-San Antolín:San Antolin
-San Antón:San Anton
+San Bartolome:San Bartolomé
 San Bartolomé:San Bartolome
-San Cristóbal de la Laguna:San Cristóbal de La Laguna
+San Cristobal de Monte Agudo:San Cristóbal de Monte Agudo
+San Cristobal de Trabancos:San Cristóbal de Trabancos
+San Cristóbal de La Laguna:San Cristóbal de la Laguna
 San Cristóbal de Monte Agudo:San Cristobal de Monte Agudo
 San Cristóbal de Trabancos:San Cristobal de Trabancos
-San Cristóbal de la Laguna:San Cristobal de La Laguna
-San Cristóbal:San Cristobal
-San Luís:San Luis
-San Martín:San Martin
-San Nicolás:San Nicolas
+San Cristóbal de la Laguna:San Cristóbal de La Laguna
+San Roman el Antiguo:San Román el Antiguo
 San Román el Antiguo:San Roman el Antiguo
-San Román:San Roman
-Sant Genís:Sant Genis
+Sant Marti de Torroella:Sant Martí de Torroella
 Sant Martí de Torroella:Sant Marti de Torroella
-Santa Cecília:Santa Cecilia
+Santa Lucia de la Sierra:Santa Lucía de la Sierra
 Santa Lucía de la Sierra:Santa Lucia de la Sierra
-Santa Lucía:Santa Lucia
-Santa Maria de l'Avall:Santa Maria de L'Avall
+Santa Maria Ananuñez:Santa María Ananúñez
+Santa Maria de Buil:Santa María de Buil
 Santa María Ananúñez:Santa Maria Ananuñez
 Santa María de Buil:Santa Maria de Buil
+Santa María de Guia:Santa María de Guía
 Santa María de Guía:Santa María de Guia
-Santa María del Camí:Santa Maria del Camí
-Santa María:Santa Maria
+Santibañez del Cañedo:Santibáñez del Cañedo
 Santibáñez del Cañedo:Santibañez del Cañedo
+Sebulcor:Sebúlcor
 Sebúlcor:Sebulcor
-Sequeiró:Sequeiro
-Sequeirós:Sequeiros
+Serrania:Serranía
 Serranía:Serrania
+Sierra del Almiceran:Sierra del Almicerán
 Sierra del Almicerán:Sierra del Almiceran
-Tabláu:Tablau
 Torre-Serona:Torre-serona
+Torre-serona:Torre-Serona
+Torrecilla Sobre Alesanco:Torrecilla sobre Alesanco
 Torrecilla sobre Alesanco:Torrecilla Sobre Alesanco
-Trión:Trion
+Truyes:Truyés
 Truyés:Truyes
+Umbria:Umbría
 Umbría:Umbria
-Urría:Urria
-Valrío:Valrio
-Veinat de l'Estacio:Veïnat de l'Estació
 Vila-Rodona:Vila-rodona
 Vila-Seca:Vila-seca
-Vilarés:Vilares
-Villagarcía:Villagarcia
-Viñás:Viñas
+Vila-rodona:Vila-Rodona
+Vila-seca:Vila-Seca
+Zona de los Principes:Zona de los Príncipes
 Zona de los Príncipes:Zona de los Principes
-El Mas Serra:el Mas Serra
-El Palomar:el Palomar
-El Perelló:el Perelló
-El Pla de Baix:el Pla de Baix
-El Veïnat de Dalt:el Veïnat de Dalt
-Els Manous:els Manous
-Els Masos:els Masos
-L'Estany:l'Estany
-La Joncosa del Montmell:la Joncosa del Montmell
-La Torre de l'Espanyol:la Torre de l'Espanyol
+els Manous:Els Manous
+io de Nuestro Padre Jesus
+io de Nuestro Padre Jesús
+la Joncosa del Montmell:La Joncosa del Montmell
+la Torre de l'Espanyol:La Torre de l'Espanyol
