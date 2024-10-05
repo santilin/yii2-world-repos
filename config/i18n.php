@@ -1,5 +1,6 @@
 <?php
 /*<<<<<USES*/
+/*Template:Yii2App/config/i18n.php*/
 $ret = [
     'translations' => [
 		'app*' => [

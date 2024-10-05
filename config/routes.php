@@ -11,8 +11,8 @@ $routes = [
 	'<controller:[A-Za-z0-9_\-]+>/<id:\d+>' => '<controller>/view',
 	'<controller:[A-Za-z0-9_\-]+>/<action:[A-Za-z0-9_\-]+>/<id:\d+>' => '<controller>/<action>',
 	'<controller:[A-Za-z0-9_\-]+>/<action:[A-Za-z0-9_\-]+>' => '<controller>/<action>',
-];
 /*>>>>>MAIN_ROUTES*/
 /*<<<<<END*/
+];
 return $routes;
 /*>>>>>END*/

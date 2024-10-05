@@ -1,11 +1,11 @@
 <?php
 /*<<<<<CONFIG*/
+/*Template:Yii2App/config/params.php*/
 use yii\helpers\Html;
 // Program parameters, not editable by the final users, example:
 $ret = [
 	'bsDependencyEnabled' => false,
-	'bsVersion' => '4.x',
-	'logo' => '/img/logo_icono.jpg',
+	'bsVersion' => '5.x',
 	'adminEmail' => 'software@noviolento.es',
 	'baseUrl' => 'http://noviolentismo.org',
 	'develURL' => 'http://trivel.test',

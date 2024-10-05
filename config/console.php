@@ -1,22 +1,15 @@
 <?php
 /*<<<<<CONFIG*/
-$params = require __DIR__ . '/params.php';
-if( file_exists(__DIR__ . "/local_params.php") ) {
-	$params = array_merge($params, require( __DIR__ ."/local_params.php"));
-}
-$db = require __DIR__ . '/db.php';
-$smtp_transport = require __DIR__ . '/smtp.php';
-$i18n = require __DIR__ . '/i18n.php';
-
+$local_config = require __DIR__ . '/local_config.php';
 $config = [
-    'id' => 'wrepos',
+    'id' => 'world-repos',
 	'name' => 'World repositories',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
 	// Set as es-ES, not es_ES
 	'language' => 'es-ES',
 	'sourceLanguage' => 'es',
-	'vendorPath' => '/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos/vendor/',
+	'vendorPath' => dirname(__DIR__) . '/vendor/',
     'controllerNamespace' => 'santilin\wrepos\console\controllers',
 	'modules' => [
 		'churros' => [
@@ -36,16 +29,18 @@ $config = [
             ],
         ],
 		'formatter' => [
-			'locale' => 'es_ES', 'dateFormat' => 'php:d/m/Y', 'datetimeFormat' => 'php:d/m/Y h:i:s'
+			'locale' => 'es_ES', 'dateFormat' => 'php:d/m/Y', 'datetimeFormat' => 'php:d/m/Y H:i:s'
 		],
-        'db' => $db,
-        'i18n' => $i18n,
-		'mailer' => [
-			'useFileTransport' => YII_ENV_DEV, // Avoid email errors in development env
-			'class' => 'yii\swiftmailer\Mailer',
-			'viewPath' => '@app/views/mailer',
-			'transport' => $smtp_transport
-		],
+		'db' => $local_config['dbs'][0],
+		'i18n' => require __DIR__ . '/i18n.php',
+		'mailer' => $local_config['mailers'][0],
+		'urlManager' => [
+            'class' => 'yii\web\UrlManager',
+			'baseurl' => YII_ENV_PROD ? 'undefined' : 'http://world-repos.test',
+			'enablePrettyUrl' => true,
+			'showScriptName' => false,
+			'hostinfo' => YII_ENV_PROD ? 'undefined' : 'http://world-repos.test',
+        ],
     ],
     'controllerMap' => [
         'migrate' => [
@@ -53,18 +48,26 @@ $config = [
             'migrationPath' => '@app/database/migrations',
 		]
     ],
-	'params' => $params,
+	'params' => require __DIR__ . '/params.php',
 ];
 /*>>>>>CONFIG*/
 /*<<<<<DEBUG*/
 if (YII_ENV_DEV || YII_ENV_TEST) {
+	global $global_fixtures_suite;
+	if (!isset($global_fixtures_suite)) {
+		$global_fixtures_namespace = '';
+		$global_fixtures_suite = '';
+	} else {
+		$global_fixtures_namespace = "\\$global_fixtures_suite";
+		$global_fixtures_suite = "/$global_fixtures_suite";
+	}
 	Yii::setAlias('@tests', dirname(__DIR__) . '/tests');
 	$config['controllerMap']['fixture'] = [ // Fixture generation command line.
 		'class' => 'yii\faker\FixtureController',
 		// paths and namespaces by default for the unit suite
-		'templatePath' => '@tests/unit/fixtures/templates',
-		'namespace' => 'tests\unit\fixtures',
-		'fixtureDataPath' => '@tests/unit/fixtures/data', // for faker
+		'templatePath' => "@tests$global_fixtures_suite/fixtures/faker",
+		'namespace' => "tests$global_fixtures_namespace\\fixtures",
+		'fixtureDataPath' => "@tests$global_fixtures_suite/fixtures/data", // for faker
 		'providers' => [
 			'santilin\churros\fakers\Base',
 			'santilin\churros\fakers\Address',
@@ -73,25 +76,24 @@ if (YII_ENV_DEV || YII_ENV_TEST) {
 		],
 	];
 }
-if (YII_ENV_DEV) {
-	$config['components']['log']['targets'][] = [
-        'class' => 'yii\log\FileTarget',
-        'logFile' => '@runtime/logs/profile.log',
-        'logVars' => [],
-        'levels' => ['profile'],
-        'categories' => ['yii\db\Command::query', 'yii\db\Command::execute'],
-        'prefix' => function($message) {
-            return 'db:';
-        }
-    ];
-}
+// if (YII_ENV_DEV) {
+// 	$config['components']['log']['targets'][] = [
+//         'class' => 'yii\log\FileTarget',
+//         'logFile' => '@runtime/logs/profile.log',
+//         'logVars' => [],
+//         'levels' => ['profile'],
+//         'categories' => ['yii\db\Command::query', 'yii\db\Command::execute'],
+//         'prefix' => function($message) {
+//             return 'db:';
+//         }
+//     ];
+// }
 /*>>>>>DEBUG*/
 // You can tweak the $config array here as you need
 /*<<<<<RETURN*/
-unset($params, $smtp_transport, $db, $i18n);
 if( file_exists(__DIR__ . "/local_console.php") ) {
-	return yii\helpers\ArrayHelper::merge($config, require( __DIR__ ."/local_console.php"));
-} else {
-	return $config;
+	$config = yii\helpers\ArrayHelper::merge($config, require( __DIR__ ."/local_console.php"));
 }
+unset($local_config);
+return $config;
 /*>>>>>RETURN*/
