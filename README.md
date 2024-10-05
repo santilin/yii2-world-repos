@@ -10,9 +10,8 @@ World repos of all kinds: countries, cities ,villages, etc.
 [//]: # (<<<<<INSTALL)
 # Instalación
 
-* Configurar config/smtp.php
 * Configurar config/secrets.php
-* Configurar config/db.php
+* Configurar config/local_config.php
 
 ```
 mkdir -m 777 web/assets
@@ -70,8 +69,6 @@ torres devel test
 ```
 
 [//]: # (>>>>>USUARIAS)
-
-
 
 # Create source database
 

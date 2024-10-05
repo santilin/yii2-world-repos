@@ -180,7 +180,9 @@ class Country extends \santilin\wrepos\models\_BaseModel
 	public function getPlaces()
 	{
 		// Country.places:BelongsToMany(inv)(not null) Place: countries.id=>places.countries_id
-		return $this->hasMany(\santilin\wrepos\models\Place::class, ['countries_id' => 'id'])->inverseOf('country');
+		return $this->hasMany(\santilin\wrepos\models\Place::class,
+			['countries_id'=>"id"])
+			->inverseOf('country');
 	}
 /*>>>>>RELATIONS*/
 /*<<<<<END*/

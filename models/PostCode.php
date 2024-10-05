@@ -161,14 +161,14 @@ class PostCode extends \santilin\wrepos\models\_BaseModel
 		// Tweak or add report fields here
 /*<<<<<RELATIONS*/
 	/**
-	 * The keys of the array refer to the attributes of the record associated
-	 * with the `$class` model, while the values of the
-	 * array refer to the corresponding attributes in **this** AR class.
+	 * The keys of the array refer to the attributes of the record associated with the `$class` model,
+	 * while the values of the array refer to the corresponding attributes in **this** AR class.
 	 */
 	public function getPlace()
 	{
 		// PostCode.place:HasOne(not null) Place: postcodes.places_id=>places.id
-		return $this->hasOne(\santilin\wrepos\models\Place::class, ['id' => 'places_id']);
+		return $this->hasOne(\santilin\wrepos\models\Place::class,
+			['id'=>"places_id"]);
 	}
 /*>>>>>RELATIONS*/
 

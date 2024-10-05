@@ -217,14 +217,14 @@ class Place extends \santilin\wrepos\models\_BaseModel
 		// Tweak or add report fields here
 /*<<<<<RELATIONS*/
 	/**
-	 * The keys of the array refer to the attributes of the record associated
-	 * with the `$class` model, while the values of the
-	 * array refer to the corresponding attributes in **this** AR class.
+	 * The keys of the array refer to the attributes of the record associated with the `$class` model,
+	 * while the values of the array refer to the corresponding attributes in **this** AR class.
 	 */
 	public function getCountry()
 	{
 		// Place.country:HasOne(not null) Country: places.countries_id=>countries.id
-		return $this->hasOne(\santilin\wrepos\models\Country::class, ['id' => 'countries_id']);
+		return $this->hasOne(\santilin\wrepos\models\Country::class,
+			['id'=>"countries_id"]);
 	}
 	/**
 	 * The keys of the array refer to the attributes of the record associated
@@ -234,7 +234,9 @@ class Place extends \santilin\wrepos\models\_BaseModel
 	public function getPostCodes()
 	{
 		// Place.postCodes:BelongsToMany(inv)(not null) PostCode: places.id=>postcodes.places_id
-		return $this->hasMany(\santilin\wrepos\models\PostCode::class, ['places_id' => 'id'])->inverseOf('place');
+		return $this->hasMany(\santilin\wrepos\models\PostCode::class,
+			['places_id'=>"id"])
+			->inverseOf('place');
 	}
 /*>>>>>RELATIONS*/
 

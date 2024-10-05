@@ -37,22 +37,7 @@ a:hover {
   background-color: var(--bs-secondary-bg); /* Set the desired background color */
   color: var(--bs-secondary-color); /* Set the text color to ensure readability */
 }
-/*
-.no-horiz-margin {
-	margin-left: -15px !important;
-	margin-right: -15px !important;
-}
-.invalid {
-	color: white;
-	background-color:orange;
-}
-.hidden {
-	display:none;
-}
-input[type="checkbox"]:focus + .custom-control-label {
-  text-decoration: underline;
-}
-*/
+
 fieldset {
 	border: 1px solid #ddd !important;
 	margin: 0;
@@ -76,15 +61,6 @@ legend {
 /*>>>>>COMMON_STYLES*/
 /*<<<<<FORMS*/
 .btn.btn-cancel {
-	background-color: var(--bs-secondary-color);
-	background-color: var(--bs-secondary-bg);
-	border-color: #6c757d;
-	padding: 0px 8px;
-	margin:0;
-	font-size: smaller;
-}
-.btn.btn-cancel > i {
-	font-size: 1.5rem;
 }
 
 /*

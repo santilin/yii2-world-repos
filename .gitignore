@@ -12,17 +12,14 @@ world-repos_*.torres
 *~
 .kdev4/**
 /nbproject/**
-
+.sass-cache
 ### begin-preserve-local ###
 vendor
 web/assets/*
 runtime/*
-config/db.php
-config/test_db.php
-config/smtp.php
 config/secrets.php
+config/local_config.php
 config/local_console.php
-config/local_params.php
 config/local_web.php
 composer.lock
 web/uploads

@@ -1,21 +1,17 @@
 #<<<<<YII2_CAPEL
-world-repos.hmcfg export-ignore
 world-repos.kdev4 export-ignore
 world-repos.capel.json export-ignore
 .kdev4 export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore
-README.md export-ignore
-config/db.php export-ignore
-config/test_db.php export-ignore
-config/smtp.php export-ignore
+config/local_*.php export-ignore
 config/test.php export-ignore
 config/secrets.php export-ignore
-pre_deploy.h export-ignore
 *.xcf export-ignore
 releases.log export-ignore
 codeception.yml export-ignore
 tests/** export-ignore
 database/migrations/tests export-ignore
 TODO.md export-ignore
+*.torres export-ignore
 #>>>>>YII2_CAPEL

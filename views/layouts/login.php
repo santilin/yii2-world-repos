@@ -24,9 +24,8 @@ $created_by = 'Creado por Santilín con Yii' . Yii::getVersion();
 <html lang="<?= Yii::$app->language ?>">
 <head>
 	<meta name="description" content="world-repos">
-	<meta name="author" content="santilín">
+	<meta name="author" content="Santilín">
 	<meta charset="<?= Yii::$app->charset ?>">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <?php
 echo $this->registerCsrfMetaTags();
