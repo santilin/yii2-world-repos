@@ -79,18 +79,26 @@ SELECT pl.id, plpr.name as nuts3, pl.name as nuts4, '' as nuts5
 		INNER JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
 	WHERE (pl.name LIKE :place_like) AND pl.level = 4
 	UNION
-	SELECT plmun.id, plpr.name, plmun.name, pl.name
+	SELECT pl.id, plpr.name, plmun.name, pl.name
 	FROM $place_tbl pl
 		INNER JOIN $place_tbl plmun ON pl.admin_sup_code=plmun.admin_code AND plmun.level = 4
 		INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
 	WHERE (pl.name LIKE :place_like) AND pl.level = 5
 	UNION
-	SELECT plent.id, plpr.name, plmun.name, plent.name || '|' || pl.name
+	SELECT pl.id, plpr.name, plmun.name, plent.name || '|' || pl.name
 	FROM $place_tbl pl
 		INNER JOIN $place_tbl plent ON pl.admin_sup_code=plent.admin_code AND plent.level = 5
 		INNER JOIN $place_tbl plmun ON plent.admin_sup_code=plmun.admin_code AND plmun.level = 4
 		INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
-	WHERE (pl.name LIKE :place_like) AND pl.level >= 6
+	WHERE (pl.name LIKE :place_like) AND pl.level = 6
+UNION
+	SELECT pl.id, plpr.name, plmun.name, plent.name || '|' || plsubent.name || '|'  || pl.name
+	FROM $place_tbl pl
+	INNER JOIN $place_tbl plent ON pl.admin_sup_code=plsubent.admin_code AND plsubent.level = 6
+	INNER JOIN $place_tbl plsubent ON plsubent.admin_sup_code=plent.admin_code AND plent.level = 5
+	INNER JOIN $place_tbl plmun ON plent.admin_sup_code=plmun.admin_code AND plmun.level = 4
+	INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
+	WHERE (pl.name LIKE :place_like) AND pl.level > 6
 SQL;
 			$places = PostCode::getDb()->createCommand($sql)
 					->bindValue(':place_like', "%$search%")
