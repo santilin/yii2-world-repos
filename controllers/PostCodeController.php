@@ -98,6 +98,7 @@ SQL;
 			foreach ($places as $place) {
 				$place['nuts3'] = '(' . $place['nuts3'] . ')';
 				$place['postcode'] = PostCode::findPlacePostCode($place['id']);
+				$place['nuts3_code'] = substr($place['postcode'],0,2);
 				$place['nuts5'] = str_replace('|', ', ', $place['nuts5']);
 				$models[] = $place;
 			}
