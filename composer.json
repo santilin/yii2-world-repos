@@ -26,6 +26,10 @@
 	"extra": {
 		"bootstrap": "santilin\\wrepos\\Bootstrap",
 		"version": "1.0.0"
-	}
-
+	},
+    "scripts": {
+        "post-update-cmd": [
+            "unzip -o runtime/wrepos.db.zip -d runtime/"
+        ]
+    }
 }

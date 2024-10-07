@@ -58,7 +58,7 @@ class SourceController extends Controller
 
 	public function beforeAction($action)
 	{
-		if (Yii::$app->id != 'wrepos') {
+		if (Yii::$app->id != 'world-repos') {
 			$this->stderr("Forbidden: you have to run this in the wrepos app\n");
 			exit(1);
 		}
@@ -1382,7 +1382,7 @@ sql;
 					$country->id = intval($country_data[4]);
 				}
 				$country->$name_field = $country_data[5];
-				if (!$country->name || $language == "EN") {
+				if (!$cnombreountry->name || $language == "EN") {
 					$country->name = $country_data[5];
 				}
 				if (!$country->save()) {
@@ -1396,6 +1396,146 @@ sql;
 	} // actionImportCountries
 /*>>>>>ACTION_IMPORTCOUNTRIES_END*/
 
+
+	public function actionFixEntidadesMenores()
+	{
+
+		$names = [
+			"Alquería" => "Alqueria",
+			"Altrítar" => "Altritar",
+			"As Pedras" => "AS Pedras",
+			"Balmeón" => "Balmeon",
+			"Barranco del Talayón" => "Barranco del Talayon",
+			"Barrio de la Concepción" => "Barrio de la Concepcion",
+			"Base Aérea" => "Base Aerea",
+			"Boedo de Castrejón" => "Boedo de Castrejon",
+			"Busfrío" => "Busfrio",
+			"Bélmez" => "Belmez",
+			"Cabárceno" => "Cabarceno",
+			"Carretera de Chinchón" => "Carretera de Chinchon",
+			"Casa de los García" => "Casa de los Garcia",
+			"Casas de Cementerio de Nuestro Padre Jesús" => "Casas de Cementerio de Nuestro Padre Jesus",
+			"Casillas de las Erías" => "Casillas de las Erias",
+			"Castaño de Eirís" => "Castaño de Eiris",
+			"Castrejón" => "Castrejon",
+			"Consolación" => "Consolacion",
+			"Corbera d'Ebre" => "Corbera D'ebre",
+			"Cortijo del Marqués" => "Cortijo del Marques",
+			"Cuarto de Sánchez Arjona" => "Cuarto de Sanchez Arjona",
+			"Dehesa de Hernán Vicente" => "Dehesa de Hernan Vicente",
+			"El Cabrón" => "El Cabron",
+			"El Campetón" => "El Campeton",
+			"El Cerrajón" => "El Cerrajon",
+			"El Encín y la Canaleja" => "El Encin y la Canaleja",
+			"El Far d'Empordà" => "El Far D'empordà",
+			"El Far d'Empordà" => "El Far d'empordà",
+			"El Gróo" => "El Groo",
+			"El Pingarrón" => "El Pingarron",
+			"El Príncipe" => "El Principe",
+			"El Saúco" => "El Sauco",
+			"Els Manous" => "els Manous",
+			"Els Masos de Tamúrcia" => "Els Masos de Tamurcia",
+			"Fresnéu" => "Fresneu",
+			"Gillué" => "Gillue",
+			"Grau i Platja" => "Grau I Platja",
+			"Instituto Leprológico" => "Instituto Leprologico",
+			"Jemingómez" => "Jemingomez",
+			"La Bisbal d'empordà" => "La Bisbal d'Empordà",
+			"La Joncosa del Montmell" => "la Joncosa del Montmell",
+			"La Jurisdicción" => "La Jurisdiccion",
+			"La Mare de Déu del Bosc" => "La Mare de Deu del Bosc",
+			"La Mercoria" => "LA Mercoria",
+			"La Partija-Santa Mónica" => "La Partija-Santa Monica",
+			"La Torre de l'Espanyol" => "la Torre de l'Espanyol",
+			"La Vega de Santa María" => "La Vega de Santa Maria",
+			"Llamargón" => "Llamargon",
+			"Macián" => "Macian",
+			"Maraón" => "Maraon",
+			"Martín Vicente" => "Martin Vicente",
+			"María Aparicio" => "Maria Aparicio",
+			"Masía de la Tejeria" => "Masia de la Tejería",
+			"Mina de la Concepción" => "Mina de la Concepcion",
+			"Molí de Ger" => "Moli de Ger",
+			"Molíns" => "Molins",
+			"Mont-ras" => "Mont-Ras",
+			"Montecalderón" => "Montecalderon",
+			"Moron i Mola" => "Moron I Mola",
+			"Muñón" => "Muñon",
+			"Navalrincón" => "Navalrincon",
+			"O Muíñovedro" => "O Muiñovedro",
+			"Os Currás" => "Os Curras",
+			"Palau-solità i Plegamans" => "Palau-Solità i Plegamans",
+			"Pilar de Jaravía" => "Pilar de Jaravia",
+			"Pinilla de los Moros" => "Pinilla de Los Moros",
+			"Prado del Rincón" => "Prado del Rincon",
+			"Pueblica de Campeán" => "Pueblica de Campean",
+			"Puentes del Alagón" => "Puentes del Alagon",
+			"Puerto de la Anunciación" => "Puerto de la Anunciacion",
+			"Rambla del Marqués" => "Rambla del Marques",
+			"Riba-Roja d'Ebre" => "Riba-roja d'Ebre",
+			"Rincón del Marqués" => "Rincón del Marques",
+			"Román" => "Roman",
+			"Salto de Torrejón" => "Salto de Torrejon",
+			"San Andrés" => "San Andres",
+			"San Bartolomé" => "San Bartolome",
+			"San Cristóbal de Monte Agudo" => "San Cristobal de Monte Agudo",
+			"San Cristóbal de Trabancos" => "San Cristobal de Trabancos",
+			"San Cristóbal de la Laguna" => "San Cristóbal de La Laguna",
+			"San Román el Antiguo" => "San Roman el Antiguo",
+			"Sant Martí de Torroella" => "Sant Marti de Torroella",
+			"Santa Lucía de la Sierra" => "Santa Lucia de la Sierra",
+			"Santa María Ananúñez" => "Santa Maria Ananuñez",
+			"Santa María de Buil" => "Santa Maria de Buil",
+			"Santa María de Guía" => "Santa María de Guia",
+			"Santibáñez del Cañedo" => "Santibañez del Cañedo",
+			"Sebúlcor" => "Sebulcor",
+			"Serranía" => "Serrania",
+			"Sierra del Almicerán" => "Sierra del Almiceran",
+			"Torre-Serona" => "Torre-serona",
+			"Torrecilla sobre Alesanco" => "Torrecilla Sobre Alesanco",
+			"Truyés" => "Truyes",
+			"Umbría" => "Umbria",
+			"Vila-Rodona" => "Vila-rodona",
+			"Vila-Seca" => "Vila-seca",
+			"Zona de los Príncipes" => "Zona de los Principes",
+		];
+		$db = Yii::$app->db;
+		$trans = $db->beginTransaction();
+
+		foreach ($names as $good_name => $bad_name) {
+
+			$bad_found = false;
+			$one_bad = $db->createCommand("SELECT * FROM places WHERE name=:bad OR name=:good ORDER BY national_id LIMIT 1", ['bad' => $bad_name, 'good' => $good_name])->queryAll();
+			if (count($one_bad)==1) {
+				$prefix = substr($one_bad[0]['national_id'],0,8);
+				$all_bad = $db->createCommand("SELECT * FROM places WHERE name=:bad OR name=:good  AND SUBSTRING(national_id,1,8) = :prefix ORDER BY national_id", ['bad' => $bad_name, 'good' => $good_name, 'prefix' => $prefix])->queryAll();
+				if ($all_bad>1) {
+					$i = 0;
+					foreach ($all_bad as $bad) {
+						$p = Place::findOne($bad['id']);
+						if ($i++ == 0) {
+							if ($bad['name'] != $good_name || $bad['name_es'] != $good_name) {
+								$p->name = $good_name;
+								$p->name_es = $good_name;
+								$p->saveOrFail();
+								$this->stdout("Updated place: {$p->national_id} from $bad_name to $good_name\n");
+							}
+						} else {
+							PostCode::deleteAll(['places_id' => $p->id]);
+							$p->delete();
+							$this->stdout("Removed bad place: {$p->national_id}: $bad_name and kept $good_name\n");
+						}
+					}
+				} else {
+					$this->stdout("No bad records found for: {$bad_name}\n");
+				}
+			} else {
+				$this->stdout("No bad records found for: {$bad_name}\n");
+			}
+		}
+		return ExitCode::OK;
+
+	}
 
 /*<<<<<CLASS_END*/
 } // class world-reposController
