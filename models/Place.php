@@ -30,7 +30,7 @@ use santilin\wrepos\models\PostCode;
 class Place extends \santilin\wrepos\models\_BaseModel
 {
 	use \santilin\churros\RelationTrait;
-	use \santilin\churros\ModelInfoTrait {
+	use \santilin\churros\models\ModelInfoTrait {
 		handyFieldValues as trait_handyFieldValues;
 	}
 /*>>>>>CLASS*/

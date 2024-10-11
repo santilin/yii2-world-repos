@@ -24,7 +24,7 @@ use santilin\wrepos\models\Place;
 class Country extends \santilin\wrepos\models\_BaseModel
 {
 	use \santilin\churros\NoRelationTrait;
-	use \santilin\churros\ModelInfoTrait {
+	use \santilin\churros\models\ModelInfoTrait {
 		handyFieldValues as trait_handyFieldValues;
 	}
 /*>>>>>CLASS*/

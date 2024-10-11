@@ -7,7 +7,6 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
-use santilin\churros\ModelSearchTrait;
 use santilin\wrepos\models\Place;
 /*>>>>>USES*/
 /*<<<<<CLASS*/
@@ -18,7 +17,7 @@ class Place_Search extends Place
 {
 /*>>>>>CLASS*/
 /*<<<<<CLASS_BODY*/
-	use \santilin\churros\ModelSearchTrait;
+	use \santilin\churros\models\ModelSearchTrait;
 protected $related_properties = [
 		'country.id' => null,
 	];
