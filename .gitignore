@@ -11,6 +11,7 @@ world-repos_*.torres
 *.kate-swp
 *~
 .kdev4/**
+.theia/**
 /nbproject/**
 .sass-cache
 ### begin-preserve-local ###

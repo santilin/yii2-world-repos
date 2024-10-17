@@ -2,30 +2,29 @@
 /*<<<<<USES*/
 /*Template:Yii2App/layouts/login.php*/
 /**
- * Yii2App Bootstrap4 'login' layout
+ * Yii2App Bootstrap5 'login' layout
  * @var \yii\web\View $this
  * @var string $content
-*/
-
+ */
 use yii\helpers\{Html,Url};
-use yii\bootstrap4\Breadcrumbs;
+use yii\bootstrap5\Breadcrumbs;
 use app\assets\LoginAsset;
-use santilin\churros\helpers\AppHelper;
 use santilin\churros\widgets\SessionAlert;
 
 LoginAsset::register($this);
 $company = $brand_name = Yii::$app->name;
+$copyright_symbol = '&copy;';
 $created_by = 'Creado por Santilín con Yii' . Yii::getVersion();
 /*>>>>>USES*/
 /*<<<<<BEGINPAGE*/
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>">
+<html lang="<?= Yii::$app->language ?>" class='h-100' data-bs-theme="auto">
 <head>
-	<meta name="description" content="world-repos">
-	<meta name="author" content="Santilín">
 	<meta charset="<?= Yii::$app->charset ?>">
+	<meta name="description" content="World repositories">
+	<meta name="author" content="Santilín">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <?php
 echo $this->registerCsrfMetaTags();
@@ -34,43 +33,45 @@ echo $this->registerCsrfMetaTags();
 	<?php $this->head() ?>
 <?php
 /*>>>>>BEGINPAGE*/
-/*<<<<<BEGINBODY*/
+/*<<<<<BODY*/
 ?>
 </head>
 <?php $this->beginBody() ?>
-<body class="site" data-bs-theme="light">
-<header aria-hidden=true>
+<body class="site">
+<header class=container aria-label="navegación">
 <?php
-/*>>>>>BEGINBODY*/
+/*>>>>>BODY*/
 /*<<<<<BREADCRUMBS*/
+?>
+</header>
+<main class=container aria-label="Contenido">
+<?php
 	echo Breadcrumbs::widget([
 		'homeLink' => [ 'label' => Yii::t('app', 'World repositories'), 'url' => ['/']],
 		'links' => $this->params['breadcrumbs']?? [ 'Inicio' ],
 		'options' => ['class' => 'breadcrumb justify-content-center'] ]);
 ?>
-<h1 class=text-center><?= (isset(Yii::$app->params['logo']) ? Html::img(Yii::$app->params['logo'], ['id' => 'app-logo']) : '') . '<br>' . Yii::$app->name ?></h1>
-</header>
-<main aria-label="contenido">
+<h1 class="offset-1 col-10 text-center welcome">Bienvenido a World repositories</h1>
 <?php
 /*>>>>>BREADCRUMBS*/
 /*<<<<<CONTENT*/
-echo SessionAlert::widget();
+	echo SessionAlert::widget();
+	echo $content;
 ?>
 <?php
-echo str_replace('<div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">',
-				 '<div class="col-md-4 offset-md-4 col-sm-6 offset-sm-3">', $content);
 /*>>>>>CONTENT*/
 /*<<<<<ENDBODY*/
 ?>
 </main>
-<footer aria-hidden=true>
+<hr/>
+<footer aria-label='Pie de página' aria-hidden=true>
 <?php
 /*>>>>>ENDBODY*/
 /*<<<<<FOOTER*/
 ?>
-	<div class="container">
-		<p class="float-sm-left">&copy; <?= $company ?>, <?= date('Y') ?></p>
-		<p class="float-sm-right"><?= $created_by ?></p>
+	<div class="d-flex justify-content-around">
+		<p><?=$copyright_symbol?> <?= $company ?>, <?= date('Y') ?></p>
+		<p><?= $created_by ?></p>
 	</div>
 </footer>
 <?=	$this->endBody(); ?>

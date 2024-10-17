@@ -19,7 +19,6 @@ class SiteAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/themes/light.css',
 		'css/site_site.css',
 		'css/site_site_print.css',
 /*>>>>>USES*/
@@ -37,8 +36,7 @@ class SiteAsset extends AssetBundle
 		'yii\web\JqueryAsset',
         'yii\bootstrap5\BootstrapAsset',
 		'yii\bootstrap5\BootstrapPluginAsset',
-		'yii\bootstrap5\BootstrapIconAsset',
-		'rmrevin\yii\fontawesome\AssetBundle',
+        'yidas\yii\fontawesome\FontawesomeAsset',
 /*>>>>>DEPENDS*/
 /*<<<<<DEPENDS_END*/
         // Add your custom depends here
