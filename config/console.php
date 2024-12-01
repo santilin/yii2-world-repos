@@ -1,15 +1,14 @@
 <?php
 /*<<<<<CONFIG*/
-$local_config = require __DIR__ . '/local_config.php';
+$web_app = false;
 $config = [
     'id' => 'world-repos',
 	'name' => 'World repositories',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
-	// Set as es-ES, not es_ES
-	'language' => 'es-ES',
-	'sourceLanguage' => 'es',
 	'vendorPath' => dirname(__DIR__) . '/vendor/',
+    'language' => 'es-ES', // Set as es-ES, not es_ES
+	'sourceLanguage' => 'es',
+	'bootstrap' => ['log'],
     'controllerNamespace' => 'santilin\wrepos\console\controllers',
 	'modules' => [
 		'churros' => [
@@ -21,7 +20,8 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'log' => [
-            'targets' => [
+			'traceLevel' => YII_DEBUG ? 3 : 0,
+			'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
@@ -29,12 +29,36 @@ $config = [
             ],
         ],
 		'formatter' => [
-			'locale' => 'es_ES', 'dateFormat' => 'php:d/m/Y', 'datetimeFormat' => 'php:d/m/Y H:i:s'
+			'class' => \santilin\churros\components\Formatter::class,
+			'locale' => 'es-ES',
+			// 'dateFormat' => '%d/%m/%y',
+			// 'dateTimeFormat' => '%a %d %b %Y %T',
+			// 'currencyCode' => '€',
 		],
-		'db' => $local_config['dbs'][0],
-		'i18n' => require __DIR__ . '/i18n.php',
-		'mailer' => $local_config['mailers'][0],
-		'urlManager' => [
+		'db' => [
+			'class' => 'yii\db\Connection',
+			'charset' => 'utf8mb4',
+			'enableSchemaCache' => YII_ENV_PROD,
+			'schemaCacheDuration' => 6000,
+			'schemaCache' => 'cache',
+		],
+		'i18n' => [
+			'translations' => [
+				'app*' => [
+					'class' => 'yii\i18n\PhpMessageSource',
+					'basePath' => '@app/messages',
+				],
+			]
+		],
+		'mailer' => [
+			'useFileTransport' => false,
+			'class' => 'yii\symfonymailer\Mailer',
+			'viewPath' => '@app/views/mails',
+			'transport' => 	[
+				'dsn' => "smtp://smtp_username:smtp_password@smtp_host:smtp_port?encryption=smtp_encryption"
+			]
+		],
+		'urlManager' => [ // for testing mainly
             'class' => 'yii\web\UrlManager',
 			'baseurl' => YII_ENV_PROD ? 'undefined' : 'http://world-repos.test',
 			'enablePrettyUrl' => true,
@@ -48,11 +72,18 @@ $config = [
             'migrationPath' => '@app/database/migrations',
 		]
     ],
+	'aliases' => [
+		'@bower' => '@vendor/bower-asset',
+		'@npm'   => '@vendor/npm-asset',
+		'@tests' => '@app/tests',
+	],
 	'params' => require __DIR__ . '/params.php',
 ];
+require __DIR__ . '/components.php';
 /*>>>>>CONFIG*/
 /*<<<<<DEBUG*/
 if (YII_ENV_DEV || YII_ENV_TEST) {
+	Yii::setAlias('@tests', dirname(__DIR__) . '/tests');
 	global $global_fixtures_suite;
 	if (!isset($global_fixtures_suite)) {
 		$global_fixtures_namespace = '';
@@ -61,7 +92,6 @@ if (YII_ENV_DEV || YII_ENV_TEST) {
 		$global_fixtures_namespace = "\\$global_fixtures_suite";
 		$global_fixtures_suite = "/$global_fixtures_suite";
 	}
-	Yii::setAlias('@tests', dirname(__DIR__) . '/tests');
 	$config['controllerMap']['fixture'] = [ // Fixture generation command line.
 		'class' => 'yii\faker\FixtureController',
 		// paths and namespaces by default for the unit suite
@@ -76,24 +106,9 @@ if (YII_ENV_DEV || YII_ENV_TEST) {
 		],
 	];
 }
-// if (YII_ENV_DEV) {
-// 	$config['components']['log']['targets'][] = [
-//         'class' => 'yii\log\FileTarget',
-//         'logFile' => '@runtime/logs/profile.log',
-//         'logVars' => [],
-//         'levels' => ['profile'],
-//         'categories' => ['yii\db\Command::query', 'yii\db\Command::execute'],
-//         'prefix' => function($message) {
-//             return 'db:';
-//         }
-//     ];
-// }
 /*>>>>>DEBUG*/
 // You can tweak the $config array here as you need
 /*<<<<<RETURN*/
-if( file_exists(__DIR__ . "/local_console.php") ) {
-	$config = yii\helpers\ArrayHelper::merge($config, require( __DIR__ ."/local_console.php"));
-}
-unset($local_config);
+require __DIR__ . '/local_config.php';
 return $config;
 /*>>>>>RETURN*/

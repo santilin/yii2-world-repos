@@ -35,7 +35,7 @@ class Place_Form extends Place
 		$fdf = FormHelper::getConfig('Place_Form', 'DefaultValues', []);
 		if( is_array($fdf) ) {
 			$df = [];
-			foreach($fdf as $fld => $value) {
+			foreach(array_intersect_assoc($this->activeAttributes(), $fdf) as $fld => $value) {
 				$df[$fld] = $this->$fld;
 			}
 			if( !empty($df) ) {
@@ -50,13 +50,13 @@ class Place_Form extends Place
 /*>>>>>AFTER_SAVE.END*/
 /*<<<<<DEFAULT_VALUES*/
 	// @param controller $context
-	public function setDefaultValues($context = null, bool $duplicating = false)
+	public function setDefaultValues()
 	{
-		parent::setDefaultValues($context, $duplicating);
+		parent::setDefaultValues();
 /*>>>>>DEFAULT_VALUES*/
 /*<<<<<DEFAULT_VALUES.PARENT*/
 
-		if (!$duplicating) { // dont set these default values while duplicating
+		if ($model->getScenario() != 'duplicating') { // dont set these default values while duplicating
 
 		}
 		$fdf = FormHelper::getConfig('Place_Form', 'DefaultValues', []);

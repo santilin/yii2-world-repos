@@ -3,6 +3,7 @@
 /*Template:Yii2App/views/site/index.php*/
 use yii\helpers\{Html,Url};
 use yii\widgets\Breadcrumbs;
+use app\helpers\UserHelper;
 
 /* var yii\web\View $this */
 /* @var $params array */

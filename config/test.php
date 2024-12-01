@@ -1,5 +1,6 @@
 <?php
 /*<<<<<CONFIG*/
+global $config;
 if (defined('TESTING_COMMAND')) {
 	$config = require __DIR__ . '/console.php';
 } else {

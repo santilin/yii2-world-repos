@@ -10,7 +10,6 @@ World repos of all kinds: countries, cities ,villages, etc.
 [//]: # (<<<<<INSTALL)
 # Instalación
 
-* Configurar config/secrets.php
 * Configurar config/local_config.php
 
 ```

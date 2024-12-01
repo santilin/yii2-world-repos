@@ -20,7 +20,6 @@ class SiteAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
 		'css/site_site.css',
-		'css/site_site_print.css',
 /*>>>>>USES*/
 /*<<<<<JS*/
         // Add your custom css here

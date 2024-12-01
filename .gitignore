@@ -18,7 +18,6 @@ world-repos_*.torres
 vendor
 web/assets/*
 runtime/*
-config/secrets.php
 config/local_config.php
 config/local_console.php
 config/local_web.php

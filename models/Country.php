@@ -38,7 +38,8 @@ class Country extends \santilin\wrepos\models\_BaseModel
 	];
 /*>>>>>STATIC_INFO*/
 /*<<<<<MODEL_INFO*/
-	static public $_model_info = [];
+	static public $isJunctionModel = false;
+	static protected $_model_info = [];
 	static public function getModelInfo($part)
 	{
 		if (static::$_model_info == [] ) {
@@ -111,29 +112,21 @@ class Country extends \santilin\wrepos\models\_BaseModel
 /*>>>>>RULES_RETURN*/
 /*<<<<<HANDY_VALUES_PRE*/
 	public function handyFieldValues(string $field, string $format,
-		string $model_format = 'medium', array|string $scope=null, ?string $filter_fields = null)
+		string $model_format = 'medium', array|string|null $scope = null, ?string $filter_fields = null)
 	{
 		$field_parts = explode('.', $field);
 		if (count($field_parts) > 1) {
 			$table = array_shift($field_parts);
 			$rel_model_name = static::$relations[$table]['modelClass'];
 			$rel_model = new $rel_model_name;
-			return $rel_model->handyFieldValues(implode('.', $field_parts), $format, $model_format, $scope);
+			return $rel_model->handyFieldValues(implode('.', $field_parts), $format, $model_format, $scope, $filter_fields);
 		}
 		$ret = null;
-		if (is_array($scope)) {
-			$scope_func = array_shift($scope); $scope_args = $scope;
-		} else {
-			$scope_func = $scope; $scope_args = [];
-		}
 /*>>>>>HANDY_VALUES_PRE*/
 /*<<<<<HANDY_VALUES.BODY*/
 		if( $field == 'places' ) { // hasMany
 			$q = Place::find();
-			$q->defaultOrder();
-			if( $scope_func ) {
-				call_user_func_array([$q,$scope_func],$scope_args);
-			}
+			static::applyScopes($q, $scope);
 			$models = $q->all();
 			$ret = [];
 			if (empty($filter_fields)) {

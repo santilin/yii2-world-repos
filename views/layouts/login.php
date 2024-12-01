@@ -7,7 +7,6 @@
  * @var string $content
  */
 use yii\helpers\{Html,Url};
-use yii\bootstrap5\Breadcrumbs;
 use app\assets\LoginAsset;
 use santilin\churros\widgets\SessionAlert;
 
@@ -42,16 +41,12 @@ echo $this->registerCsrfMetaTags();
 <?php
 /*>>>>>BODY*/
 /*<<<<<BREADCRUMBS*/
+// No breadcrumbs needed here
 ?>
 </header>
 <main class=container aria-label="Contenido">
-<?php
-	echo Breadcrumbs::widget([
-		'homeLink' => [ 'label' => Yii::t('app', 'World repositories'), 'url' => ['/']],
-		'links' => $this->params['breadcrumbs']?? [ 'Inicio' ],
-		'options' => ['class' => 'breadcrumb justify-content-center'] ]);
-?>
-<h1 class="offset-1 col-10 text-center welcome">Bienvenido a World repositories</h1>
+<div class="row mt-5">
+<h1 class="offset-3 col-6 text-center welcome">Bienvenido a world-repos</h1>
 <?php
 /*>>>>>BREADCRUMBS*/
 /*<<<<<CONTENT*/

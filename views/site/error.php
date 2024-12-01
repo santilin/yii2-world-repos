@@ -6,6 +6,7 @@
 /* @var Exception $exception */
 
 use yii\helpers\Html;
+use app\helpers\UserHelper;
 
 $this->title = $name??'Error';
 ?>
@@ -15,7 +16,7 @@ $this->title = $name??'Error';
 
     <div class="alert alert-danger">
 <?php
-    if (Yii::$app->user?->identity?->getIsAdmin()) {
+    if (UserHelper::userIsAdmin()) {
 ?>
         <p><?= Yii::t('app', 'Como administrador/a,')?></p>
 <?php

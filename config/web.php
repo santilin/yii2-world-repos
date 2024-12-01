@@ -1,45 +1,23 @@
 <?php
 /*<<<<<CONFIG*/
-$local_config = require __DIR__ . '/local_config.php';
+$web_app = true;
 $config = [
 	'id' => 'world-repos',
-	'catchAll' => ($params['maintenance']??null)?['site/maintenance', 'message' => $params['maintenance']]:'',
 	'name' => 'World repositories',
 	'basePath' => dirname(__DIR__),
 	'vendorPath' => dirname(__DIR__) . '/vendor/',
-	// Set as es-ES, not es_ES
-	'language' => 'es-ES',
+	'language' => 'es-ES', // Set as es-ES, not es_ES
 	'sourceLanguage' => 'es',
 	'bootstrap' => ['log'],
 	'controllerNamespace' => 'santilin\wrepos\controllers',
-	'aliases' => [
-		'@bower' => '@vendor/bower-asset',
-		'@npm'   => '@vendor/npm-asset',
-		'@tests' => '@app/tests',
-	],
 	'modules' => [
 		'churros' => [
 			'class' => 'santilin\churros\Module'
 		]
 	],
 	'components' => [
-		'assetManager' => [
-			'linkAssets' => YII_ENV_DEV,
-			'forceCopy' => YII_ENV_DEV
-		],
-		'request' => [
-			// !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-			'cookieValidationKey' => $local_config['secrets']['cookie_validation_key'],
-			'parsers' => [
-				'application/json' => 'yii\web\JsonParser',
-			]
-		],
 		'cache' => [
 			'class' => 'yii\caching\FileCache',
-		],
-		'errorHandler' => [
-			'class' => \santilin\churros\components\ErrorHandler::class,
-			'errorAction' => 'site/error',
 		],
 		'log' => [
 			'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -52,23 +30,63 @@ $config = [
 		],
 		'formatter' => [
 			'class' => \santilin\churros\components\Formatter::class,
-			'locale' => 'es_ES',
-			'dateFormat' => 'php:d/m/Y',
-			'datetimeFormat' => 'php:d/m/Y H:i:s',
-			'currencyCode' => 'EUR',
+			'locale' => 'es-ES',
+			// 'dateFormat' => ''%d/%m/%y'',
+			// 'dateTimeFormat' => ''%a %d %b %Y %T'',
+			// 'currencyCode' => ''€'',
 		],
-		'db' => $local_config['dbs'][0],
-		'i18n' => require __DIR__ . '/i18n.php',
-		'mailer' => $local_config['mailers'][0],
+		'db' => [
+			'class' => 'yii\db\Connection',
+			'charset' => 'utf8mb4',
+			'enableSchemaCache' => YII_ENV_PROD,
+			'schemaCacheDuration' => 6000,
+			'schemaCache' => 'cache',
+		],
+		'i18n' => [
+			'translations' => [
+				'app*' => [
+					'class' => 'yii\i18n\PhpMessageSource',
+					'basePath' => '@app/messages',
+				],
+			]
+		],
+		'mailer' => [
+			'useFileTransport' => false,
+			'class' => 'yii\symfonymailer\Mailer',
+			'viewPath' => '@app/views/mails',
+			'transport' => 	[
+				'dsn' => "smtp://username:password@host:port?encryption=encryption"
+			]
+		],
 		'urlManager' => [
 			'class' => 'yii\web\UrlManager',
 			'enablePrettyUrl' => true,
 			'showScriptName' => false,
 			'rules' => require __DIR__ . '/routes.php',
 		],
+		'assetManager' => [
+			'linkAssets' => YII_ENV_DEV,
+			'forceCopy' => YII_ENV_DEV
+		],
+		'request' => [
+			'cookieValidationKey' => 'ëµÕ°0sFºfCX2;TeôûFùýÐ²áFCB& zžþ',
+			'parsers' => [
+				'application/json' => 'yii\web\JsonParser',
+			]
+		],
+		'errorHandler' => [
+			'class' => \santilin\churros\components\ErrorHandler::class,
+			'errorAction' => 'site/error',
+		],
+	],
+	'aliases' => [
+		'@bower' => '@vendor/bower-asset',
+		'@npm'   => '@vendor/npm-asset',
+		'@tests' => '@app/tests',
 	],
 	'params' => require __DIR__ . '/params.php',
 ];
+require __DIR__ . '/components.php';
 /*>>>>>CONFIG*/
 /*<<<<<DEBUG*/
 if (YII_ENV_DEV || YII_ENV_TEST) {
@@ -76,10 +94,10 @@ if (YII_ENV_DEV || YII_ENV_TEST) {
 }
 if (YII_ENV_DEV && YII_DEBUG) {
 	$config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = [
-            'class' => 'yii\debug\Module',
-            // uncomment and adjust the following to add your IP if you are not connecting from localhost.
-            //'allowedIPs' => ['127.0.0.1', '::1'],
+	$config['modules']['debug'] = [
+		'class' => 'yii\debug\Module',
+		// uncomment and adjust the following to add your IP if you are not connecting from localhost.
+		//'allowedIPs' => ['127.0.0.1', '::1'],
 	];
 }
 /*>>>>>DEBUG*/
@@ -102,9 +120,6 @@ $config['modules']['gridview'] =  [
 
 // You can tweak the $config array here as you need
 /*<<<<<RETURN*/
-if( file_exists(__DIR__ . "/local_web.php") ) {
-	$config = yii\helpers\ArrayHelper::merge($config, require( __DIR__ ."/local_web.php"));
-}
-unset($local_config);
+require __DIR__ . '/local_config.php';
 return $config;
 /*>>>>>RETURN*/

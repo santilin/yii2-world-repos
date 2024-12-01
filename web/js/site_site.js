@@ -79,7 +79,46 @@ const ChurrosForm = (function() {
 					form.addEventListener('keydown', this.formEnterAsTab);
 				}
 			}
+		},
+
+		copyToClipboard: function(text_area, text) {
+			try {
+				// Try to use the modern clipboard API
+				navigator.clipboard.writeText(text).then(function() {
+					console.log('Text successfully copied to clipboard');
+				}).catch(function(err) {
+					console.error('Unable to copy text: ', err);
+				});
+			} catch (err) {
+				// Check if a textarea is provided
+				if (text_area) {
+					// If textarea exists, use it
+					text_area.value = text;
+					text_area.select();
+				} else {
+					// If no textarea, create a temporary one
+					text_area = document.createElement("textarea");
+					text_area.value = text;
+					document.body.appendChild(text_area);
+					text_area.select();
+				}
+				// Fallback to execCommand for older browsers
+				try {
+					console.log(text_area.value);
+					debugger;
+					var successful = document.execCommand('copy');
+					var msg = successful ? 'successful' : 'unsuccessful';
+					console.log('Fallback: Copying text was ' + msg);
+				} catch (err) {
+					console.error('Fallback: Unable to copy text: ', err);
+				}
+				// Remove the temporary textarea if we created one
+				if (!text_area.parentNode) {
+					document.body.removeChild(text_area);
+				}
+			}
 		}
+
 	};
 })();
 /*>>>>>MODULE_INIT_FORM*/

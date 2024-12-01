@@ -8,6 +8,7 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use santilin\wrepos\models\Place;
+use \santilin\churros\models\ModelInfoTrait;
 /*>>>>>USES*/
 /*<<<<<CLASS*/
 /**
@@ -18,10 +19,10 @@ class Place_Search extends Place
 /*>>>>>CLASS*/
 /*<<<<<CLASS_BODY*/
 	use \santilin\churros\models\ModelSearchTrait;
-protected $related_properties = [
+	protected $related_properties = [
 		'country.id' => null,
 	];
-protected $normal_attrs = [
+	protected $normal_attrs = [
 		'admin_code' => 'LIKE',
 		'admin_sup_code' => 'LIKE',
 		'admin_sup_name' => 'LIKE',
@@ -88,9 +89,7 @@ protected $normal_attrs = [
 			$query->joinWith($relation);
 		}
 		$searchScopes = (array)ArrayHelper::remove($params, '_search_scopes', []);
-		foreach( $searchScopes as $scope ) {
-			$query->$scope();
-		}
+		static::applyScopes($query, $searchScopes, false);
 		if (!empty($params['or'])) {
 			unset($params['or']);
 			$is_or = true;
@@ -98,7 +97,7 @@ protected $normal_attrs = [
 			$is_or = false;
 		}
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
+            'query' => $query->distinct(),
         ]);
 /*>>>>>SEARCH*/
 /*<<<<<SEARCH.LOAD*/
@@ -119,17 +118,25 @@ protected $normal_attrs = [
 				return $dataProvider;
 			}
 		}
+		$conditions = [];
 /*>>>>>SEARCH_VALIDATE*/
 /*<<<<<SEARCH_FILTERS*/
-		foreach( $this->normal_attrs as $attr => $operator ) {
-			$this->searchFilterWhere($query, $attr, ['op' => $operator, 'v' => $this->$attr], !$is_or);
+		foreach ($this->normal_attrs as $attr => $operator) {
+			$conditions[] = $this->searchFilterWhere($attr, ['op' => $operator, 'v' => $this->$attr]);
 		}
-		foreach( $this->related_properties as $attr => $value ) {
-			$this->filterWhereRelated($query, $attr, $value, !$is_or);
+		foreach ($this->related_properties as $attr => $value) {
+			$conditions[] = $this->filterWhereRelated($query, $attr, $value);
+		}
+		if ($is_or) {
+			$query->andWhere(array_merge(['or'], array_filter($conditions)));
+		} else {
+			$query->andWhere(array_merge(['and'], array_filter($conditions)));
 		}
 /*>>>>>SEARCH_FILTERS*/
 /*<<<<<DEFAULT_SORT*/
+	if (empty($dataProvider->query->orderBy)) {
 		$dataProvider->sort->defaultOrder = ['countries_id' => SORT_ASC];
+	}
 /*>>>>>DEFAULT_SORT*/
 /*<<<<<SEARCH_SORTS*/
 		$dataProvider->sort->attributes['country.id'] = [

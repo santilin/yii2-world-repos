@@ -25,7 +25,7 @@ class PlacesController extends Controller
 	const VERSION = '0.0.1';
 	public bool $dryRun = true;
 	public bool $abortOnError = true;
-	public string $wrepos_dbname = 'wrepos';
+	public string $wrepos_dbname = "wrepos";
 /*>>>>>MAIN*/
 /*<<<<<OPTIONS*/
     /**
