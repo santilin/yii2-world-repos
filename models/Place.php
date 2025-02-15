@@ -240,6 +240,64 @@ class Place extends \santilin\wrepos\models\_BaseModel
 		}
 	}
 
+	static public function importToModel(?callable $callback, string $dest_model_name, array $fields, string $conds=null, string $country='ES'): int
+	{
+		$select_fields = [];
+		$place_schema = Place::getTableSchema();
+		foreach ($fields as $field) {
+			list($dest, $orig) = AppHelper::splitString($field, ':');
+			if (empty($dest)) {
+				throw new \Exception("$field: wrong format. Must be orig_field:dest_field\n");
+			}
+			if ($orig == "nuts_code" || $orig == "code") {
+				$orig = "admin_code";
+			}
+			if (!$place_schema->getColumn($orig)) {
+				throw new \Exception("$orig: no field found in " . Place::tableName() . "\n");
+			}
+			$select_fields[$orig] = $dest;
+		}
+		$country_id = Country::find()->where(['or', [ 'iso2' => $country], ['iso3' => $country], ['name' => $country]])->scalar();
+		if (!$country_id) {
+			$this->stderr( "$country: country not found\n");
+			exit(1);
+		}
+		$sql_conds = "countries_id=$country_id";
+		if (!empty($conds) && $conds != 'null') {
+			$sql_conds .= " AND $conds";
+		}
+		$places = Place::find()->where($sql_conds)->all();
+		foreach ($places as $place) {
+			$dest_model = $dest_model_name::findOne($place->id);
+			if (!$dest_model) {
+				$dest_model = new $dest_model_name;
+				$dest_model->id = $place->id;
+			}
+			foreach ($select_fields as $orig_field => $dest_field) {
+				switch ($orig_field) {
+					case 'admin_code':
+						if ($place->level < 6) {
+							$dest_model->$dest_field = implode('-', array_filter([$place->admin_sup_code,$place->admin_code]));
+						} else {
+							$dest_model->$dest_field = $place->admin_code;
+						}
+						break;
+					default:
+						$dest_model->$dest_field = $place->$orig_field;
+				}
+			}
+			if (is_callable($callback)) {
+				call_user_func($callback, $dest_model, $place);
+			}
+			if (!$dest_model->save()) {
+				throw new \Exception('Place not saved: ' . $dest_model->recordDesc('long')
+					. ": errors: " . implode(", ", $dest_model->getErrorSummary(true)));
+			}
+		}
+		return count($places);
+	}
+
+
 
 /*<<<<<END*/
 } // class Place

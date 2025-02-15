@@ -132,66 +132,85 @@ delete from territorios; insert into territorios SELECT "id" as "id","name" as "
 		$exitcode = ExitCode::OK;
 /*>>>>>ACTION_IMPORTPLACES*/
 
-		$select_fields = [];
-		$place_schema = Place::getTableSchema();
-		foreach ($fields as $field) {
-			list($dest, $orig) = AppHelper::splitString($field, ':');
-			if (empty($dest)) {
-				$this->stderr( "$field: wrong format. Must be orig_field:dest_field\n");
-				exit(ExitCode::DATAERR);
-			}
-			if ($orig == "nuts_code" || $orig == "code") {
-				$orig = "admin_code";
-			}
-			if (!$place_schema->getColumn($orig)) {
-				$this->stderr( "$orig: no field found in " . Place::tableName() . "\n");
-				exit(ExitCode::DATAERR);
-			}
-			$select_fields[$orig] = $dest;
-		}
-		$country_id = Country::find()->where(['or', [ 'iso2' => $country], ['iso3' => $country], ['name' => $country]])->scalar();
-		if (!$country_id) {
-			$this->stderr( "$country: country not found\n");
-			exit(1);
-		}
-		$sql_conds = "countries_id=$country_id";
-		if (!empty($conds) && $conds != 'null') {
-			$sql_conds .= " AND $conds";
-		}
-		$places = Place::find()->where($sql_conds)->all();
-		foreach ($places as $place) {
-			$dest_model = $dest_model_name::findOne($place->id);
-			if (!$dest_model) {
-				$dest_model = new $dest_model_name;
-				$dest_model->id = $place->id;
-			}
-			foreach ($select_fields as $orig_field => $dest_field) {
-				switch ($orig_field) {
-					case 'admin_code':
-						if ($place->level < 6) {
-							$dest_model->$dest_field = implode('-', array_filter([$place->admin_sup_code,$place->admin_code]));
-						} else {
-							$dest_model->$dest_field = $place->admin_code;
-						}
-						break;
-					default:
-						$dest_model->$dest_field = $place->$orig_field;
-				}
-			}
-			if ($dest_model->save()) {
-				$this->stdout($dest_model->recordDesc('long') . ": imported\n");
-			} else {
-				$this->stderr($dest_model->recordDesc('long') . ": error: " . $dest_model->getOneError() . "\"");
-				exit(ExitCode::DATAERR);
-			}
-		}
-		$rows = count($places);
-		$this->stdout("Imported $rows places to $dest_model_name\n");
+		$count = Place::importToModel(null, $dest_model_name, $fields, $conds, $country);
+		$this->stdout("Imported $count places to $dest_model_name\n");
 
 /*<<<<<ACTION_IMPORTPLACES_END*/
 		return $exitcode;
 	} // actionImportPlaces
 /*>>>>>ACTION_IMPORTPLACES_END*/
+
+
+
+	public function setProvincia($model, $place)
+	{
+		static $provincias = [
+			"01" => 1,
+			"02" => 2,
+			"03" => 3,
+			"04" => 4,
+			"33" => 5,
+			"05" => 6,
+			"06" => 7,
+			"07" => 8,
+			"08" => 9,
+			"09" => 10,
+			"10" => 11,
+			"11" => 12,
+			"39" => 13,
+			"12" => 14,
+			"51" => 15,
+			"13" => 16,
+			"14" => 17,
+			"16" => 18,
+			"17" => 19,
+			"18" => 20,
+			"19" => 21,
+			"20" => 22,
+			"21" => 23,
+			"22" => 24,
+			"23" => 25,
+			"15" => 26,
+			"26" => 27,
+			"35" => 28,
+			"24" => 29,
+			"25" => 30,
+			"27" => 31,
+			"28" => 32,
+			"29" => 33,
+			"52" => 34,
+			"30" => 35,
+			"31" => 36,
+			"32" => 37,
+			"34" => 38,
+			"36" => 39,
+			"37" => 40,
+			"38" => 41,
+			"40" => 42,
+			"41" => 43,
+			"42" => 44,
+			"43" => 45,
+			"44" => 46,
+			"45" => 47,
+			"46" => 48,
+			"47" => 49,
+			"48" => 50,
+			"49" => 51,
+			"50" => 52,
+		];
+		$model->provincias_esp_id = $provincias[substr($place->admin_code,0,2)];
+	}
+
+
+	public function actionImportaMunicipios(
+		string $dest_model_name, array $fields, string $conds=null)
+	{
+		$exitcode = ExitCode::OK;
+		$count = Place::importToModel([$this, 'setProvincia'], $dest_model_name, $fields,
+									  "level in (4,5) and admin_sup_code in ('ES611')", 'ES');
+		$this->stdout("Importados $count municitios a $dest_model_name\n");
+		return $exitcode;
+	}
 
 
 /*<<<<<CLASS_END*/
