@@ -12,8 +12,7 @@
         "description": "World repositories",
     "package_doc_block": "yii2-world-repos",
     "params": {
-        "adminEmail": "software@noviolento.es",
-        "testEmail": "software@noviolento.es",
+        "adminEmail": "z@zzzz.es",
         "baseUrl": "http://noviolentismo.org",
         "develURL": "http://trivel.test",
         "testUrl": "http://trivel.test",

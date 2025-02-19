@@ -8,15 +8,12 @@ $ret = [
 	'bsVersion' => '5.x',
 	'adminEmail' => "software@noviolento.es",
 	'baseUrl' => "http://noviolentismo.org",
-	'develURL' => "http://trivel.test",
 	'pdfMarginBottom' => 20,
 	'pdfMarginFooter' => 15,
 	'pdfMarginHeader' => 15,
 	'pdfMarginTop' => 20,
 	'privateUploadsDir' => "@app/runtime/uploads/",
 	'publicUploadsDir' => "@web/uploads/",
-	'testEmail' => "software@noviolento.es",
-	'testUrl' => "http://trivel.test",
 ];
 // Add params here
 /*>>>>>CONFIG*/
