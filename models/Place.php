@@ -244,10 +244,11 @@ class Place extends \santilin\wrepos\models\_BaseModel
 	{
 		$select_fields = [];
 		$place_schema = Place::getTableSchema();
+		$prim_keys = [];
 		foreach ($fields as $field) {
 			list($dest, $orig) = AppHelper::splitString($field, ':');
 			if (empty($dest)) {
-				throw new \Exception("$field: wrong format. Must be orig_field:dest_field\n");
+				throw new \Exception("$field: wrong format. Must be dest_field:places_field\n");
 			}
 			if ($orig == "nuts_code" || $orig == "code") {
 				$orig = "admin_code";
@@ -255,7 +256,11 @@ class Place extends \santilin\wrepos\models\_BaseModel
 			if (!$place_schema->getColumn($orig)) {
 				throw new \Exception("$orig: no field found in " . Place::tableName() . "\n");
 			}
-			$select_fields[$orig] = $dest;
+			if (empty($prim_keys)) {
+				$prim_keys = [$orig, $dest];
+			} else {
+				$select_fields[$orig] = $dest;
+			}
 		}
 		$country_id = Country::find()->where(['or', [ 'iso2' => $country], ['iso3' => $country], ['name' => $country]])->scalar();
 		if (!$country_id) {
@@ -268,10 +273,10 @@ class Place extends \santilin\wrepos\models\_BaseModel
 		}
 		$places = Place::find()->where($sql_conds)->all();
 		foreach ($places as $place) {
-			$dest_model = $dest_model_name::findOne($place->id);
+			$dest_model = $dest_model_name::findOne($place->{$prim_keys[0]});
 			if (!$dest_model) {
 				$dest_model = new $dest_model_name;
-				$dest_model->id = $place->id;
+				$dest_model->{$prim_keys[1]} = $place->{$prim_keys[0]};
 			}
 			foreach ($select_fields as $orig_field => $dest_field) {
 				switch ($orig_field) {
