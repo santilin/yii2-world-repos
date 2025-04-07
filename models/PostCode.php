@@ -32,6 +32,12 @@ class PostCode extends \santilin\wrepos\models\_BaseModel
 'place' => [ 'model' => 'Place', 'left' => 'postcodes.places_id', 'right' => 'places.id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'postcodes.places_id = places.id', 'type' => 'HasOne']
 	];
 /*>>>>>STATIC_INFO*/
+
+	static public function getDb()
+	{
+		return Yii::$app->getModule('wrepos')->db;
+	}
+
 /*<<<<<MODEL_INFO*/
 	static public $isJunctionModel = false;
 	static protected $_model_info = [];

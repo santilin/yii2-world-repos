@@ -45,6 +45,12 @@ class Place extends \santilin\wrepos\models\_BaseModel
 	];
 /*>>>>>STATIC_INFO*/
 
+	static public function getDb()
+	{
+		return Yii::$app->getModule('wrepos')->db;
+	}
+
+
 /*<<<<<MODEL_INFO*/
 	static public $isJunctionModel = false;
 	static protected $_model_info = [];
@@ -245,12 +251,14 @@ class Place extends \santilin\wrepos\models\_BaseModel
 		$select_fields = [];
 		$place_schema = Place::getTableSchema();
 		$prim_keys = [];
-		foreach ($fields as $field) {
-			list($dest, $orig) = AppHelper::splitString($field, ':');
+		foreach ($fields as $dest => $orig) {
+			if (is_numeric($dest)) {
+				list($dest, $orig) = AppHelper::splitString($orig, ':');
+			}
 			if (empty($dest)) {
 				throw new \Exception("$field: wrong format. Must be dest_field:places_field\n");
 			}
-			if ($orig == "nuts_code" || $orig == "code") {
+			if ($orig == "n~uts_code" || $orig == "code") {
 				$orig = "admin_code";
 			}
 			if (!$place_schema->getColumn($orig)) {
@@ -302,7 +310,11 @@ class Place extends \santilin\wrepos\models\_BaseModel
 		return count($places);
 	}
 
-
+	public function findPoblacion()
+	{
+		return intval($this->getDb()->createCommand("SELECT poblacion FROM entidades_es WHERE CODIGOINE = :codigoine",
+			[ 'codigoine' => str_pad($this->national_id,11,'0',STR_PAD_RIGHT) ])->queryScalar());
+	}
 
 /*<<<<<END*/
 } // class Place

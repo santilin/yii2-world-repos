@@ -37,6 +37,12 @@ class Country extends \santilin\wrepos\models\_BaseModel
 'places' => [ 'model' => 'Place', 'left' => 'countries.id', 'right' => 'places.countries_id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'countries.id = places.countries_id', 'type' => 'BelongsToMany']
 	];
 /*>>>>>STATIC_INFO*/
+
+	static public function getDb()
+	{
+		return Yii::$app->getModule('wrepos')->db;
+	}
+
 /*<<<<<MODEL_INFO*/
 	static public $isJunctionModel = false;
 	static protected $_model_info = [];
