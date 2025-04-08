@@ -246,6 +246,17 @@ class Place extends \santilin\wrepos\models\_BaseModel
 		}
 	}
 
+	public function fullName(string $sep = ', ')
+	{
+		$parts = [$this->name];
+		$place = $this;
+		while ($place = $place->findSupPlaceById($place->id)) {
+			$parts[] = $place->name;
+		}
+		return join($sep, $parts);
+	}
+
+
 	static public function importToModel(?callable $callback, string $dest_model_name, array $fields, string $conds=null, string $country='ES'): int
 	{
 		$select_fields = [];
@@ -258,7 +269,7 @@ class Place extends \santilin\wrepos\models\_BaseModel
 			if (empty($dest)) {
 				throw new \Exception("$field: wrong format. Must be dest_field:places_field\n");
 			}
-			if ($orig == "n~uts_code" || $orig == "code") {
+			if ($orig == "nuts_code" || $orig == "code") {
 				$orig = "admin_code";
 			}
 			if (!$place_schema->getColumn($orig)) {
@@ -279,7 +290,7 @@ class Place extends \santilin\wrepos\models\_BaseModel
 		if (!empty($conds) && $conds != 'null') {
 			$sql_conds .= " AND $conds";
 		}
-		$places = Place::find()->where($sql_conds)->all();
+		$places = Place::find()->where($sql_conds)->orderBy('name')->all();
 		foreach ($places as $place) {
 			$dest_model = $dest_model_name::findOne($place->{$prim_keys[0]});
 			if (!$dest_model) {
@@ -314,6 +325,28 @@ class Place extends \santilin\wrepos\models\_BaseModel
 	{
 		return intval($this->getDb()->createCommand("SELECT poblacion FROM entidades_es WHERE CODIGOINE = :codigoine",
 			[ 'codigoine' => str_pad($this->national_id,11,'0',STR_PAD_RIGHT) ])->queryScalar());
+	}
+
+	public function findCodigoPostal(): ?string
+	{
+		$place = $this;
+		$pc = null;
+		while (!$pc) {
+			$pc = PostCode::findOne(['places_id' => $place->id]);
+			if (!$pc) {
+				$place = $place->findSupPlaceById($place->id);
+				if (!$place) {
+					echo "Código postal de [{$this->id}]{$this->fullName()} no encontrado\n";
+					return null;
+				}
+			}
+		}
+		if ($pc) {
+			// echo "Encontrado código postal de [{$this->id}]{$this->fullName()}: {$pc->postcode}\n";
+			return $pc->postcode;
+		} else {
+			return null;
+		}
 	}
 
 /*<<<<<END*/

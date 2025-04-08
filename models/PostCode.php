@@ -185,6 +185,80 @@ class PostCode extends \santilin\wrepos\models\_BaseModel
 		return '';
 	}
 
+	static public function searchPostCodes(string $search, int $page = 1, int $per_page = 10): array
+	{
+		$models = [];
+		$search = trim($search);
+		$postcode_tbl = PostCode::tableName();
+		$place_tbl = Place::tableName();
+		$sql = '';
+		if ($per_page != 0) {
+			if ($page == 0 ) {
+				$page = 1;
+			}
+			$sql_limit = ' LIMIT ' . ($page-1) * $per_page . ",$per_page";
+		}
+		if (is_numeric($search) ) {
+			if (strlen($search)>=4) {
+				$sql = <<<SQL
+SELECT pc.postcode, plpr.name as nuts3, pl.name as nuts4, '' as nuts5, substr(pc.postcode,1,2) as nuts3_code
+FROM $postcode_tbl pc
+	INNER JOIN $place_tbl pl ON pl.id=pc.places_id
+	LEFT JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
+WHERE pc.postcode LIKE :postcode_like AND pl.level = 4 /* :place_like */
+UNION
+SELECT pc.postcode, plpr.name, plmun.name, pl.name, substr(pc.postcode,1,2)
+FROM $postcode_tbl pc
+	INNER JOIN $place_tbl pl ON pl.id=pc.places_id
+	LEFT JOIN $place_tbl plmun ON pl.admin_sup_code=plmun.admin_code AND plmun.level = 4
+	LEFT JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
+WHERE pc.postcode LIKE :postcode_like AND pl.level >= 5
+SQL;
+				$models = PostCode::getDb()->createCommand($sql. $sql_limit)
+					->bindValue(':postcode_like', $search . '%')
+					->queryAll();
+			}
+		} else {
+				$sql = <<<SQL
+SELECT pl.id, plpr.name as nuts3, pl.name as nuts4, '' as nuts5
+	FROM $place_tbl pl
+		INNER JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
+	WHERE (pl.name LIKE :place_like) AND pl.level = 4
+	UNION
+	SELECT pl.id, plpr.name, plmun.name, pl.name
+	FROM $place_tbl pl
+		INNER JOIN $place_tbl plmun ON pl.admin_sup_code=plmun.admin_code AND plmun.level = 4
+		INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
+	WHERE (pl.name LIKE :place_like) AND pl.level = 5
+	UNION
+	SELECT pl.id, plpr.name, plmun.name, plent.name || '|' || pl.name
+	FROM $place_tbl pl
+		INNER JOIN $place_tbl plent ON pl.admin_sup_code=plent.admin_code AND plent.level = 5
+		INNER JOIN $place_tbl plmun ON plent.admin_sup_code=plmun.admin_code AND plmun.level = 4
+		INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
+	WHERE (pl.name LIKE :place_like) AND pl.level = 6
+UNION
+	SELECT pl.id, plpr.name, plmun.name, plent.name || '|' || plsubent.name || '|'  || pl.name
+	FROM $place_tbl pl
+	INNER JOIN $place_tbl plent ON pl.admin_sup_code=plsubent.admin_code AND plsubent.level = 6
+	INNER JOIN $place_tbl plsubent ON plsubent.admin_sup_code=plent.admin_code AND plent.level = 5
+	INNER JOIN $place_tbl plmun ON plent.admin_sup_code=plmun.admin_code AND plmun.level = 4
+	INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
+	WHERE (pl.name LIKE :place_like) AND pl.level > 6
+SQL;
+			$places = PostCode::getDb()->createCommand($sql)
+					->bindValue(':place_like', "%$search%")
+					->queryAll();
+			foreach ($places as $place) {
+				$place['nuts3'] = '(' . $place['nuts3'] . ')';
+				$place['postcode'] = PostCode::findPlacePostCode($place['id']);
+				$place['nuts3_code'] = substr($place['postcode'],0,2);
+				$place['nuts5'] = str_replace('|', ', ', $place['nuts5']);
+				$models[] = $place;
+			}
+		}
+		return $models;
+	}
 
 /*<<<<<END*/
 } // class PostCode
