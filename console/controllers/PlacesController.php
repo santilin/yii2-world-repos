@@ -144,61 +144,7 @@ delete from territorios; insert into territorios SELECT "id" as "id","name" as "
 
 	public function setProvincia($model, $place)
 	{
-		static $provincias = [
-			"01" => 1,
-			"02" => 2,
-			"03" => 3,
-			"04" => 4,
-			"33" => 5,
-			"05" => 6,
-			"06" => 7,
-			"07" => 8,
-			"08" => 9,
-			"09" => 10,
-			"10" => 11,
-			"11" => 12,
-			"39" => 13,
-			"12" => 14,
-			"51" => 15,
-			"13" => 16,
-			"14" => 17,
-			"16" => 18,
-			"17" => 19,
-			"18" => 20,
-			"19" => 21,
-			"20" => 22,
-			"21" => 23,
-			"22" => 24,
-			"23" => 25,
-			"15" => 26,
-			"26" => 27,
-			"35" => 28,
-			"24" => 29,
-			"25" => 30,
-			"27" => 31,
-			"28" => 32,
-			"29" => 33,
-			"52" => 34,
-			"30" => 35,
-			"31" => 36,
-			"32" => 37,
-			"34" => 38,
-			"36" => 39,
-			"37" => 40,
-			"38" => 41,
-			"40" => 42,
-			"41" => 43,
-			"42" => 44,
-			"43" => 45,
-			"44" => 46,
-			"45" => 47,
-			"46" => 48,
-			"47" => 49,
-			"48" => 50,
-			"49" => 51,
-			"50" => 52,
-		];
-		$model->provincias_esp_id = $provincias[substr($place->admin_code,0,2)];
+		$model->provincias_esp_id = intval(substr($place->admin_code,0,2));
 	}
 
 
@@ -207,8 +153,8 @@ delete from territorios; insert into territorios SELECT "id" as "id","name" as "
 	{
 		$exitcode = ExitCode::OK;
 		$count = Place::importToModel([$this, 'setProvincia'], $dest_model_name, $fields,
-									  "level in (4,5) and admin_sup_code in ('ES611')", 'ES');
-		$this->stdout("Importados $count municitios a $dest_model_name\n");
+									  $conds, 'ES');
+		$this->stdout("Importados $count municipios a $dest_model_name\n");
 		return $exitcode;
 	}
 
