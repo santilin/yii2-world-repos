@@ -1,6 +1,6 @@
 {
     "name": "world-repos",
-    "schema_version": "0.1.3",
+    "schema_version": "0.1.5",
     "version": "0.0.1",
     "charset": "utf8",
     "language": "es-ES",
@@ -9,7 +9,7 @@
     ],
     "source_language": "es",
     "currency_code": "EUR",
-        "description": "World repositories",
+    "description": "World repositories",
     "package_doc_block": "yii2-world-repos",
     "params": {
         "adminEmail": "z@zzzz.es",
