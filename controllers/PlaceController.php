@@ -65,19 +65,27 @@ class PlaceController extends Controller
 		\Yii::$app->response->format = Response::FORMAT_JSON;
 		$p = new Place; // to get the db object
 		$db = $p->getDb();
-		$municipio = $db->createCommand("SELECT * FROM entidades_es WHERE INEMUNI LIKE :mun_id", ['mun_id' => "$mun_id%"])->queryAll();
-		return $municipio;
+		$entidades = $db->createCommand("SELECT * FROM entidades_es WHERE CODIGOINE LIKE :mun_id", ['mun_id' => "$mun_id%"])->queryAll();
+		return $entidades;
 	}
 
-	public function actionDegurbaEntidadesMenoresPorIdIne(string $mun_id)
+	public function actionDegurbaEntidadesMenoresPorCodigoIne(string $codigo_ine)
 	{
 		\Yii::$app->response->format = Response::FORMAT_JSON;
 		$p = new Place; // to get the db object
 		$db = $p->getDb();
-		$municipio = $db->createCommand("SELECT * FROM entidades_es WHERE TIPO IN ('Municipio', 'Entidad singular', 'Entidad colectiva', 'Capital de municipio') AND INEMUNI LIKE :mun_id", ['mun_id' => "$mun_id%"])->queryAll();
-		return $municipio;
+		$entidades = $db->createCommand("SELECT * FROM entidades_es WHERE TIPO IN ('Municipio', 'Entidad singular', 'Entidad colectiva', 'Capital de municipio') AND CODIGOINE LIKE :mun_id", ['mun_id' => "$codigo_ine%"])->queryAll();
+		return $entidades;
 	}
 
+	public function actionDegurbaEntidadMenorPorCodigoIne(string $codigo_ine)
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$p = new Place; // to get the db object
+		$db = $p->getDb();
+		$entidades = $db->createCommand("SELECT * FROM entidades_es WHERE TIPO IN ('Municipio', 'Entidad singular', 'Entidad colectiva', 'Capital de municipio') AND CODIGOINE LIKE :mun_id", ['mun_id' => "$codigo_ine%"])->queryAll();
+		return $entidades;
+	}
 
 
 /*<<<<<CLASS_END*/
