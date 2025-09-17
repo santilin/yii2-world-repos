@@ -267,7 +267,10 @@ class Place extends \santilin\wrepos\models\_BaseModel
 				list($dest, $orig) = AppHelper::splitString($orig, ':');
 			}
 			if (empty($dest)) {
-				throw new \Exception("$field: wrong format. Must be dest_field:places_field\n");
+				$dest_schema = $dest_model_name::getTableSchema();
+				throw new \Exception("$dest: wrong format. Must be dest_field:places_field\n"
+					. 'Place fields: ' . implode(', ', array_keys($place_schema->columns)) . "\n"
+					. "$dest_model_name fields: " . implode(', ', array_keys($dest_schema->columns)));
 			}
 			if ($orig == "nuts_code" || $orig == "code") {
 				$orig = "admin_code";
