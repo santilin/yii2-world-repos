@@ -1,57 +1,12 @@
 {
     "name": "world-repos",
-    "schema_version": "0.1.5",
+    "schema_version": "0.1.6",
     "version": "0.0.1",
-    "charset": "utf8",
-    "language": "es-ES",
-    "languages": [
-        "es-ES"
-    ],
-    "source_language": "es",
-    "currency_code": "EUR",
-    "description": "World repositories",
-    "package_doc_block": "yii2-world-repos",
     "params": {
         "adminEmail": "z@zzzz.es",
         "baseUrl": "http://noviolentismo.org",
         "develURL": "http://trivel.test",
-        "testUrl": "http://trivel.test",
-        "publicUploadsDir": "@web/uploads/",
-        "privateUploadsDir": "@app/runtime/uploads/"
-    },
-    "outputs": {
-        "site": {
-            "enabled": true,
-            "type": "Yii2StandAloneModule",
-            "access_filters": [
-                "none"
-            ],
-            "title": "Repositories",
-            "namespace": "santilin\\wrepos",
-            "dest_path": "/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos",
-            "models": {
-                "Country": [
-                    "model",
-                    "migration"
-                ],
-                "Place": [
-                    "model",
-                    "migration"
-                ],
-                "PostCode": [
-                    "model",
-                    "migration"
-                ]
-            },
-            "controllers": {
-                "Place": {
-                    "type": "Empty"
-                },
-                "PostCode": {
-                    "type": "Empty"
-                }
-            }
-        }
+        "testUrl": "http://trivel.test"
     },
     "models": {
         "Country": {
@@ -183,104 +138,157 @@
             "model_hierarchy": "21.179.076.500"
         }
     },
-    "commands": {
-        "Source": {
-            "options": [
-                {
-                    "name": "dryRun",
-                    "type": "bool",
-                    "default_value": true
-                },
-                {
-                    "name": "abortOnError",
-                    "type": "bool",
-                    "default_value": true
-                }
+    "apps": {
+        "yii2": {
+            "type": "Yii2App",
+            "enabled": true,
+            "language": "es-ES",
+            "languages": [
+                "es-ES"
             ],
-            "actions": {
-                "ImportPlaces": {
-                    "description": "Importador de lugares: provincias, municipios, etc. por países",
-                    "arguments": [
+            "source_language": "es",
+            "charset": "utf8",
+            "currency_code": "EUR",
+            "description": "World repositories",
+            "params": {
+                "publicUploadsDir": "@web/uploads/",
+                "privateUploadsDir": "@app/runtime/uploads/"
+            },
+            "commands": {
+                "Source": {
+                    "options": [
                         {
-                            "name": "country",
-                            "type": "string",
-                            "default_value": "ES"
+                            "name": "dryRun",
+                            "type": "bool",
+                            "default_value": true
+                        },
+                        {
+                            "name": "abortOnError",
+                            "type": "bool",
+                            "default_value": true
                         }
-                    ]
+                    ],
+                    "actions": {
+                        "ImportPlaces": {
+                            "description": "Importador de lugares: provincias, municipios, etc. por países",
+                            "arguments": [
+                                {
+                                    "name": "country",
+                                    "type": "string",
+                                    "default_value": "ES"
+                                }
+                            ]
+                        },
+                        "ImportCountries": {
+                            "description": "Importador de países por lenguajes",
+                            "arguments": [
+                                {
+                                    "name": "language",
+                                    "type": "string",
+                                    "default_value": "ES"
+                                }
+                            ]
+                        }
+                    }
                 },
-                "ImportCountries": {
-                    "description": "Importador de países por lenguajes",
-                    "arguments": [
+                "Places": {
+                    "options": [
                         {
-                            "name": "language",
+                            "name": "dryRun",
+                            "type": "bool",
+                            "default_value": true
+                        },
+                        {
+                            "name": "abortOnError",
+                            "type": "bool",
+                            "default_value": true
+                        },
+                        {
+                            "name": "wrepos_dbname",
                             "type": "string",
-                            "default_value": "ES"
+                            "default_value": "wrepos"
                         }
-                    ]
+                    ],
+                    "actions": {
+                        "ImportPlaces": {
+                            "description": "Importador de lugares: provincias, municipios, etc. por países",
+                            "arguments": [
+                                {
+                                    "name": "dest_model_name",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "fields",
+                                    "type": "array"
+                                },
+                                {
+                                    "name": "conds",
+                                    "type": "string",
+                                    "is_required": false
+                                },
+                                {
+                                    "name": "country",
+                                    "type": "string",
+                                    "default_value": "ES"
+                                }
+                            ]
+                        },
+                        "ImportCountries": {
+                            "description": "Importador de países por lenguajes",
+                            "arguments": [
+                                {
+                                    "name": "table",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "fields",
+                                    "type": "array"
+                                },
+                                {
+                                    "name": "language",
+                                    "type": "string",
+                                    "default_value": "ES"
+                                }
+                            ]
+                        }
+                    }
                 }
-            }
-        },
-        "Places": {
-            "options": [
-                {
-                    "name": "dryRun",
-                    "type": "bool",
-                    "default_value": true
-                },
-                {
-                    "name": "abortOnError",
-                    "type": "bool",
-                    "default_value": true
-                },
-                {
-                    "name": "wrepos_dbname",
-                    "type": "string",
-                    "default_value": "wrepos"
-                }
-            ],
-            "actions": {
-                "ImportPlaces": {
-                    "description": "Importador de lugares: provincias, municipios, etc. por países",
-                    "arguments": [
-                        {
-                            "name": "dest_model_name",
-                            "type": "string"
+            },
+            "dest_path": "/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos",
+            "generated_models": {
+                "Country": [
+                    "model",
+                    "migration"
+                ],
+                "Place": [
+                    "model",
+                    "migration"
+                ],
+                "PostCode": [
+                    "model",
+                    "migration"
+                ]
+            },
+            "modules": {
+                "site": {
+                    "enabled": true,
+                    "type": "Yii2Module",
+                    "access_filters": [
+                        "none"
+                    ],
+                    "title": "Repositories",
+                    "namespace": "santilin\\wrepos",
+                    "controllers": {
+                        "Place": {
+                            "type": "Empty"
                         },
-                        {
-                            "name": "fields",
-                            "type": "array"
-                        },
-                        {
-                            "name": "conds",
-                            "type": "string",
-                            "is_required": false
-                        },
-                        {
-                            "name": "country",
-                            "type": "string",
-                            "default_value": "ES"
+                        "PostCode": {
+                            "type": "Empty"
                         }
-                    ]
-                },
-                "ImportCountries": {
-                    "description": "Importador de países por lenguajes",
-                    "arguments": [
-                        {
-                            "name": "table",
-                            "type": "string"
-                        },
-                        {
-                            "name": "fields",
-                            "type": "array"
-                        },
-                        {
-                            "name": "language",
-                            "type": "string",
-                            "default_value": "ES"
-                        }
-                    ]
+                    }
                 }
-            }
+            },
+            "title": "World repositories"
         }
     }
 }
