@@ -8,7 +8,7 @@
  */
 use yii\helpers\{Html,Url};
 use yii\bootstrap5\{Breadcrumbs,Nav,NavBar};
-use santilin\wrepos\assets\SiteAsset;
+use app\assets\SiteAsset;
 use santilin\churros\widgets\SessionAlert;
 use app\helpers\UserHelper;
 
@@ -44,7 +44,7 @@ $company = "Santilín";
 <?php
 /*>>>>>BODY*/
 /*<<<<<NAVIGATION*/
-$home_link = null; // 
+$home_link = null;
 $navbar_options = [
 	'brandLabel' => '<span>' . (isset(Yii::$app->params['logo'])
 		? Html::img(Yii::$app->params['logo'], ['id' => 'app-logo']) : '' ) . '&nbsp;'
@@ -55,22 +55,8 @@ $navbar_options = [
 		'aria-label' => 'Menú principal',
 	],
 ];
+$main_menu_items = []; // Main menu
 /*>>>>>NAVIGATION*/
-/*<<<<<MENU_USER*/
-$items_main = []; // Main menu
-$login_menu = [];
-$login_items = [];
-$user_component = Yii::$app->get('user', false);
-$username = $user_component?->getIdentity()?->username ?: 'Invitada';
-$user_is_admin = UserHelper::userIsAdmin();
-/*>>>>>MENU_USER*/
-/*<<<<<LOGINMENU*/
-if( count($login_items) == 1 ) {
-	$login_menu[] = reset($login_items);
-} else if( count($login_items) > 1 ) {
-	$login_menu[] = [ 'label' => $username ?: Yii::t('app', 'Acceso'), 'url' => '#', 'items' => $login_items, 'visible' => true ];
-}
-/*>>>>>LOGINMENU*/
 /*<<<<<MENUITEMS_PRE*/
 
 /*>>>>>MENUITEMS_PRE*/
@@ -80,7 +66,7 @@ if( count($login_items) == 1 ) {
 /*<<<<<NAVMENUS*/
 $nav_menu_options = [
 	'options' => ['class' => 'navbar-nav ms-auto' ],
-	'items' => array_merge(	$items_main),
+	'items' => array_merge(	$main_items),
 ];
 NavBar::begin($navbar_options);
 /*>>>>>NAVMENUS*/
@@ -120,10 +106,3 @@ NavBar::end();
 </html>
 <?php $this->endPage();
 /*>>>>>FOOTER*/
-/*<<<<<PROFILES_LINKS*/
-if( $user_component ) {
-	foreach( \app\components\Capel::modulesWithAccess($user_component) as $km => $name ) {
-		$login_items[$km] = ['label' => Yii::t('app', $name), 'url' => Url::to("/$km") ];
-	}
-}
-/*>>>>>PROFILES_LINKS*/

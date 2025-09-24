@@ -1,7 +1,7 @@
 <?php
 /*<<<<<USES*/
 /*Template:Yii2App/controllers/SiteController.php*/
-namespace santilin\wrepos\controllers;
+namespace app\controllers;
 
 use Yii;
 use yii\base\ViewNotFoundException;
@@ -17,6 +17,10 @@ class SiteController extends Controller
 	 */
 	public $layout = 'site';
 	/**
+	 * @var $breadCrumbsStyle The breadcrumb style(s) for this controller
+	 */
+	public array $breadCrumbsStyle = ['standard'];
+	/**
 	 * @inheritdoc
 	 */
     public $enableCsrfValidation = false;
@@ -30,7 +34,7 @@ class SiteController extends Controller
 		return $b;
 	}
 /*>>>>>BEHAVIORS_END*/
-/*<<<<<MAINTENANCE_BEGIN_PAGE*/
+/*<<<<<MAINTENANCE.BEGIN_PAGE*/
 	/**
 
 	 * Displays the maintenance page.
@@ -44,11 +48,11 @@ class SiteController extends Controller
 		if (isset($_GET['tag'])) { // debug module
 			die;
 		}
-/*>>>>>MAINTENANCE_BEGIN_PAGE*/
-/*<<<<<MAINTENANCE_END_PAGE*/
+/*>>>>>MAINTENANCE.BEGIN_PAGE*/
+/*<<<<<MAINTENANCE.END_PAGE*/
 		return $this->render('maintenance', $params);
 	}
-/*>>>>>MAINTENANCE_END_PAGE*/
+/*>>>>>MAINTENANCE.END_PAGE*/
 /*<<<<<ERROR*/
     /**
      * Displays error page (customized for server codes: 4xx, 5xx) if view present in views/site.
@@ -59,22 +63,23 @@ class SiteController extends Controller
 	{
 		$exception = Yii::$app->errorHandler->exception;
 		if ($exception !== null) {
-			if( $exception instanceof \yii\web\HttpException) {
+			if ($exception instanceof \yii\web\HttpException) {
 				$error = $exception->statusCode;
 				try {
-					return $this->render( "error$error", [ 'name' => 'Error', 'message' => $exception->getMessage(), 'exception' => $exception] );
-				} catch(ViewNotFoundException $e) {
-					return $this->render( "error", [ 'name' => 'Error', 'message' => $exception->getMessage(), 'exception' => $exception] );
+					return $this->render("//site/error$error", [ 'name' => null, 'message' => $exception->getMessage(), 'exception' => $exception]);
+				} catch (ViewNotFoundException $e) {
+					return $this->render("//site/error", [ 'name' => null, 'message' => $exception->getMessage(), 'exception' => $exception]);
 				}
 			} else {
-				return $this->render( "error", [ 'name' => 'Error', 'message' => $exception->getMessage(), 'exception' => $exception] );
+				return $this->render("//site/error", [ 'name' => null, 'message' => $exception->getMessage(), 'exception' => $exception]);
 			}
+		} else {
+			return $this->renderContent("Error");
 		}
 	}
 /*>>>>>ERROR*/
 /*<<<<<INDEX_BEGIN_PAGE*/
 	/**
-
 	 * Displays index page.
 	 *
 	 * @return string
@@ -84,7 +89,7 @@ class SiteController extends Controller
 		$params = [];
 /*>>>>>INDEX_BEGIN_PAGE*/
 /*<<<<<INDEX_END_PAGE*/
-		return $this->render('index', $params);
+		return $this->render('index', ['params' => $params]);
 	}
 /*>>>>>INDEX_END_PAGE*/
 /*<<<<<CLASS_END*/

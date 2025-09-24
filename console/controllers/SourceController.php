@@ -1,7 +1,7 @@
 <?php
 /*<<<<<USES*/
 /*Template:Yii2App/console/controllers/Controller.php*/
-namespace santilin\wrepos\console\controllers;
+namespace app\console\controllers;
 
 use Yii;
 use yii\helpers\Console;
@@ -12,7 +12,7 @@ use santilin\wrepos\models\{Country,Place,PostCode};
 
 /*<<<<<MAIN*/
 /**
- * world-repos console commands
+ * world-repos Source console commands
  *
  * @author Santilín
  * @since 1.0

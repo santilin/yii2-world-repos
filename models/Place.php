@@ -1,16 +1,17 @@
 <?php
 /*<<<<<USES*/
 /*Template:Yii2App/models/DbRecordModel.php*/
-namespace santilin\wrepos\models;
 
-use Yii;
-use santilin\churros\helpers\{AppHelper,DateTimeEx,FormHelper};
-use santilin\wrepos\models\Country;
-use santilin\wrepos\models\PostCode;
+declare(strict_types=1);
+
+namespace app\models;
+
+use app\models\{Country, PostCode};
+use santilin\wrepos\models\_BaseModel as Base_Place;
 /*>>>>>USES*/
 /*<<<<<CLASS*/
 /**
- * This is the base model class for table "{{%places}}".
+ * This is the base model class for table `{{%places}}`.
  *
  * @property integer $id // key/primary
  * @property string $name // places/name
@@ -23,11 +24,10 @@ use santilin\wrepos\models\PostCode;
  * @property string $admin_sup_name
  * @property string $national_id
  * @property integer $countries_id // smallInteger
- *
- * @property santilin\wrepos\models\Country $country // HasOne
- * @property santilin\wrepos\models\PostCode[] $postCodes // BelongsToMany
+ * @property app\models\Country $Country // HasOne
+ * @property app\models\PostCode[] $postCodes_by_Place // BelongsToMany
  */
-class Place extends \santilin\wrepos\models\_BaseModel
+class Place extends Base_Place
 {
 	use \santilin\churros\RelationTrait;
 	use \santilin\churros\models\ModelInfoTrait {
@@ -35,16 +35,32 @@ class Place extends \santilin\wrepos\models\_BaseModel
 	}
 /*>>>>>CLASS*/
 /*<<<<<STATIC_INFO*/
-	static public function tableName()
+	public static function tableName()
 	{
 		return '{{%places}}';
 	}
-	static public $relations = [
-'country' => [ 'model' => 'Country', 'left' => 'places.countries_id', 'right' => 'countries.id', 'modelClass' => 'santilin\wrepos\models\Country', 'relatedTablename' => 'countries', 'join' => 'places.countries_id = countries.id', 'type' => 'HasOne'],
-'postCodes' => [ 'model' => 'PostCode', 'left' => 'places.id', 'right' => 'postcodes.places_id', 'modelClass' => 'santilin\wrepos\models\PostCode', 'relatedTablename' => 'postcodes', 'join' => 'places.id = postcodes.places_id', 'type' => 'BelongsToMany']
+	public static $relations = [
+		'Country' => [ 'model' => 'Country', 'left' => 'places.countries_id', 'right' => 'countries.id', 'modelClass' => 'app\models\Country', 'relatedTablename' => 'countries', 'join' => 'places.countries_id = countries.id', 'type' => 'HasOne'],
+		'postCodes_by_Place' => [ 'model' => 'PostCode', 'left' => 'places.id', 'right' => 'postcodes.places_id', 'modelClass' => 'app\models\PostCode', 'relatedTablename' => 'postcodes', 'join' => 'places.id = postcodes.places_id', 'type' => 'BelongsToMany'],
 	];
 /*>>>>>STATIC_INFO*/
 
+/*<<<<<FIND_IF_NOT_QUERY*/
+	/**
+	 * @return \app\models\comp\PlaceQuery the active query used by this AR class.
+	 */
+	public static function find()
+	{
+		if (class_exists("app\models\comp\PlaceQuery")) {
+			$q = new \app\models\comp\PlaceQuery(get_called_class());
+		} else {
+			$q = parent::find();
+		}
+/*>>>>>FIND_IF_NOT_QUERY*/
+/*<<<<<FIND_END*/
+		return $q;
+	} // find
+/*>>>>>FIND_END*/
 	static public function getDb()
 	{
 		return Yii::$app->getModule('wrepos')->db;
@@ -52,11 +68,11 @@ class Place extends \santilin\wrepos\models\_BaseModel
 
 
 /*<<<<<MODEL_INFO*/
-	static public $isJunctionModel = false;
-	static protected $_model_info = [];
-	static public function getModelInfo($part)
+	public static bool $isJunctionModel = false;
+	protected static array $_model_info = [];
+	public static function getModelInfo($part)
 	{
-		if (static::$_model_info == [] ) {
+		if (static::$_model_info == []) {
 			$mi = [
 				'model_name' => 'Place',
 				'title' => 'Place',
@@ -65,9 +81,9 @@ class Place extends \santilin\wrepos\models\_BaseModel
 				'desc_field' => 'name',
 				'controller_name' => 'place',
 				'female' => true,
-				'record_desc_format_short' => '{country}',
-				'record_desc_format_medium' => '{country}, {name}',
-				'record_desc_format_long' => '{country}, {name}'
+				'record_desc_format_short' => '{Country}',
+				'record_desc_format_medium' => '{Country}, {name}',
+				'record_desc_format_long' => '{Country}, {name}',
 			];
 /*>>>>>MODEL_INFO*/
 /*<<<<<MODEL_INFO_CUSTOM*/
@@ -104,32 +120,47 @@ class Place extends \santilin\wrepos\models\_BaseModel
 			'admin_sup_name' => 'Admin sup name',
 			'national_id' => 'National id',
 			'countries_id' => Country::getModelInfo('title'), // HasOne
-			'country' => Country::getModelInfo('title'), // HasOne
-			'postCodes' => PostCode::getModelInfo('title_plural'), // belongstomany
+			'Country' => Country::getModelInfo('title'), // HasOne
+			'postCodes_by_Place' => PostCode::getModelInfo('title_plural'), // belongstomany
 		];
 /*>>>>>LABELS*/
 		// customize your labels here
 /*<<<<<LABELS.RETURN*/
- 		return $labels;
+		return $labels;
 	} // attributeLabels
 /*>>>>>LABELS.RETURN*/
 /*<<<<<RULES*/
-    public function rules()
-    {
+	public function rules()
+	{
 		$rules = [
-			'req' => [['name','countries_id'], 'required', 'on' => $this->getCrudScenarios()],
-			'int_level' => ['level', 'integer', 'min' => -128, 'max' => 127, 'on' => $this->getCrudScenarios()],
-
-			'int_countries_id' => ['countries_id', 'integer', 'min' => -32768, 'max' => 32767, 'on' => $this->getCrudScenarios()],
+			'req' => [['name','countries_id'], 'required'],
+			'int_level' => ['level', 'integer', 'min' => -128, 'max' => 127],
 			'null' => [['name_es','name_en','name_fr','admin_code','admin_sup_code','admin_sup_name','national_id'], 'default', 'value' => null],
-			'def_level'=>['level', 'default', 'value' => 0, 'on' => $this->getCrudScenarios()],
+			'def_level' => ['level', 'default', 'value' => 0],
 		];
 /*>>>>>RULES*/
 		// customize your rules here
 /*<<<<<RULES_RETURN*/
 		return $rules;
-    } // rules
+	} // rules
 /*>>>>>RULES_RETURN*/
+/*<<<<<HANDY_VALUES*/
+	public function handyFieldValues(
+		string $field,
+		string $format,
+		string $model_format = 'medium',
+		array|string|null $scope = null,
+		?string $filter_fields = null,
+	) {
+		$field_parts = explode('.', $field);
+		if (count($field_parts) > 1) {
+			$table = array_shift($field_parts);
+			$rel_model_name = static::$relations[$table]['modelClass'];
+			$rel_model = new $rel_model_name();
+			return $rel_model->handyFieldValues(implode('.', $field_parts), $format, $model_format, $scope, $filter_fields);
+		}
+		$ret = null;
+/*>>>>>HANDY_VALUES*/
 /*<<<<<HANDY_VALUES_PRE*/
 	public function handyFieldValues(string $field, string $format,
 		string $model_format = 'medium', array|string|null $scope = null, ?string $filter_fields = null)
@@ -144,35 +175,35 @@ class Place extends \santilin\wrepos\models\_BaseModel
 		$ret = null;
 /*>>>>>HANDY_VALUES_PRE*/
 /*<<<<<HANDY_VALUES.BODY*/
-		if( $field == 'countries_id' || $field == 'country' || $field == 'Country' ) { // HasOne
+		if ($field == 'countries_id' || $field == 'Country') { // HasOne
 			$q = Country::find();
 			static::applyScopes($q, $scope);
 			$models = $q->all();
 			$ret = [];
 			if (empty($filter_fields)) {
-				foreach($models as $model) {
-					$ret[$model->getPrimaryKey()] = $model->recordDesc($model_format);
+				foreach ($models as $model) {
+					$ret[$model->id] = $model->recordDesc($model_format);
 				}
 			} else {
-				$fflds = explode(',',$filter_fields);
-				foreach($models as $model) {
-					$ret[$model->getPrimaryKey()] = array_merge([$model->recordDesc($model_format)], array_values($model->getAttributes($fflds)));
+				$fflds = explode(',', $filter_fields);
+				foreach ($models as $model) {
+					$ret[$model->id] = array_merge([$model->recordDesc($model_format)], $model->getAttributeValues($fflds));
 				}
 			}
 		}
-		if( $field == 'postCodes' ) { // hasMany
+		if ($field == 'postCodes_by_Place') { // hasMany
 			$q = PostCode::find();
 			static::applyScopes($q, $scope);
 			$models = $q->all();
 			$ret = [];
 			if (empty($filter_fields)) {
-				foreach($models as $model) {
+				foreach ($models as $model) {
 					$ret[$model->getPrimaryKey()] = $model->recordDesc($model_format);
 				}
 			} else {
-				$fflds = explode(',',$filter_fields);
-				foreach($models as $model) {
-					$ret[$model->getPrimaryKey()] = array_merge([$model->recordDesc($model_format)], array_values($model->getAttributes($fflds)));
+				$fflds = explode(',', $filter_fields);
+				foreach ($models as $model) {
+					$ret[$model->getPrimaryKey()] = array_merge([$model->recordDesc($model_format)], $model->getAttributeValues($fflds));
 				}
 			}
 		}
@@ -190,10 +221,9 @@ class Place extends \santilin\wrepos\models\_BaseModel
 	} // handyFieldValues
 /*>>>>>HANDY_VALUES.RETURN*/
 /*<<<<<DEFAULT_VALUES*/
-	// @param controller $context
 	public function setDefaultValues()
 	{
-		if ($model->getScenario() != 'duplicating') { // Dont set these default values while duplicating
+		if ($this->getScenario() == 'create') {
 			$this->level = 0;
 		}
 /*>>>>>DEFAULT_VALUES*/
@@ -208,31 +238,24 @@ class Place extends \santilin\wrepos\models\_BaseModel
 		// customize or add your behaviors here
 /*<<<<<BEHAVIORS.RETURN*/
 		return $behaviors;
-    } // behaviors
+	} // behaviors
 /*>>>>>BEHAVIORS.RETURN*/
 		// Tweak or add report fields here
 /*<<<<<RELATIONS*/
-	/**
-	 * The keys of the array refer to the attributes of the record associated with the `$class` model,
-	 * while the values of the array refer to the corresponding attributes in **this** AR class.
-	 */
-	public function getCountry()
+	public function getCountry() // HasOne
 	{
-		// Place.country:HasOne(not null) Country: places.countries_id=>countries.id
-		return $this->hasOne(\santilin\wrepos\models\Country::class,
-			['id'=>"countries_id"]);
+		// Place.Country:HasOne(not null) Country: places.countries_id=>countries.id
+		return $this->hasOne(
+			Country::class,
+			['id' => 'countries_id'],
+		);
 	}
-	/**
-	 * The keys of the array refer to the attributes of the record associated
-	 *	with the `$class` model, while the values of the
-     * array refer to the corresponding attributes in **this** AR class.
-     */
-	public function getPostCodes()
+	public function getPostCodes_by_Place() // HasMany
 	{
-		// Place.postCodes:BelongsToMany(inv)(not null) PostCode: places.id=>postcodes.places_id
-		return $this->hasMany(\santilin\wrepos\models\PostCode::class,
-			['places_id'=>"id"])
-			->inverseOf('place');
+		return $this->hasMany(
+			PostCode::class,
+			['places_id' => 'id'],
+		);
 	}
 /*>>>>>RELATIONS*/
 

@@ -6,7 +6,7 @@ use yii\helpers\{Html,Url};
 /* var yii\web\View $this */
 /* @var $params array */
 
-$welcome = Yii::t('app','Modo mantenimiento');
+$welcome ='Modo mantenimiento';
 $this->title = 'World repositories - ' . $welcome;
 /*>>>>>USES*/
 /*<<<<<MAINTENANCE*/
@@ -15,7 +15,7 @@ $this->title = 'World repositories - ' . $welcome;
 <?php
 /*>>>>>MAINTENANCE*/
 /*<<<<<WELCOME*/
-if( !empty($welcome) ) : ?>
+if (!empty($welcome) ) : ?>
     <div class="jumbotron">
         <h1><?=$welcome?></h1>
 

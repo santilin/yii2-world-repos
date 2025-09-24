@@ -1,15 +1,17 @@
 <?php
 /*<<<<<USES*/
 /*Template:Yii2App/models/DbRecordModel.php*/
-namespace santilin\wrepos\models;
 
-use Yii;
-use santilin\churros\helpers\{AppHelper,DateTimeEx,FormHelper};
-use santilin\wrepos\models\Place;
+declare(strict_types=1);
+
+namespace app\models;
+
+use app\models\{Place};
+use santilin\wrepos\models\_BaseModel as Base_Country;
 /*>>>>>USES*/
 /*<<<<<CLASS*/
 /**
- * This is the base model class for table "{{%countries}}".
+ * This is the base model class for table `{{%countries}}`.
  *
  * @property integer $id // key/primary/small
  * @property string $iso2 // places/country/iso2_code
@@ -18,10 +20,9 @@ use santilin\wrepos\models\Place;
  * @property string $name_es // places/country/name
  * @property string $name_en // places/country/name
  * @property string $name_fr // places/country/name
- *
- * @property santilin\wrepos\models\Place[] $places // BelongsToMany
+ * @property app\models\Place[] $places_by_Country // BelongsToMany
  */
-class Country extends \santilin\wrepos\models\_BaseModel
+class Country extends Base_Country
 {
 	use \santilin\churros\NoRelationTrait;
 	use \santilin\churros\models\ModelInfoTrait {
@@ -29,37 +30,53 @@ class Country extends \santilin\wrepos\models\_BaseModel
 	}
 /*>>>>>CLASS*/
 /*<<<<<STATIC_INFO*/
-	static public function tableName()
+	public static function tableName()
 	{
 		return '{{%countries}}';
 	}
-	static public $relations = [
-'places' => [ 'model' => 'Place', 'left' => 'countries.id', 'right' => 'places.countries_id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'countries.id = places.countries_id', 'type' => 'BelongsToMany']
+	public static $relations = [
+		'places_by_Country' => [ 'model' => 'Place', 'left' => 'countries.id', 'right' => 'places.countries_id', 'modelClass' => 'app\models\Place', 'relatedTablename' => 'places', 'join' => 'countries.id = places.countries_id', 'type' => 'BelongsToMany'],
 	];
 /*>>>>>STATIC_INFO*/
 
+/*<<<<<FIND_IF_NOT_QUERY*/
+	/**
+	 * @return \app\models\comp\CountryQuery the active query used by this AR class.
+	 */
+	public static function find()
+	{
+		if (class_exists("app\models\comp\CountryQuery")) {
+			$q = new \app\models\comp\CountryQuery(get_called_class());
+		} else {
+			$q = parent::find();
+		}
+/*>>>>>FIND_IF_NOT_QUERY*/
+/*<<<<<FIND_END*/
+		return $q;
+	} // find
+/*>>>>>FIND_END*/
 	static public function getDb()
 	{
 		return Yii::$app->getModule('wrepos')->db;
 	}
 
 /*<<<<<MODEL_INFO*/
-	static public $isJunctionModel = false;
-	static protected $_model_info = [];
-	static public function getModelInfo($part)
+	public static bool $isJunctionModel = false;
+	protected static array $_model_info = [];
+	public static function getModelInfo($part)
 	{
-		if (static::$_model_info == [] ) {
+		if (static::$_model_info == []) {
 			$mi = [
 				'model_name' => 'Country',
 				'title' => 'Country',
-				'title_plural' => 'Countries',
+				'title_plural' => 'Countrys',
 				'code_field' => 'iso2',
 				'desc_field' => 'name',
 				'controller_name' => 'country',
 				'female' => true,
 				'record_desc_format_short' => '{iso2}',
 				'record_desc_format_medium' => '{iso2}, {name}',
-				'record_desc_format_long' => '{iso2}, {name}, {name_es}, {name_en}, {name_fr}'
+				'record_desc_format_long' => '{iso2}, {name}, {name_es}, {name_en}, {name_fr}',
 			];
 /*>>>>>MODEL_INFO*/
 /*<<<<<MODEL_INFO_CUSTOM*/
@@ -92,21 +109,21 @@ class Country extends \santilin\wrepos\models\_BaseModel
 			'name_es' => 'Name es',
 			'name_en' => 'Name en',
 			'name_fr' => 'Name fr',
-			'places' => Place::getModelInfo('title_plural'), // belongstomany
+			'places_by_Country' => Place::getModelInfo('title_plural'), // belongstomany
 		];
 /*>>>>>LABELS*/
 		// customize your labels here
 /*<<<<<LABELS.RETURN*/
- 		return $labels;
+		return $labels;
 	} // attributeLabels
 /*>>>>>LABELS.RETURN*/
 /*<<<<<RULES*/
-    public function rules()
-    {
+	public function rules()
+	{
 		$rules = [
-			'req' => [['iso2','iso3'], 'required', 'on' => $this->getCrudScenarios()],
-			'max_iso2'=>['iso2', 'string', 'max' => 2, 'on' => $this->getCrudScenarios()],
-			'max_iso3'=>['iso3', 'string', 'max' => 3, 'on' => $this->getCrudScenarios()],
+			'req' => [['iso2','iso3'], 'required'],
+			'max_iso2' => ['iso2', 'string', 'max' => 2],
+			'max_iso3' => ['iso3', 'string', 'max' => 3],
 			'null' => [['name','name_es','name_en','name_fr'], 'default', 'value' => null],
 		];
 /*>>>>>RULES*/
@@ -114,8 +131,25 @@ class Country extends \santilin\wrepos\models\_BaseModel
 
 /*<<<<<RULES_RETURN*/
 		return $rules;
-    } // rules
+	} // rules
 /*>>>>>RULES_RETURN*/
+/*<<<<<HANDY_VALUES*/
+	public function handyFieldValues(
+		string $field,
+		string $format,
+		string $model_format = 'medium',
+		array|string|null $scope = null,
+		?string $filter_fields = null,
+	) {
+		$field_parts = explode('.', $field);
+		if (count($field_parts) > 1) {
+			$table = array_shift($field_parts);
+			$rel_model_name = static::$relations[$table]['modelClass'];
+			$rel_model = new $rel_model_name();
+			return $rel_model->handyFieldValues(implode('.', $field_parts), $format, $model_format, $scope, $filter_fields);
+		}
+		$ret = null;
+/*>>>>>HANDY_VALUES*/
 /*<<<<<HANDY_VALUES_PRE*/
 	public function handyFieldValues(string $field, string $format,
 		string $model_format = 'medium', array|string|null $scope = null, ?string $filter_fields = null)
@@ -130,19 +164,19 @@ class Country extends \santilin\wrepos\models\_BaseModel
 		$ret = null;
 /*>>>>>HANDY_VALUES_PRE*/
 /*<<<<<HANDY_VALUES.BODY*/
-		if( $field == 'places' ) { // hasMany
+		if ($field == 'places_by_Country') { // hasMany
 			$q = Place::find();
 			static::applyScopes($q, $scope);
 			$models = $q->all();
 			$ret = [];
 			if (empty($filter_fields)) {
-				foreach($models as $model) {
+				foreach ($models as $model) {
 					$ret[$model->getPrimaryKey()] = $model->recordDesc($model_format);
 				}
 			} else {
-				$fflds = explode(',',$filter_fields);
-				foreach($models as $model) {
-					$ret[$model->getPrimaryKey()] = array_merge([$model->recordDesc($model_format)], array_values($model->getAttributes($fflds)));
+				$fflds = explode(',', $filter_fields);
+				foreach ($models as $model) {
+					$ret[$model->getPrimaryKey()] = array_merge([$model->recordDesc($model_format)], $model->getAttributeValues($fflds));
 				}
 			}
 		}
@@ -167,21 +201,16 @@ class Country extends \santilin\wrepos\models\_BaseModel
 		// customize or add your behaviors here
 /*<<<<<BEHAVIORS.RETURN*/
 		return $behaviors;
-    } // behaviors
+	} // behaviors
 /*>>>>>BEHAVIORS.RETURN*/
 		// Tweak or add report fields here
 /*<<<<<RELATIONS*/
-	/**
-	 * The keys of the array refer to the attributes of the record associated
-	 *	with the `$class` model, while the values of the
-     * array refer to the corresponding attributes in **this** AR class.
-     */
-	public function getPlaces()
+	public function getPlaces_by_Country() // HasMany
 	{
-		// Country.places:BelongsToMany(inv)(not null) Place: countries.id=>places.countries_id
-		return $this->hasMany(\santilin\wrepos\models\Place::class,
-			['countries_id'=>"id"])
-			->inverseOf('country');
+		return $this->hasMany(
+			Place::class,
+			['countries_id' => 'id'],
+		);
 	}
 /*>>>>>RELATIONS*/
 /*<<<<<END*/

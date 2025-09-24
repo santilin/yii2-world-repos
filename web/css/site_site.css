@@ -3,8 +3,6 @@
 @import "/css/app_common.css";
 html,
 body {
-	color: inherit;
-	background-color: inherit;
 }
 /*>>>>>MAIN*/
 /*<<<<<COMMON_STYLES*/
@@ -55,52 +53,30 @@ legend {
 	width: auto;
 	padding: 5px 10px;
 }
-
-/* For example, change the color and add a border */
-/* Add your custom styles here */
 /*>>>>>COMMON_STYLES*/
 /*<<<<<FORMS*/
+.record-view .panel-heading h1 {
+	font-size: 1.5rem;
+}
+#mainContent .title h1 {
+	font-size: 1.5rem;
+}
 .btn.btn-cancel {
 }
-
-/*
-.form-control::placeholder { opacity:0.5; }
-.form-control-plaintext {
-	padding: 0.375rem 0.75rem !important;
-	background-color: #e9ecef;
-	opacity: 1;
+ul.no-bullets, .no-bullets ul {
+	list-style-type: none;
 }
-.readonly {
-	background-color: #e9ecef;
-	opacity: 1;
+.fake-readonly-control {
+	display: block;
+	padding: 0.375rem 0;
+	padding-left: 0px;
+	margin-bottom: 0;
+	line-height: 1.5;
+	color: var(--bs-body-color);
+	background-color: transparent;
+	border: solid transparent;
+	border-width: var(--bs-border-width) 0;
 }
-.custom-control.custom-checkbox {
-	margin-bottom: 1rem;
-}
-.form-buttons-group {
-	padding-left: 0.75rem;
-}
-.form-fields .tab-content {
-	margin-top: 1rem;
-}
-*/
-/* churros formwizard
-.churros-wizard .sw-main {
-	background-color: inherit;
-}
-.churros-wizard .sw-theme-default > ul.step-anchor {
-	background-color: inherit;
-}
-.churros-wizard .step-content {
-	background-color: inherit;
-}
-.churros-wizard .sw-theme-default > ul.step-anchor > li.active > a {
-	color: inherit;
-}
-.sw-theme-default > ul.step-anchor > li.done > a {
-	color: inherit !important;
-}
-*/
 /*>>>>>FORMS*/
 /*<<<<<FIXES*/
 .editormd-fullscreen {
@@ -108,3 +84,26 @@ legend {
   z-index: 10;
 }
 /*>>>>>FIXES*/
+/*<<<<<BS5-EXTENSIONS*/
+.inline-alert {
+  display: inline-block; /* Makes the alert inline */
+  width: 100%;
+  text-align: center;
+  padding: 5px 0; /* Adjust padding for a smaller size */
+  font-size: 0.875rem; /* Reduce font size */
+  margin: 0; /* Remove margin for inline positioning */
+  --bs-alert-padding-x: 1rem;
+  --bs-alert-padding-y: 1rem;
+  --bs-alert-margin-bottom: 1rem;
+  --bs-alert-border: var(--bs-border-width) solid var(--bs-alert-border-color);
+  --bs-alert-border-radius: var(--bs-border-radius);
+  position: relative;
+  color: var(--bs-alert-color);
+  background-color: var(--bs-alert-bg);
+  border: var(--bs-alert-border);
+  border-radius: var(--bs-alert-border-radius);
+}
+.btn-group > a > svg, .toolbar > a > svg {
+	margin-right: 0.5rem;
+}
+/*>>>>>BS5-EXTENSIONS*/

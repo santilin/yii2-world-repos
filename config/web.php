@@ -9,11 +9,11 @@ $config = [
 	'language' => 'es-ES', // Set as es-ES, not es_ES
 	'sourceLanguage' => 'es',
 	'bootstrap' => ['log'],
-	'controllerNamespace' => 'santilin\wrepos\controllers',
+	'controllerNamespace' => 'app\controllers',
 	'modules' => [
 		'churros' => [
-			'class' => 'santilin\churros\Module'
-		]
+			'class' => 'santilin\churros\Module',
+		],
 	],
 	'components' => [
 		'cache' => [
@@ -31,9 +31,9 @@ $config = [
 		'formatter' => [
 			'class' => \santilin\churros\components\Formatter::class,
 			'locale' => 'es-ES',
-			// 'dateFormat' => ''%d/%m/%y'',
-			// 'dateTimeFormat' => ''%a %d %b %Y %T'',
-			// 'currencyCode' => ''€'',
+			// 'dateFormat' => '%d/%m/%y',
+			// 'dateTimeFormat' => '%a %d %b %Y %T',
+			// 'currencyCode' => '€'
 		],
 		'db' => [
 			'class' => 'yii\db\Connection',
@@ -48,15 +48,15 @@ $config = [
 					'class' => 'yii\i18n\PhpMessageSource',
 					'basePath' => '@app/messages',
 				],
-			]
+			],
 		],
 		'mailer' => [
 			'useFileTransport' => false,
 			'class' => 'yii\symfonymailer\Mailer',
 			'viewPath' => '@app/views/mails',
 			'transport' => 	[
-				'dsn' => "smtp://username:password@host:port?encryption=encryption"
-			]
+				'dsn' => "smtp://username:password@host:port?encryption=encryption",
+			],
 		],
 		'urlManager' => [
 			'class' => 'yii\web\UrlManager',
@@ -65,17 +65,18 @@ $config = [
 			'rules' => require __DIR__ . '/routes.php',
 		],
 		'assetManager' => [
+			'basePath' => __DIR__ . '/../web/assets',
 			'linkAssets' => YII_ENV_DEV,
-			'forceCopy' => YII_ENV_DEV
+			'forceCopy' => YII_ENV_DEV,
 		],
 		'request' => [
-			'cookieValidationKey' => 'ëµÕ°0sFºfCX2;TeôûFùýÐ²áFCB& zžþ',
+			'cookieValidationKey' => 'my-secret-cookie-validation-key',
 			'parsers' => [
 				'application/json' => 'yii\web\JsonParser',
-			]
+			],
 		],
 		'errorHandler' => [
-			'class' => \santilin\churros\components\ErrorHandler::class,
+			'class' => \app\components\ErrorHandler::class,
 			'errorAction' => 'site/error',
 		],
 	],
@@ -101,6 +102,24 @@ if (YII_ENV_DEV && YII_DEBUG) {
 	];
 }
 /*>>>>>DEBUG*/
+/*<<<<<NOT_MULTILINGUAL*/
+if (!function_exists('yii_t')) {
+	function yii_t(string $str, array $changes)
+	{
+		$bracked_changes =  [];
+		foreach ($changes as $kc => $c) {
+			$bracked_changes['{' . $kc . '}'] = $c;
+		}
+		return \strtr($str, $bracked_changes);
+	}
+}
+/*>>>>>NOT_MULTILINGUAL*/
+/*<<<<<NO_WEB_USERS*/
+\yii\base\Event::on(\yii\web\Application::className(), \yii\web\Application::EVENT_BEFORE_REQUEST, function ($event) {
+	session_start();
+	$event->sender->clear('user');
+});
+/*>>>>>NO_WEB_USERS*/
 /*<<<<<MODULE_GRIDVIEW*/
 $config['modules']['gridview'] =  [
 	'class' => '\kartik\grid\Module'

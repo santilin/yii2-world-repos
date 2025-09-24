@@ -1,22 +1,23 @@
 <?php
 /*<<<<<USES*/
 /*Template:Yii2App/models/DbRecordModel.php*/
-namespace santilin\wrepos\models;
 
-use Yii;
-use santilin\churros\helpers\{AppHelper,DateTimeEx,FormHelper};
-use santilin\wrepos\models\Place;
+declare(strict_types=1);
+
+namespace app\models;
+
+use app\models\{Place};
+use santilin\wrepos\models\_BaseModel as Base_PostCode;
 /*>>>>>USES*/
 /*<<<<<CLASS*/
 /**
- * This is the base model class for table "{{%postcodes}}".
+ * This is the base model class for table `{{%postcodes}}`.
  *
  * @property string $postcode // places/postcode
  * @property integer $places_id
- *
- * @property santilin\wrepos\models\Place $place // HasOne
+ * @property app\models\Place $Place // HasOne
  */
-class PostCode extends \santilin\wrepos\models\_BaseModel
+class PostCode extends Base_PostCode
 {
 	use \santilin\churros\RelationTrait;
 	use \santilin\churros\models\ModelInfoTrait {
@@ -24,26 +25,42 @@ class PostCode extends \santilin\wrepos\models\_BaseModel
 	}
 /*>>>>>CLASS*/
 /*<<<<<STATIC_INFO*/
-	static public function tableName()
+	public static function tableName()
 	{
 		return '{{%postcodes}}';
 	}
-	static public $relations = [
-'place' => [ 'model' => 'Place', 'left' => 'postcodes.places_id', 'right' => 'places.id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'postcodes.places_id = places.id', 'type' => 'HasOne']
+	public static $relations = [
+		'Place' => [ 'model' => 'Place', 'left' => 'postcodes.places_id', 'right' => 'places.id', 'modelClass' => 'app\models\Place', 'relatedTablename' => 'places', 'join' => 'postcodes.places_id = places.id', 'type' => 'HasOne'],
 	];
 /*>>>>>STATIC_INFO*/
 
+/*<<<<<FIND_IF_NOT_QUERY*/
+	/**
+	 * @return \app\models\comp\PostCodeQuery the active query used by this AR class.
+	 */
+	public static function find()
+	{
+		if (class_exists("app\models\comp\PostCodeQuery")) {
+			$q = new \app\models\comp\PostCodeQuery(get_called_class());
+		} else {
+			$q = parent::find();
+		}
+/*>>>>>FIND_IF_NOT_QUERY*/
+/*<<<<<FIND_END*/
+		return $q;
+	} // find
+/*>>>>>FIND_END*/
 	static public function getDb()
 	{
 		return Yii::$app->getModule('wrepos')->db;
 	}
 
 /*<<<<<MODEL_INFO*/
-	static public $isJunctionModel = false;
-	static protected $_model_info = [];
-	static public function getModelInfo($part)
+	public static bool $isJunctionModel = false;
+	protected static array $_model_info = [];
+	public static function getModelInfo($part)
 	{
-		if (static::$_model_info == [] ) {
+		if (static::$_model_info == []) {
 			$mi = [
 				'model_name' => 'PostCode',
 				'title' => 'PostCode',
@@ -54,7 +71,7 @@ class PostCode extends \santilin\wrepos\models\_BaseModel
 				'female' => true,
 				'record_desc_format_short' => '',
 				'record_desc_format_medium' => '',
-				'record_desc_format_long' => ''
+				'record_desc_format_long' => '',
 			];
 /*>>>>>MODEL_INFO*/
 /*<<<<<MODEL_INFO_CUSTOM*/
@@ -82,28 +99,44 @@ class PostCode extends \santilin\wrepos\models\_BaseModel
 		$labels = [
 			'postcode' => 'Postcode',
 			'places_id' => Place::getModelInfo('title'), // HasOne
-			'place' => Place::getModelInfo('title'), // HasOne
+			'Place' => Place::getModelInfo('title'), // HasOne
 		];
 /*>>>>>LABELS*/
 		// customize your labels here
 /*<<<<<LABELS.RETURN*/
- 		return $labels;
+		return $labels;
 	} // attributeLabels
 /*>>>>>LABELS.RETURN*/
 /*<<<<<RULES*/
-    public function rules()
-    {
+	public function rules()
+	{
 		$rules = [
-			'req' => [['postcode','places_id'], 'required', 'on' => $this->getCrudScenarios()],
-			'int_places_id' => ['places_id', 'integer', 'min' => -2147483648, 'max' => 2147483647, 'on' => $this->getCrudScenarios()],
-			'max_postcode'=>['postcode', 'string', 'max' => 10, 'on' => $this->getCrudScenarios()],
+			'req' => [['postcode','places_id'], 'required'],
+			'max_postcode' => ['postcode', 'string', 'max' => 10],
 		];
 /*>>>>>RULES*/
 		// customize your rules here
 /*<<<<<RULES_RETURN*/
 		return $rules;
-    } // rules
+	} // rules
 /*>>>>>RULES_RETURN*/
+/*<<<<<HANDY_VALUES*/
+	public function handyFieldValues(
+		string $field,
+		string $format,
+		string $model_format = 'medium',
+		array|string|null $scope = null,
+		?string $filter_fields = null,
+	) {
+		$field_parts = explode('.', $field);
+		if (count($field_parts) > 1) {
+			$table = array_shift($field_parts);
+			$rel_model_name = static::$relations[$table]['modelClass'];
+			$rel_model = new $rel_model_name();
+			return $rel_model->handyFieldValues(implode('.', $field_parts), $format, $model_format, $scope, $filter_fields);
+		}
+		$ret = null;
+/*>>>>>HANDY_VALUES*/
 /*<<<<<HANDY_VALUES_PRE*/
 	public function handyFieldValues(string $field, string $format,
 		string $model_format = 'medium', array|string|null $scope = null, ?string $filter_fields = null)
@@ -118,19 +151,19 @@ class PostCode extends \santilin\wrepos\models\_BaseModel
 		$ret = null;
 /*>>>>>HANDY_VALUES_PRE*/
 /*<<<<<HANDY_VALUES.BODY*/
-		if( $field == 'places_id' || $field == 'place' || $field == 'Place' ) { // HasOne
+		if ($field == 'places_id' || $field == 'Place') { // HasOne
 			$q = Place::find();
 			static::applyScopes($q, $scope);
 			$models = $q->all();
 			$ret = [];
 			if (empty($filter_fields)) {
-				foreach($models as $model) {
-					$ret[$model->getPrimaryKey()] = $model->recordDesc($model_format);
+				foreach ($models as $model) {
+					$ret[$model->id] = $model->recordDesc($model_format);
 				}
 			} else {
-				$fflds = explode(',',$filter_fields);
-				foreach($models as $model) {
-					$ret[$model->getPrimaryKey()] = array_merge([$model->recordDesc($model_format)], array_values($model->getAttributes($fflds)));
+				$fflds = explode(',', $filter_fields);
+				foreach ($models as $model) {
+					$ret[$model->id] = array_merge([$model->recordDesc($model_format)], $model->getAttributeValues($fflds));
 				}
 			}
 		}
@@ -155,19 +188,17 @@ class PostCode extends \santilin\wrepos\models\_BaseModel
 		// customize or add your behaviors here
 /*<<<<<BEHAVIORS.RETURN*/
 		return $behaviors;
-    } // behaviors
+	} // behaviors
 /*>>>>>BEHAVIORS.RETURN*/
 		// Tweak or add report fields here
 /*<<<<<RELATIONS*/
-	/**
-	 * The keys of the array refer to the attributes of the record associated with the `$class` model,
-	 * while the values of the array refer to the corresponding attributes in **this** AR class.
-	 */
-	public function getPlace()
+	public function getPlace() // HasOne
 	{
-		// PostCode.place:HasOne(not null) Place: postcodes.places_id=>places.id
-		return $this->hasOne(\santilin\wrepos\models\Place::class,
-			['id'=>"places_id"]);
+		// PostCode.Place:HasOne(not null) Place: postcodes.places_id=>places.id
+		return $this->hasOne(
+			Place::class,
+			['id' => 'places_id'],
+		);
 	}
 /*>>>>>RELATIONS*/
 

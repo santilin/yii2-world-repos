@@ -6,7 +6,7 @@ global $config, $web_app;
 /*>>>>>MAIN*/
 /*<<<<<MODULE_GRIDVIEW*/
 $config['modules']['gridview'] =  [
-	'class' => '\kartik\grid\Module'
+	'class' => '\kartik\grid\Module',
 	// enter optional module parameters below - only if you need to
 	// use your own export download action or custom translation
 	// message source. See http://demos.krajee.com/grid

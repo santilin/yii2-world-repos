@@ -1,12 +1,12 @@
 <?php
 /*<<<<<USES*/
 /*Template:Yii2App/controllers/EmptyController.php*/
-namespace santilin\wrepos\controllers;
+namespace app\controllers;
 
 use Yii;
 use yii\web\Controller;
 use yii\web\Response;
-use santilin\wrepos\models\PostCode;
+use app\models\PostCode;
 /*>>>>>USES*/
 use santilin\wrepos\models\Place;
 

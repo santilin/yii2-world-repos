@@ -1,11 +1,11 @@
 <?php
 /*<<<<<USES*/
-/*Template:Yii2App/models/ModelForm.php*/
-namespace santilin\wreposforms;
+/*Template:Yii2App/models/FormModel.php*/
+namespace app\forms;
 
-use Yii;
-use santilin\wrepos\models\Place;
+use app\models\Place;
 use santilin\churros\helpers\FormHelper;
+use Yii;
 /*>>>>>USES*/
 /*<<<<<CLASS*/
 /**
@@ -19,9 +19,9 @@ class Place_Form extends Place
     public function rules()
     {
 		$rules = array_merge(parent::rules(), [
-			'f_safe'=>[['id'], 'safe', 'on' => $this->getCrudScenarios()],
-			'req' => [['name','level','countries_id'], 'required', 'on' => $this->getCrudScenarios()],
-			'null' => [['name_es','name_en','name_fr','admin_code','admin_sup_code','admin_sup_name','national_id'], 'default', 'value' => null, 'on' => $this->getCrudScenarios()],
+			'f_safe' => [['id'], 'safe'],
+			'req' => [['name','level','countries_id'], 'required'],
+			'null' => [['name_es','name_en','name_fr','admin_code','admin_sup_code','admin_sup_name','national_id'], 'default', 'value' => null],
 		]);
 /*>>>>>RULES*/
 /*<<<<<RULES_RETURN*/
@@ -33,12 +33,12 @@ class Place_Form extends Place
 	{
 		parent::afterSave($insert, $changedAttributes);
 		$fdf = FormHelper::getConfig('Place_Form', 'DefaultValues', []);
-		if( is_array($fdf) ) {
+		if (is_array($fdf)) {
 			$df = [];
-			foreach(array_intersect_assoc($this->activeAttributes(), $fdf) as $fld => $value) {
+			foreach (array_intersect_assoc($this->activeAttributes(), $fdf) as $fld => $value) {
 				$df[$fld] = $this->$fld;
 			}
-			if( !empty($df) ) {
+			if (!empty($df)) {
 				FormHelper::setConfig('Place_Form', 'DefaultValues', $df);
 			}
 		} else {
@@ -49,18 +49,13 @@ class Place_Form extends Place
 	}
 /*>>>>>AFTER_SAVE.END*/
 /*<<<<<DEFAULT_VALUES*/
-	// @param controller $context
 	public function setDefaultValues()
 	{
 		parent::setDefaultValues();
 /*>>>>>DEFAULT_VALUES*/
 /*<<<<<DEFAULT_VALUES.PARENT*/
-
-		if ($model->getScenario() != 'duplicating') { // dont set these default values while duplicating
-
-		}
 		$fdf = FormHelper::getConfig('Place_Form', 'DefaultValues', []);
-		if( !empty($fdf) ) {
+		if (!empty($fdf)) {
 			$this->setAttributes($fdf);
 		}
 /*>>>>>DEFAULT_VALUES.PARENT*/

@@ -1,3 +1,4 @@
 #<<<<<INIT
 User-agent: *
+Disallow: /
 #>>>>>INIT

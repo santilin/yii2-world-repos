@@ -146,6 +146,7 @@
             "languages": [
                 "es-ES"
             ],
+            "namespace": "santilin\\wrepos",
             "source_language": "es",
             "charset": "utf8",
             "currency_code": "EUR",
@@ -277,7 +278,6 @@
                         "none"
                     ],
                     "title": "Repositories",
-                    "namespace": "santilin\\wrepos",
                     "controllers": {
                         "Place": {
                             "type": "Empty"

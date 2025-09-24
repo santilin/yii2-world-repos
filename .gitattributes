@@ -6,7 +6,6 @@ world-repos.capel.json export-ignore
 .gitignore export-ignore
 config/local_*.php export-ignore
 config/test.php export-ignore
-config/secrets.php export-ignore
 *.xcf export-ignore
 releases.log export-ignore
 codeception.yml export-ignore
@@ -14,5 +13,5 @@ tests/** export-ignore
 database/migrations/tests export-ignore
 TODO.md export-ignore
 *.torres export-ignore
-releases.log export-ignore
+ecs.php export-ignore
 #>>>>>YII2_CAPEL

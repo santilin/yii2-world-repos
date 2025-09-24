@@ -8,21 +8,18 @@
  * @copyright Copyright (c) 2008 Yii Software LLC
  * @license http://www.yiiframework.com/license/
  */
-
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
-
 define('APP_VERSION','0.0.1');
 define('APP_REVISION', '###GIT_REVISION###');
 
-require '/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos/vendor/autoload.php';
-require '/home/santilin/devel/yii2base/vendor/santilin/yii2-world-repos/vendor/yiisoft/yii2/Yii.php';
+require __DIR__ . '/vendor/' . 'autoload.php';
+require __DIR__ . '/vendor/' . 'yiisoft/yii2/Yii.php';
 
 $config = require __DIR__ . '/config/console.php';
-
-$application = new yii\console\Application($config);
 /*>>>>>MAIN*/
 /*<<<<<RUN*/
+$application = new yii\console\Application($config);
 $exitCode = $application->run();
 /*>>>>>RUN*/
 /*<<<<<EXIT*/

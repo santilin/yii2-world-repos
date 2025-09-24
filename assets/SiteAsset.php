@@ -4,7 +4,7 @@
 /**
  * bs5 Asset for the 'site' layout
  */
-namespace santilin\wrepos\assets;
+namespace app\assets;
 
 use yii\web\AssetBundle;
 
@@ -23,7 +23,7 @@ class SiteAsset extends AssetBundle
 /*>>>>>USES*/
 /*<<<<<JS*/
         // Add your custom css here
-	];
+    ];
     public $js = [
 		'js/site_site.js',
 /*>>>>>JS*/
@@ -32,10 +32,10 @@ class SiteAsset extends AssetBundle
     ];
     public $depends = [
         'yii\web\YiiAsset',
-		'yii\web\JqueryAsset',
+        'yii\web\JqueryAsset',
         'yii\bootstrap5\BootstrapAsset',
-		'yii\bootstrap5\BootstrapPluginAsset',
-        'yidas\yii\fontawesome\FontawesomeAsset',
+        'yii\bootstrap5\BootstrapPluginAsset',
+        'asmoday74\fontawesome6\FontAwesomeAsset',
 /*>>>>>DEPENDS*/
 /*<<<<<DEPENDS_END*/
         // Add your custom depends here

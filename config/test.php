@@ -8,6 +8,7 @@ if (defined('TESTING_COMMAND')) {
 }
 $config['id'] = $config['id'] . "_tests";
 $config['name'] = $config['name'] . "_tests";
+// use runtime/test directory as there can be more than one db
 $config['components']['db']['dsn'] = 'sqlite:@app/runtime/test/world-repos.db';
 /*>>>>>CONFIG*/
 /*<<<<<return*/

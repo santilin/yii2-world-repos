@@ -2,12 +2,13 @@
 phpunit.phar
 /phpunit.xml
 tests/_output
-tests/_data
 tests/_support/_generated
-
+tests/Support/_generated
 *.log
 !releases.log
 world-repos_*.torres
+world-repos.kdev4
+world-repos.capel.json.lock
 *.kate-swp
 *~
 .kdev4/**

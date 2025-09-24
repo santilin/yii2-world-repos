@@ -7,12 +7,8 @@ use app\helpers\UserHelper;
 
 /* var yii\web\View $this */
 /* @var $params array */
-if( 'Repositories' == '' ) {
-	$this->title = 'World repositories';
-} else {
-	$this->title = 'World repositories - Repositories';
-}
-$label_inicio = Yii::t('app', 'Inicio');
+$this->title = 'World repositories';
+$label_inicio = 'Inicio';
 /*>>>>>USES*/
 /*<<<<<BREADCRUMBS*/
 $this->params['breadcrumbs'] = [ $label_inicio ];
@@ -29,7 +25,7 @@ $this->params['breadcrumbs'] = [ $label_inicio ];
 /*>>>>>MAIN_DIV*/
 $welcome = "Bienvenid@ a world-repos";
 /*<<<<<WELCOME*/
-if( !empty($welcome) ) : ?>
+if (!empty($welcome) ) : ?>
     <div class="jumbotron">
         <h1><?=$welcome?></h1>
 

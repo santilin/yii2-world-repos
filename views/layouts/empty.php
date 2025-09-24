@@ -7,7 +7,7 @@
  * @var string $content
  */
 use yii\helpers\Html;
-use santilin\wrepos\assets\SiteAsset;
+use app\assets\SiteAsset;
 use santilin\churros\widgets\SessionAlert;
 
 SiteAsset::register($this);
