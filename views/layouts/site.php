@@ -8,7 +8,7 @@
  */
 use yii\helpers\{Html,Url};
 use yii\bootstrap5\{Breadcrumbs,Nav,NavBar};
-use app\assets\SiteAsset;
+use santilin\wrepos\assets\SiteAsset;
 use santilin\churros\widgets\SessionAlert;
 use app\helpers\UserHelper;
 

@@ -1,12 +1,12 @@
 <?php
 /*<<<<<USES*/
 /*Template:Yii2App/controllers/EmptyController.php*/
-namespace app\controllers;
+namespace santilin\wrepos\controllers;
 
 use Yii;
 use yii\web\Controller;
 use yii\web\Response;
-use app\models\Place;
+use santilin\wrepos\models\Place;
 /*>>>>>USES*/
 /*<<<<<CLASS*/
 /**

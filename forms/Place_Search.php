@@ -1,9 +1,9 @@
 <?php
 /*<<<<<USES*/
 /*Template:Yii2App/models/ModelSearch.php*/
-namespace app\forms;
+namespace santilin\wrepos\forms;
 
-use app\models\Place;
+use santilin\wrepos\models\Place;
 use santilin\churros\models\ModelInfoTrait;
 use Yii;
 use yii\base\Model;
@@ -12,7 +12,7 @@ use yii\helpers\ArrayHelper;
 /*>>>>>USES*/
 /*<<<<<CLASS*/
 /**
- * \app\forms\Place_Search represents the model behind the search form about `\app\models\Place`.
+ * \santilin\wrepos\forms\Place_Search represents the model behind the search form about `\santilin\wrepos\models\Place`.
  */
 class Place_Search extends Place
 {

@@ -4,7 +4,7 @@
 
 declare(strict_types=1);
 
-namespace app\models;
+namespace santilin\wrepos\models;
 
 use app\models\{Place};
 use santilin\wrepos\models\_BaseModel as Base_PostCode;
@@ -15,7 +15,7 @@ use santilin\wrepos\models\_BaseModel as Base_PostCode;
  *
  * @property string $postcode // places/postcode
  * @property integer $places_id
- * @property app\models\Place $Place // HasOne
+ * @property santilin\wrepos\models\Place $Place // HasOne
  */
 class PostCode extends Base_PostCode
 {
@@ -30,18 +30,18 @@ class PostCode extends Base_PostCode
 		return '{{%postcodes}}';
 	}
 	public static $relations = [
-		'Place' => [ 'model' => 'Place', 'left' => 'postcodes.places_id', 'right' => 'places.id', 'modelClass' => 'app\models\Place', 'relatedTablename' => 'places', 'join' => 'postcodes.places_id = places.id', 'type' => 'HasOne'],
+		'Place' => [ 'model' => 'Place', 'left' => 'postcodes.places_id', 'right' => 'places.id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'postcodes.places_id = places.id', 'type' => 'HasOne'],
 	];
 /*>>>>>STATIC_INFO*/
 
 /*<<<<<FIND_IF_NOT_QUERY*/
 	/**
-	 * @return \app\models\comp\PostCodeQuery the active query used by this AR class.
+	 * @return \santilin\wrepos\models\comp\PostCodeQuery the active query used by this AR class.
 	 */
 	public static function find()
 	{
-		if (class_exists("app\models\comp\PostCodeQuery")) {
-			$q = new \app\models\comp\PostCodeQuery(get_called_class());
+		if (class_exists("santilin\wrepos\models\comp\PostCodeQuery")) {
+			$q = new \santilin\wrepos\models\comp\PostCodeQuery(get_called_class());
 		} else {
 			$q = parent::find();
 		}

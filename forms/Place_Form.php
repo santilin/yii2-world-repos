@@ -1,9 +1,9 @@
 <?php
 /*<<<<<USES*/
 /*Template:Yii2App/models/FormModel.php*/
-namespace app\forms;
+namespace santilin\wrepos\forms;
 
-use app\models\Place;
+use santilin\wrepos\models\Place;
 use santilin\churros\helpers\FormHelper;
 use Yii;
 /*>>>>>USES*/

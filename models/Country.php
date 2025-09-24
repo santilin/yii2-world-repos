@@ -4,7 +4,7 @@
 
 declare(strict_types=1);
 
-namespace app\models;
+namespace santilin\wrepos\models;
 
 use app\models\{Place};
 use santilin\wrepos\models\_BaseModel as Base_Country;
@@ -20,7 +20,7 @@ use santilin\wrepos\models\_BaseModel as Base_Country;
  * @property string $name_es // places/country/name
  * @property string $name_en // places/country/name
  * @property string $name_fr // places/country/name
- * @property app\models\Place[] $places_by_Country // BelongsToMany
+ * @property santilin\wrepos\models\Place[] $places_by_Country // BelongsToMany
  */
 class Country extends Base_Country
 {
@@ -35,18 +35,18 @@ class Country extends Base_Country
 		return '{{%countries}}';
 	}
 	public static $relations = [
-		'places_by_Country' => [ 'model' => 'Place', 'left' => 'countries.id', 'right' => 'places.countries_id', 'modelClass' => 'app\models\Place', 'relatedTablename' => 'places', 'join' => 'countries.id = places.countries_id', 'type' => 'BelongsToMany'],
+		'places_by_Country' => [ 'model' => 'Place', 'left' => 'countries.id', 'right' => 'places.countries_id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'countries.id = places.countries_id', 'type' => 'BelongsToMany'],
 	];
 /*>>>>>STATIC_INFO*/
 
 /*<<<<<FIND_IF_NOT_QUERY*/
 	/**
-	 * @return \app\models\comp\CountryQuery the active query used by this AR class.
+	 * @return \santilin\wrepos\models\comp\CountryQuery the active query used by this AR class.
 	 */
 	public static function find()
 	{
-		if (class_exists("app\models\comp\CountryQuery")) {
-			$q = new \app\models\comp\CountryQuery(get_called_class());
+		if (class_exists("santilin\wrepos\models\comp\CountryQuery")) {
+			$q = new \santilin\wrepos\models\comp\CountryQuery(get_called_class());
 		} else {
 			$q = parent::find();
 		}

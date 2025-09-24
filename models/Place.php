@@ -4,7 +4,7 @@
 
 declare(strict_types=1);
 
-namespace app\models;
+namespace santilin\wrepos\models;
 
 use app\models\{Country, PostCode};
 use santilin\wrepos\models\_BaseModel as Base_Place;
@@ -24,8 +24,8 @@ use santilin\wrepos\models\_BaseModel as Base_Place;
  * @property string $admin_sup_name
  * @property string $national_id
  * @property integer $countries_id // smallInteger
- * @property app\models\Country $Country // HasOne
- * @property app\models\PostCode[] $postCodes_by_Place // BelongsToMany
+ * @property santilin\wrepos\models\Country $Country // HasOne
+ * @property santilin\wrepos\models\PostCode[] $postCodes_by_Place // BelongsToMany
  */
 class Place extends Base_Place
 {
@@ -40,19 +40,19 @@ class Place extends Base_Place
 		return '{{%places}}';
 	}
 	public static $relations = [
-		'Country' => [ 'model' => 'Country', 'left' => 'places.countries_id', 'right' => 'countries.id', 'modelClass' => 'app\models\Country', 'relatedTablename' => 'countries', 'join' => 'places.countries_id = countries.id', 'type' => 'HasOne'],
-		'postCodes_by_Place' => [ 'model' => 'PostCode', 'left' => 'places.id', 'right' => 'postcodes.places_id', 'modelClass' => 'app\models\PostCode', 'relatedTablename' => 'postcodes', 'join' => 'places.id = postcodes.places_id', 'type' => 'BelongsToMany'],
+		'Country' => [ 'model' => 'Country', 'left' => 'places.countries_id', 'right' => 'countries.id', 'modelClass' => 'santilin\wrepos\models\Country', 'relatedTablename' => 'countries', 'join' => 'places.countries_id = countries.id', 'type' => 'HasOne'],
+		'postCodes_by_Place' => [ 'model' => 'PostCode', 'left' => 'places.id', 'right' => 'postcodes.places_id', 'modelClass' => 'santilin\wrepos\models\PostCode', 'relatedTablename' => 'postcodes', 'join' => 'places.id = postcodes.places_id', 'type' => 'BelongsToMany'],
 	];
 /*>>>>>STATIC_INFO*/
 
 /*<<<<<FIND_IF_NOT_QUERY*/
 	/**
-	 * @return \app\models\comp\PlaceQuery the active query used by this AR class.
+	 * @return \santilin\wrepos\models\comp\PlaceQuery the active query used by this AR class.
 	 */
 	public static function find()
 	{
-		if (class_exists("app\models\comp\PlaceQuery")) {
-			$q = new \app\models\comp\PlaceQuery(get_called_class());
+		if (class_exists("santilin\wrepos\models\comp\PlaceQuery")) {
+			$q = new \santilin\wrepos\models\comp\PlaceQuery(get_called_class());
 		} else {
 			$q = parent::find();
 		}

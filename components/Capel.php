@@ -15,15 +15,15 @@ class Capel
 /*<<<<<MODELS*/
 	const MODELS = [
 		'Country' => [
-			'class' => 'app\models\Country',
+			'class' => 'santilin\wrepos\models\Country',
 			'type' => 'model',
 		],
 		'Place' => [
-			'class' => 'app\models\Place',
+			'class' => 'santilin\wrepos\models\Place',
 			'type' => 'model',
 		],
 		'PostCode' => [
-			'class' => 'app\models\PostCode',
+			'class' => 'santilin\wrepos\models\PostCode',
 			'type' => 'model',
 		],
 	];
