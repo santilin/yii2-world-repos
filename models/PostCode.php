@@ -9,6 +9,7 @@ namespace santilin\wrepos\models;
 use app\models\{Place};
 use santilin\wrepos\models\_BaseModel as Base_PostCode;
 /*>>>>>USES*/
+use Yii;
 /*<<<<<CLASS*/
 /**
  * This is the base model class for table `{{%postcodes}}`.
@@ -33,7 +34,6 @@ class PostCode extends Base_PostCode
 		'Place' => [ 'model' => 'Place', 'left' => 'postcodes.places_id', 'right' => 'places.id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'postcodes.places_id = places.id', 'type' => 'HasOne'],
 	];
 /*>>>>>STATIC_INFO*/
-
 /*<<<<<FIND_IF_NOT_QUERY*/
 	/**
 	 * @return \santilin\wrepos\models\comp\PostCodeQuery the active query used by this AR class.
@@ -50,6 +50,7 @@ class PostCode extends Base_PostCode
 		return $q;
 	} // find
 /*>>>>>FIND_END*/
+
 	static public function getDb()
 	{
 		return Yii::$app->getModule('wrepos')->db;
@@ -80,19 +81,6 @@ class PostCode extends Base_PostCode
 		return static::$_model_info[$part];
 	}
 /*>>>>>MODEL_INFO_CUSTOM*/
-/*<<<<<FIND*/
-	/**
-     * @return \santilin\wreposforms\PostCodeQuery the active query used by this AR class.
-     */
-    static public function find()
-    {
-		if( class_exists("santilin\wrepos\models\comp\PostCodeQuery") ) {
-			return new \santilin\wrepos\models\comp\PostCodeQuery(get_called_class());
-		} else {
-			return parent::find();
-		}
-    } // find
-/*>>>>>FIND*/
 /*<<<<<LABELS*/
 	public function attributeLabels()
 	{
@@ -137,19 +125,6 @@ class PostCode extends Base_PostCode
 		}
 		$ret = null;
 /*>>>>>HANDY_VALUES*/
-/*<<<<<HANDY_VALUES_PRE*/
-	public function handyFieldValues(string $field, string $format,
-		string $model_format = 'medium', array|string|null $scope = null, ?string $filter_fields = null)
-	{
-		$field_parts = explode('.', $field);
-		if (count($field_parts) > 1) {
-			$table = array_shift($field_parts);
-			$rel_model_name = static::$relations[$table]['modelClass'];
-			$rel_model = new $rel_model_name;
-			return $rel_model->handyFieldValues(implode('.', $field_parts), $format, $model_format, $scope, $filter_fields);
-		}
-		$ret = null;
-/*>>>>>HANDY_VALUES_PRE*/
 /*<<<<<HANDY_VALUES.BODY*/
 		if ($field == 'places_id' || $field == 'Place') { // HasOne
 			$q = Place::find();

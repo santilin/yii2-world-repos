@@ -9,6 +9,7 @@ namespace santilin\wrepos\models;
 use app\models\{Country, PostCode};
 use santilin\wrepos\models\_BaseModel as Base_Place;
 /*>>>>>USES*/
+use Yii;
 /*<<<<<CLASS*/
 /**
  * This is the base model class for table `{{%places}}`.
@@ -61,6 +62,7 @@ class Place extends Base_Place
 		return $q;
 	} // find
 /*>>>>>FIND_END*/
+
 	static public function getDb()
 	{
 		return Yii::$app->getModule('wrepos')->db;
@@ -92,19 +94,6 @@ class Place extends Base_Place
 		return static::$_model_info[$part];
 	}
 /*>>>>>MODEL_INFO_CUSTOM*/
-/*<<<<<FIND*/
-	/**
-     * @return \santilin\wreposforms\PlaceQuery the active query used by this AR class.
-     */
-    static public function find()
-    {
-		if( class_exists("santilin\wrepos\models\comp\PlaceQuery") ) {
-			return new \santilin\wrepos\models\comp\PlaceQuery(get_called_class());
-		} else {
-			return parent::find();
-		}
-    } // find
-/*>>>>>FIND*/
 /*<<<<<LABELS*/
 	public function attributeLabels()
 	{
@@ -161,19 +150,6 @@ class Place extends Base_Place
 		}
 		$ret = null;
 /*>>>>>HANDY_VALUES*/
-/*<<<<<HANDY_VALUES_PRE*/
-	public function handyFieldValues(string $field, string $format,
-		string $model_format = 'medium', array|string|null $scope = null, ?string $filter_fields = null)
-	{
-		$field_parts = explode('.', $field);
-		if (count($field_parts) > 1) {
-			$table = array_shift($field_parts);
-			$rel_model_name = static::$relations[$table]['modelClass'];
-			$rel_model = new $rel_model_name;
-			return $rel_model->handyFieldValues(implode('.', $field_parts), $format, $model_format, $scope, $filter_fields);
-		}
-		$ret = null;
-/*>>>>>HANDY_VALUES_PRE*/
 /*<<<<<HANDY_VALUES.BODY*/
 		if ($field == 'countries_id' || $field == 'Country') { // HasOne
 			$q = Country::find();

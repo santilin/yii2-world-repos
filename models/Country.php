@@ -38,7 +38,6 @@ class Country extends Base_Country
 		'places_by_Country' => [ 'model' => 'Place', 'left' => 'countries.id', 'right' => 'places.countries_id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'countries.id = places.countries_id', 'type' => 'BelongsToMany'],
 	];
 /*>>>>>STATIC_INFO*/
-
 /*<<<<<FIND_IF_NOT_QUERY*/
 	/**
 	 * @return \santilin\wrepos\models\comp\CountryQuery the active query used by this AR class.
@@ -85,19 +84,6 @@ class Country extends Base_Country
 		return static::$_model_info[$part];
 	}
 /*>>>>>MODEL_INFO_CUSTOM*/
-/*<<<<<FIND*/
-	/**
-     * @return \santilin\wreposforms\CountryQuery the active query used by this AR class.
-     */
-    static public function find()
-    {
-		if( class_exists("santilin\wrepos\models\comp\CountryQuery") ) {
-			return new \santilin\wrepos\models\comp\CountryQuery(get_called_class());
-		} else {
-			return parent::find();
-		}
-    } // find
-/*>>>>>FIND*/
 /*<<<<<LABELS*/
 	public function attributeLabels()
 	{
@@ -150,19 +136,6 @@ class Country extends Base_Country
 		}
 		$ret = null;
 /*>>>>>HANDY_VALUES*/
-/*<<<<<HANDY_VALUES_PRE*/
-	public function handyFieldValues(string $field, string $format,
-		string $model_format = 'medium', array|string|null $scope = null, ?string $filter_fields = null)
-	{
-		$field_parts = explode('.', $field);
-		if (count($field_parts) > 1) {
-			$table = array_shift($field_parts);
-			$rel_model_name = static::$relations[$table]['modelClass'];
-			$rel_model = new $rel_model_name;
-			return $rel_model->handyFieldValues(implode('.', $field_parts), $format, $model_format, $scope, $filter_fields);
-		}
-		$ret = null;
-/*>>>>>HANDY_VALUES_PRE*/
 /*<<<<<HANDY_VALUES.BODY*/
 		if ($field == 'places_by_Country') { // hasMany
 			$q = Place::find();
@@ -213,6 +186,12 @@ class Country extends Base_Country
 		);
 	}
 /*>>>>>RELATIONS*/
+
+	static public function getDb()
+	{
+		return Yii::$app->getModule('wrepos')->db;
+	}
+
 /*<<<<<END*/
 } // class Country
 /*>>>>>END*/
