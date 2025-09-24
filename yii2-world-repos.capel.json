@@ -57,10 +57,11 @@
             "base_model_class": "\\santilin\\wrepos\\models\\_BaseModel",
             "table_name": "places",
             "relations": {
-                "Country": {
+                "country": {
                     "type": "HasOne",
                     "is_nullable": false,
-                    "is_code": true
+                    "is_code": true,
+                    "right_model": "Country"
                 }
             },
             "fields": [
@@ -123,9 +124,10 @@
             "base_model_class": "\\santilin\\wrepos\\models\\_BaseModel",
             "table_name": "postcodes",
             "relations": {
-                "Place": {
+                "place": {
                     "type": "HasOne",
-                    "is_nullable": false
+                    "is_nullable": false,
+                    "right_model": "Place"
                 }
             },
             "fields": [
