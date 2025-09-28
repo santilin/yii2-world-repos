@@ -20,8 +20,8 @@ class Place_Search extends Place
 /*<<<<<CLASS_BODY*/
 	use \santilin\churros\models\ModelSearchTrait;
 	protected $related_properties = [
-		'Country.id' => null,
-		'Country' => null,
+		'country.id' => null,
+		'country' => null,
 	];
 	protected $normal_attrs = [
 		'admin_code' => 'LIKE',
@@ -54,7 +54,7 @@ class Place_Search extends Place
 	public function rules()
 	{
 		$rules = [
-			'safe' => [['Country','Country.id','postCodes_by_Place','admin_code','admin_sup_code','admin_sup_name','countries_id','id','level','name','name_en','name_es','name_fr','national_id'], 'safe'],
+			'safe' => [['country','country.id','postCodes','admin_code','admin_sup_code','admin_sup_name','countries_id','id','level','name','name_en','name_es','name_fr','national_id'], 'safe'],
 		];
 		// add your custom rules below
 /*>>>>>RULES*/
@@ -141,9 +141,9 @@ class Place_Search extends Place
 		}
 /*>>>>>DEFAULT_SORT*/
 /*<<<<<SEARCH_SORTS*/
-		$dataProvider->sort->attributes['Country'] = [
-			'asc' => [ 'as_Country.iso2' => SORT_ASC ],
-			'desc' => [ 'as_Country.iso2' => SORT_DESC ],
+		$dataProvider->sort->attributes['country'] = [
+			'asc' => [ 'as_country.iso2' => SORT_ASC ],
+			'desc' => [ 'as_country.iso2' => SORT_DESC ],
 		];
 /*>>>>>SEARCH_SORTS*/
 /*<<<<<SEARCH_RETURN*/

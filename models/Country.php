@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace santilin\wrepos\models;
 
-use app\models\{Place};
+use santilin\wrepos\models\{Place};
 use santilin\wrepos\models\_BaseModel as Base_Country;
 /*>>>>>USES*/
 /*<<<<<CLASS*/
@@ -20,7 +20,7 @@ use santilin\wrepos\models\_BaseModel as Base_Country;
  * @property string $name_es // places/country/name
  * @property string $name_en // places/country/name
  * @property string $name_fr // places/country/name
- * @property santilin\wrepos\models\Place[] $places_by_Country // BelongsToMany
+ * @property santilin\wrepos\models\Place[] $places // BelongsToMany
  */
 class Country extends Base_Country
 {
@@ -35,7 +35,7 @@ class Country extends Base_Country
 		return '{{%countries}}';
 	}
 	public static $relations = [
-		'places_by_Country' => [ 'model' => 'Place', 'left' => 'countries.id', 'right' => 'places.countries_id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'countries.id = places.countries_id', 'type' => 'BelongsToMany'],
+		'places' => [ 'model' => 'Place', 'left' => 'countries.id', 'right' => 'places.countries_id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'countries.id = places.countries_id', 'type' => 'BelongsToMany'],
 	];
 /*>>>>>STATIC_INFO*/
 /*<<<<<FIND_IF_NOT_QUERY*/
@@ -95,7 +95,7 @@ class Country extends Base_Country
 			'name_es' => 'Name es',
 			'name_en' => 'Name en',
 			'name_fr' => 'Name fr',
-			'places_by_Country' => Place::getModelInfo('title_plural'), // belongstomany
+			'places' => Place::getModelInfo('title_plural'), // belongstomany
 		];
 /*>>>>>LABELS*/
 		// customize your labels here
@@ -137,7 +137,7 @@ class Country extends Base_Country
 		$ret = null;
 /*>>>>>HANDY_VALUES*/
 /*<<<<<HANDY_VALUES.BODY*/
-		if ($field == 'places_by_Country') { // hasMany
+		if ($field == 'places') { // hasMany
 			$q = Place::find();
 			static::applyScopes($q, $scope);
 			$models = $q->all();
@@ -178,7 +178,7 @@ class Country extends Base_Country
 /*>>>>>BEHAVIORS.RETURN*/
 		// Tweak or add report fields here
 /*<<<<<RELATIONS*/
-	public function getPlaces_by_Country() // HasMany
+	public function getPlaces() // HasMany
 	{
 		return $this->hasMany(
 			Place::class,

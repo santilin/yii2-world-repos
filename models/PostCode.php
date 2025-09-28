@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace santilin\wrepos\models;
 
-use app\models\{Place};
+use santilin\wrepos\models\{Place};
 use santilin\wrepos\models\_BaseModel as Base_PostCode;
 /*>>>>>USES*/
 use Yii;
@@ -16,7 +16,7 @@ use Yii;
  *
  * @property string $postcode // places/postcode
  * @property integer $places_id
- * @property santilin\wrepos\models\Place $Place // HasOne
+ * @property santilin\wrepos\models\Place $place // HasOne
  */
 class PostCode extends Base_PostCode
 {
@@ -31,7 +31,7 @@ class PostCode extends Base_PostCode
 		return '{{%postcodes}}';
 	}
 	public static $relations = [
-		'Place' => [ 'model' => 'Place', 'left' => 'postcodes.places_id', 'right' => 'places.id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'postcodes.places_id = places.id', 'type' => 'HasOne'],
+		'place' => [ 'model' => 'Place', 'left' => 'postcodes.places_id', 'right' => 'places.id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'postcodes.places_id = places.id', 'type' => 'HasOne'],
 	];
 /*>>>>>STATIC_INFO*/
 /*<<<<<FIND_IF_NOT_QUERY*/
@@ -87,7 +87,7 @@ class PostCode extends Base_PostCode
 		$labels = [
 			'postcode' => 'Postcode',
 			'places_id' => Place::getModelInfo('title'), // HasOne
-			'Place' => Place::getModelInfo('title'), // HasOne
+			'place' => Place::getModelInfo('title'), // HasOne
 		];
 /*>>>>>LABELS*/
 		// customize your labels here
@@ -126,7 +126,7 @@ class PostCode extends Base_PostCode
 		$ret = null;
 /*>>>>>HANDY_VALUES*/
 /*<<<<<HANDY_VALUES.BODY*/
-		if ($field == 'places_id' || $field == 'Place') { // HasOne
+		if ($field == 'places_id' || $field == 'place') { // HasOne
 			$q = Place::find();
 			static::applyScopes($q, $scope);
 			$models = $q->all();
@@ -169,7 +169,7 @@ class PostCode extends Base_PostCode
 /*<<<<<RELATIONS*/
 	public function getPlace() // HasOne
 	{
-		// PostCode.Place:HasOne(not null) Place: postcodes.places_id=>places.id
+		// PostCode.place:HasOne(not null) Place: postcodes.places_id=>places.id
 		return $this->hasOne(
 			Place::class,
 			['id' => 'places_id'],

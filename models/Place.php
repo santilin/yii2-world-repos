@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace santilin\wrepos\models;
 
-use app\models\{Country, PostCode};
+use santilin\wrepos\models\{Country, PostCode};
 use santilin\wrepos\models\_BaseModel as Base_Place;
 /*>>>>>USES*/
 use Yii;
@@ -25,8 +25,8 @@ use Yii;
  * @property string $admin_sup_name
  * @property string $national_id
  * @property integer $countries_id // smallInteger
- * @property santilin\wrepos\models\Country $Country // HasOne
- * @property santilin\wrepos\models\PostCode[] $postCodes_by_Place // BelongsToMany
+ * @property santilin\wrepos\models\Country $country // HasOne
+ * @property santilin\wrepos\models\PostCode[] $postCodes // BelongsToMany
  */
 class Place extends Base_Place
 {
@@ -41,8 +41,8 @@ class Place extends Base_Place
 		return '{{%places}}';
 	}
 	public static $relations = [
-		'Country' => [ 'model' => 'Country', 'left' => 'places.countries_id', 'right' => 'countries.id', 'modelClass' => 'santilin\wrepos\models\Country', 'relatedTablename' => 'countries', 'join' => 'places.countries_id = countries.id', 'type' => 'HasOne'],
-		'postCodes_by_Place' => [ 'model' => 'PostCode', 'left' => 'places.id', 'right' => 'postcodes.places_id', 'modelClass' => 'santilin\wrepos\models\PostCode', 'relatedTablename' => 'postcodes', 'join' => 'places.id = postcodes.places_id', 'type' => 'BelongsToMany'],
+		'country' => [ 'model' => 'Country', 'left' => 'places.countries_id', 'right' => 'countries.id', 'modelClass' => 'santilin\wrepos\models\Country', 'relatedTablename' => 'countries', 'join' => 'places.countries_id = countries.id', 'type' => 'HasOne'],
+		'postCodes' => [ 'model' => 'PostCode', 'left' => 'places.id', 'right' => 'postcodes.places_id', 'modelClass' => 'santilin\wrepos\models\PostCode', 'relatedTablename' => 'postcodes', 'join' => 'places.id = postcodes.places_id', 'type' => 'BelongsToMany'],
 	];
 /*>>>>>STATIC_INFO*/
 
@@ -83,9 +83,9 @@ class Place extends Base_Place
 				'desc_field' => 'name',
 				'controller_name' => 'place',
 				'female' => true,
-				'record_desc_format_short' => '{Country}',
-				'record_desc_format_medium' => '{Country}, {name}',
-				'record_desc_format_long' => '{Country}, {name}',
+				'record_desc_format_short' => '{country}',
+				'record_desc_format_medium' => '{country}, {name}',
+				'record_desc_format_long' => '{country}, {name}',
 			];
 /*>>>>>MODEL_INFO*/
 /*<<<<<MODEL_INFO_CUSTOM*/
@@ -109,8 +109,8 @@ class Place extends Base_Place
 			'admin_sup_name' => 'Admin sup name',
 			'national_id' => 'National id',
 			'countries_id' => Country::getModelInfo('title'), // HasOne
-			'Country' => Country::getModelInfo('title'), // HasOne
-			'postCodes_by_Place' => PostCode::getModelInfo('title_plural'), // belongstomany
+			'country' => Country::getModelInfo('title'), // HasOne
+			'postCodes' => PostCode::getModelInfo('title_plural'), // belongstomany
 		];
 /*>>>>>LABELS*/
 		// customize your labels here
@@ -151,7 +151,7 @@ class Place extends Base_Place
 		$ret = null;
 /*>>>>>HANDY_VALUES*/
 /*<<<<<HANDY_VALUES.BODY*/
-		if ($field == 'countries_id' || $field == 'Country') { // HasOne
+		if ($field == 'countries_id' || $field == 'country') { // HasOne
 			$q = Country::find();
 			static::applyScopes($q, $scope);
 			$models = $q->all();
@@ -167,7 +167,7 @@ class Place extends Base_Place
 				}
 			}
 		}
-		if ($field == 'postCodes_by_Place') { // hasMany
+		if ($field == 'postCodes') { // hasMany
 			$q = PostCode::find();
 			static::applyScopes($q, $scope);
 			$models = $q->all();
@@ -220,13 +220,13 @@ class Place extends Base_Place
 /*<<<<<RELATIONS*/
 	public function getCountry() // HasOne
 	{
-		// Place.Country:HasOne(not null) Country: places.countries_id=>countries.id
+		// Place.country:HasOne(not null) Country: places.countries_id=>countries.id
 		return $this->hasOne(
 			Country::class,
 			['id' => 'countries_id'],
 		);
 	}
-	public function getPostCodes_by_Place() // HasMany
+	public function getPostCodes() // HasMany
 	{
 		return $this->hasMany(
 			PostCode::class,
