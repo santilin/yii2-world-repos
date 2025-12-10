@@ -1,12 +1,15 @@
 <?php
 /*<<<<<USES*/
-/*Template:Yii2App/views/site/index.php*/
-use yii\helpers\{Html,Url};
+/*Template:Yii2App/views/site_/index.php*/
+use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
+use yii\bootstrap5\Html;
 use app\helpers\UserHelper;
 
-/* var yii\web\View $this */
-/* @var $params array */
+/**
+ * @var \yii\web\View $this
+ * @var array $params
+ */
 $this->title = 'World repositories';
 $label_inicio = 'Inicio';
 /*>>>>>USES*/
@@ -25,7 +28,7 @@ $this->params['breadcrumbs'] = [ $label_inicio ];
 /*>>>>>MAIN_DIV*/
 $welcome = "Bienvenid@ a world-repos";
 /*<<<<<WELCOME*/
-if (!empty($welcome) ) : ?>
+if ($welcome ?? false) : ?>
     <div class="jumbotron">
         <h1><?=$welcome?></h1>
 

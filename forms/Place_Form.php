@@ -18,13 +18,14 @@ class Place_Form extends Place
 /*<<<<<RULES*/
     public function rules()
     {
-		$rules = array_merge(parent::rules(), [
+		$rules = [
 			'f_safe' => [['id'], 'safe'],
 			'req' => [['name','level','countries_id'], 'required'],
 			'null' => [['name_es','name_en','name_fr','admin_code','admin_sup_code','admin_sup_name','national_id'], 'default', 'value' => null],
-		]);
+		];
 /*>>>>>RULES*/
 /*<<<<<RULES_RETURN*/
+		$rules = array_merge(parent::rules(), $rules);
 		return $rules;
     } // rules
 /*>>>>>RULES_RETURN*/
@@ -36,9 +37,9 @@ class Place_Form extends Place
 		if (is_array($fdf)) {
 			$df = [];
 			foreach (array_intersect_assoc($this->activeAttributes(), $fdf) as $fld => $value) {
-				$df[$fld] = $this->$fld;
+				$df[$fld] = $this->__get($fld);
 			}
-			if (!empty($df)) {
+			if (count($df) !== 0) {
 				FormHelper::setConfig('Place_Form', 'DefaultValues', $df);
 			}
 		} else {
@@ -55,7 +56,7 @@ class Place_Form extends Place
 /*>>>>>DEFAULT_VALUES*/
 /*<<<<<DEFAULT_VALUES.PARENT*/
 		$fdf = FormHelper::getConfig('Place_Form', 'DefaultValues', []);
-		if (!empty($fdf)) {
+		if (count($fdf) !== 0) {
 			$this->setAttributes($fdf);
 		}
 /*>>>>>DEFAULT_VALUES.PARENT*/

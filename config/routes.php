@@ -1,6 +1,8 @@
 <?php
 /*<<<<<BASIC*/
+/*Template:Yii2App/config/routes.php*/
 $routes = [
+	'' => 'site_/index',
 /*>>>>>BASIC*/
 /*<<<<<MAIN_ROUTES*/
 	// HasMany routes

@@ -92,5 +92,5 @@ SQL;
 	}
 
 /*<<<<<CLASS_END*/
-} // class SiteController
+} // class EmptyController
 /*>>>>>CLASS_END*/

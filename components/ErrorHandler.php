@@ -19,9 +19,9 @@ class ErrorHandler extends \yii\web\ErrorHandler
     protected function renderException($exception)
     {
         $script_url = $_SERVER['SCRIPT_URL'] ?? $_SERVER['REDIRECT_URL'] ?? $_SERVER['HTTP_REFERER'] ?? false;
-        if ($script_url) {
+        if ($script_url !== false) {
             if (preg_match('/^\/([^\/]+)/', $script_url, $matches)) {
-                if (in_array($matches[1], array_keys(Capel::MODULES))) {
+                if (in_array($matches[1], array_keys(Capel::MODULES), true)) {
                     $this->errorAction = $matches[1] . '/' . $this->errorAction;
                 }
 			}
@@ -35,9 +35,9 @@ class ErrorHandler extends \yii\web\ErrorHandler
     public function handleFatalError()
     {
         $error = error_get_last();
-        if ($error && $error['type'] == 1) {
-            if (substr($error['message'], 0, 22) == 'Allowed memory size of') {
-                if (isset($_SESSION['GridPageSize']) && intval($_SESSION['GridPageSize']) == -1) {
+        if ($error && $error['type'] === 1) {
+            if (substr($error['message'], 0, 22) === 'Allowed memory size of') {
+                if (isset($_SESSION['GridPageSize']) && intval($_SESSION['GridPageSize']) === -1) {
                     unset($_SESSION['GridPageSize']);
                 }
             }

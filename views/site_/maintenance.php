@@ -1,12 +1,12 @@
 <?php
 /*<<<<<USES*/
-/*Template:Yii2App/views/site/maintenance.php*/
+/*Template:Yii2App/views/site_/maintenance.php*/
 use yii\helpers\{Html,Url};
 
 /* var yii\web\View $this */
 /* @var $params array */
 
-$welcome ='Modo mantenimiento';
+$welcome = 'Modo mantenimiento';
 $this->title = 'World repositories - ' . $welcome;
 /*>>>>>USES*/
 /*<<<<<MAINTENANCE*/
@@ -15,7 +15,7 @@ $this->title = 'World repositories - ' . $welcome;
 <?php
 /*>>>>>MAINTENANCE*/
 /*<<<<<WELCOME*/
-if (!empty($welcome) ) : ?>
+if (!empty($welcome)) : ?>
     <div class="jumbotron">
         <h1><?=$welcome?></h1>
 

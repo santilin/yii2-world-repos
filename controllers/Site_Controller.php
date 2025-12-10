@@ -1,6 +1,6 @@
 <?php
 /*<<<<<USES*/
-/*Template:Yii2App/controllers/SiteController.php*/
+/*Template:Yii2App/controllers/Site_Controller.php*/
 namespace santilin\wrepos\controllers;
 
 use Yii;
@@ -10,7 +10,7 @@ use yii\web\Controller;
 use yii\web\Response;
 /*>>>>>USES*/
 /*<<<<<MAIN*/
-class SiteController extends Controller
+class Site_Controller extends Controller
 {
 	/**
 	 * @var $layout The layout for this controller
@@ -66,12 +66,12 @@ class SiteController extends Controller
 			if ($exception instanceof \yii\web\HttpException) {
 				$error = $exception->statusCode;
 				try {
-					return $this->render("//site/error$error", [ 'name' => null, 'message' => $exception->getMessage(), 'exception' => $exception]);
+					return $this->render("//site_/error$error", [ 'name' => null, 'message' => $exception->getMessage(), 'exception' => $exception]);
 				} catch (ViewNotFoundException $e) {
-					return $this->render("//site/error", [ 'name' => null, 'message' => $exception->getMessage(), 'exception' => $exception]);
+					return $this->render("//site_/error", [ 'name' => null, 'message' => $exception->getMessage(), 'exception' => $exception]);
 				}
 			} else {
-				return $this->render("//site/error", [ 'name' => null, 'message' => $exception->getMessage(), 'exception' => $exception]);
+				return $this->render("//site_/error", [ 'name' => null, 'message' => $exception->getMessage(), 'exception' => $exception]);
 			}
 		} else {
 			return $this->renderContent("Error");
@@ -93,5 +93,5 @@ class SiteController extends Controller
 	}
 /*>>>>>INDEX_END_PAGE*/
 /*<<<<<CLASS_END*/
-} // class SiteController
+} // class Site_Controller
 /*>>>>>CLASS_END*/

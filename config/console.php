@@ -121,7 +121,7 @@ if (!function_exists('yii_t')) {
 }
 /*>>>>>NOT_MULTILINGUAL*/
 /*<<<<<NO_WEB_USERS*/
-\yii\base\Event::on(\yii\web\Application::className(), \yii\web\Application::EVENT_BEFORE_REQUEST, function ($event) {
+\yii\base\Event::on(\yii\web\Application::class, \yii\web\Application::EVENT_BEFORE_REQUEST, function ($event) {
 	session_start();
 	$event->sender->clear('user');
 });

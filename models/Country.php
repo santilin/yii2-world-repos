@@ -20,7 +20,7 @@ use santilin\wrepos\models\_BaseModel as Base_Country;
  * @property string $name_es // places/country/name
  * @property string $name_en // places/country/name
  * @property string $name_fr // places/country/name
- * @property santilin\wrepos\models\Place[] $places // BelongsToMany
+ * @property \santilin\wrepos\models\Place[] $places // BelongsToMany
  */
 class Country extends Base_Country
 {
@@ -34,6 +34,9 @@ class Country extends Base_Country
 	{
 		return '{{%countries}}';
 	}
+	/**
+	 * @var array<string, array<string, string>>
+	 */
 	public static $relations = [
 		'places' => [ 'model' => 'Place', 'left' => 'countries.id', 'right' => 'places.countries_id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'countries.id = places.countries_id', 'type' => 'BelongsToMany'],
 	];
@@ -62,9 +65,9 @@ class Country extends Base_Country
 /*<<<<<MODEL_INFO*/
 	public static bool $isJunctionModel = false;
 	protected static array $_model_info = [];
-	public static function getModelInfo($part)
+	public static function getModelInfo($part): string|bool
 	{
-		if (static::$_model_info == []) {
+		if (static::$_model_info === []) {
 			$mi = [
 				'model_name' => 'Country',
 				'title' => 'Country',
@@ -125,7 +128,7 @@ class Country extends Base_Country
 		string $format,
 		string $model_format = 'medium',
 		array|string|null $scope = null,
-		?string $filter_fields = null,
+		string|null $filter_fields = null,
 	) {
 		$field_parts = explode('.', $field);
 		if (count($field_parts) > 1) {
@@ -137,12 +140,12 @@ class Country extends Base_Country
 		$ret = null;
 /*>>>>>HANDY_VALUES*/
 /*<<<<<HANDY_VALUES.BODY*/
-		if ($field == 'places') { // hasMany
+		if ($field === 'places') { // hasMany
 			$q = Place::find();
 			static::applyScopes($q, $scope);
 			$models = $q->all();
 			$ret = [];
-			if (empty($filter_fields)) {
+			if ($filter_fields === null || trim($filter_fields) === '') {
 				foreach ($models as $model) {
 					$ret[$model->getPrimaryKey()] = $model->recordDesc($model_format);
 				}

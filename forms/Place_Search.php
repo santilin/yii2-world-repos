@@ -20,10 +20,14 @@ class Place_Search extends Place
 /*<<<<<CLASS_BODY*/
 	use \santilin\churros\models\ModelSearchTrait;
 	protected $related_properties = [
-		'country.id' => null,
 		'country' => null,
+		'postCodes' => null,
 	];
-	protected $normal_attrs = [
+	protected $related_operators = [
+		'country' => 'LIKE',
+		'postCodes' => 'LIKE',
+	];
+	protected $attrs_operators = [
 		'admin_code' => 'LIKE',
 		'admin_sup_code' => 'LIKE',
 		'admin_sup_name' => 'LIKE',
@@ -54,7 +58,7 @@ class Place_Search extends Place
 	public function rules()
 	{
 		$rules = [
-			'safe' => [['country','country.id','postCodes','admin_code','admin_sup_code','admin_sup_name','countries_id','id','level','name','name_en','name_es','name_fr','national_id'], 'safe'],
+			'safe' => [['country','postCodes','admin_code','admin_sup_code','admin_sup_name','countries_id','id','level','name','name_en','name_es','name_fr','national_id'], 'safe'],
 		];
 		// add your custom rules below
 /*>>>>>RULES*/
@@ -74,12 +78,13 @@ class Place_Search extends Place
     {
 		$query = null;
 		$searchRelation = ArrayHelper::remove($params, '_search_relation', false);
-		if ($searchRelation) {
+		if ($searchRelation !== false) {
+			/** @var callable(): \yii\db\ActiveQuery $searchRelation */
 			$searchRelation = "get" . ucfirst($searchRelation);
 			if (method_exists($this, $searchRelation)) {
-				$query = $this->$searchRelation();
+				$query = call_user_func([$this, $searchRelation]);
 			} elseif (isset($params['master'])) {
-				$junction_query = $params['master']->$searchRelation();
+				$junction_query = call_user_func([$params['master'], $searchRelation]);
 				if ($junction_query->via) {
 					$query = $junction_query->via[1];
 				}
@@ -90,7 +95,7 @@ class Place_Search extends Place
 		}
 		$searchScopes = (array) ArrayHelper::remove($params, '_search_scopes', []);
 		static::applyScopes($query, $searchScopes, false);
-		if (!empty($params['or'])) {
+		if ($params['or'] ?? false) {
 			unset($params['or']);
 			$is_or = true;
 		} else {
@@ -103,7 +108,7 @@ class Place_Search extends Place
         $this->load($params);
 		if ($dataProvider->pagination) {
  			$this->_gridPageSize = $dataProvider->pagination->pageSize = $params['per-page'] ?? Yii::$app->session->get('GridPageSize', 12);
- 			if ($this->_gridPageSize != 0) { // dont store All in session
+ 			if ($this->_gridPageSize !== 0 && $this->_gridPageSize !== 999999999) { // dont store All in session
  				Yii::$app->session->set('GridPageSize', $dataProvider->pagination->pageSize);
  			}
 		}
@@ -120,11 +125,14 @@ class Place_Search extends Place
 		$conditions = [];
 /*>>>>>SEARCH_VALIDATE*/
 /*<<<<<SEARCH_FILTERS*/
-		foreach ($this->normal_attrs as $attr => $operator) {
-			$conditions[] = $this->searchFilterWhere(
-				$attr,
-				[ 'op' => $operator, 'v' => $this->$attr ],
-			);
+		foreach ($this->attrs_operators as $attr => $operator) {
+			$v = $this->__get($attr);
+			if (isset($v['op']) && isset($v['v'])) {
+				$conditions[] = $this->searchFilterWhere($attr, $v);
+			} else {
+				$conditions[] = $this->searchFilterWhere($attr,
+					['op' => $operator, 'v' => $this->__get($attr)]);
+			}
 		}
 		foreach ($this->related_properties as $attr => $value) {
 			$conditions[] = $this->filterWhereRelated($query, $attr, $value);
@@ -136,11 +144,15 @@ class Place_Search extends Place
 		}
 /*>>>>>SEARCH_FILTERS*/
 /*<<<<<DEFAULT_SORT*/
-		if (empty($dataProvider->query->orderBy)) {
+		if ($dataProvider->query->orderBy === null || count($dataProvider->query->orderBy) === 0) {
 			$dataProvider->sort->defaultOrder = ['countries_id' => SORT_ASC];
 		}
 /*>>>>>DEFAULT_SORT*/
 /*<<<<<SEARCH_SORTS*/
+		$dataProvider->sort->attributes['countries_id'] = [
+			'asc' => [ 'countries_id' => SORT_ASC ],
+			'desc' => [ 'countries_id' => SORT_DESC ],
+		];
 		$dataProvider->sort->attributes['country'] = [
 			'asc' => [ 'as_country.iso2' => SORT_ASC ],
 			'desc' => [ 'as_country.iso2' => SORT_DESC ],

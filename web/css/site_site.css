@@ -41,47 +41,91 @@ fieldset {
 	margin: 0;
 	padding: 10px;
 	position: relative;
-	border-radius: 4px;
+	border-radius: 8px;
 	background-color: var(--bs-tertiary-bg);
 	padding-left: 10px !important;
 }
 
 legend {
-	font-size: 14px;
 	font-weight: bold;
 	margin-bottom: 0;
 	width: auto;
 	padding: 5px 10px;
 }
+div.app-subtitle {
+	width: auto;
+	margin-left: 10px;
+	padding: 0em 0.4em;
+}
 /*>>>>>COMMON_STYLES*/
 /*<<<<<FORMS*/
-.record-view .panel-heading h1 {
-	font-size: 1.5rem;
-}
 #mainContent .title h1 {
 	font-size: 1.5rem;
 }
-.btn.btn-cancel {
+.fake-readonly-control {
+	appearance: none;
+	background-clip: padding-box;
+	border-radius: var(--bs-border-radius);
+	display: block;
+	padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+	margin-bottom: 0;
+	line-height: 1.5;
+}
+
+[data-bs-theme="dark"] {
+	& .form-control[readonly]:focus {
+		outline: none;
+		box-shadow: none;
+		border-color:#00000023;
+		background-color: transparent;
+	}
+	& .form-control[readonly] {
+		outline: none;
+		box-shadow: none;
+		border-color:#00000023;
+		background-color: darkslategray;
+	}
+	& .fake-readonly-control {
+		color: var(--bs-body-color);
+		background-color: darkslategray;
+		border: var(--bs-border-width) solid var(--bs-border-color);
+		transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+	}
+}
+
+.fake-readonly-control {
+	color: var(--bs-body-color);
+	background-color: var(--bs-primary-bg-subtle);
+	border: var(--bs-border-width) solid var(--bs-border-color);
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.form-fields {
+	& fieldset {
+		padding: 1rem;
+	}
+	& .tab-content {
+		margin-top: .4rem;
+	}
 }
 ul.no-bullets, .no-bullets ul {
 	list-style-type: none;
+	padding-left: 0;
 }
-.fake-readonly-control {
-	display: block;
-	padding: 0.375rem 0;
-	padding-left: 0px;
-	margin-bottom: 0;
-	line-height: 1.5;
-	color: var(--bs-body-color);
-	background-color: transparent;
-	border: solid transparent;
-	border-width: var(--bs-border-width) 0;
+div.row.lay-4-cols > div.col-md-3:nth-child(2),
+div.row.lay-4-cols > div.col-md-3:nth-child(3) {
+	padding-left: 0.175rem;
+	padding-right: 0.175rem;
+	margin-left: 0;
+	margin-right: 0;
 }
 /*>>>>>FORMS*/
 /*<<<<<FIXES*/
 .editormd-fullscreen {
   /* btn-group has position:relative and it looks like .editormd has z-index:200000 */
   z-index: 10;
+}
+#ui-datepicker-div {
+    z-index: 1050 !important;
 }
 /*>>>>>FIXES*/
 /*<<<<<BS5-EXTENSIONS*/
@@ -104,6 +148,12 @@ ul.no-bullets, .no-bullets ul {
   border-radius: var(--bs-alert-border-radius);
 }
 .btn-group > a > svg, .toolbar > a > svg {
-	margin-right: 0.5rem;
+	margin-right: 0.3rem;
+}
+.toolbar > a.btn > span:not(:empty) {
+	margin-left: 0.3rem;
+}
+.btn-group > a.btn > span:not(:empty) {
+	margin-left: 0.3rem;
 }
 /*>>>>>BS5-EXTENSIONS*/

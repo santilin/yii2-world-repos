@@ -23,16 +23,15 @@ $created_by = 'Creado por Santilín con Yii' . Yii::getVersion();
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>" data-bs-theme=auto>
 <head>
-	<meta charset="<?= Yii::$app->charset ?>">
-	<meta name="description" content="World repositories">
-	<meta name="author" content="Santilín">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-<?php
-echo $this->registerCsrfMetaTags();
-?>
+    <meta charset="<?= Yii::$app->charset ?>">
+</head>
 	<title><?= Html::encode($this->title) ?></title>
-	<?php $this->head() ?>
 <?php
+    $this->registerMetaTag(['name' => 'description', 'content' => 'World repositories']);
+    $this->registerMetaTag(['name' => 'author', 'content' => 'Santilín']);
+    $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1']);
+	echo $this->registerCsrfMetaTags();
+	$this->head();
 /*>>>>>BEGINPAGE*/
 $company = "Santilín";
 /*<<<<<BODY*/
@@ -44,10 +43,10 @@ $company = "Santilín";
 <?php
 /*>>>>>BODY*/
 /*<<<<<NAVIGATION*/
-$home_link = null;
+$module_home_link = null;
 $navbar_options = [
-	'brandLabel' => '<span>' . (isset(Yii::$app->params['logo'])
-		? Html::img(Yii::$app->params['logo'], ['id' => 'app-logo']) : '' ) . '&nbsp;'
+	'brandLabel' => (isset(Yii::$app->params['logo'])
+		? Html::img(Yii::$app->params['logo'], ['id' => 'app-logo']) : '') . '&nbsp;'
 		. $brand_name,
 	'brandUrl' => Yii::$app->homeUrl,
 	'options' => [
@@ -55,7 +54,7 @@ $navbar_options = [
 		'aria-label' => 'Menú principal',
 	],
 ];
-$main_menu_items = []; // Main menu
+$main_items = []; // Main menu
 /*>>>>>NAVIGATION*/
 /*<<<<<MENUITEMS_PRE*/
 
@@ -66,7 +65,8 @@ $main_menu_items = []; // Main menu
 /*<<<<<NAVMENUS*/
 $nav_menu_options = [
 	'options' => ['class' => 'navbar-nav ms-auto' ],
-	'items' => array_merge(	$main_items),
+	'items' => array_merge(
+		$main_items),
 ];
 NavBar::begin($navbar_options);
 /*>>>>>NAVMENUS*/
@@ -82,7 +82,7 @@ NavBar::end();
 /*>>>>>MENU_END*/
 /*<<<<<BREADCRUMBS*/
 	echo Breadcrumbs::widget([
-		'homeLink' => $home_link,
+		'homeLink' => $module_home_link,
 		'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
 		'options' => [ 'aria' => [ 'hidden' => 'true' ]],
 	]);

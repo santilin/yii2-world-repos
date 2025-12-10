@@ -16,7 +16,7 @@ use Yii;
  *
  * @property string $postcode // places/postcode
  * @property integer $places_id
- * @property santilin\wrepos\models\Place $place // HasOne
+ * @property \santilin\wrepos\models\Place $place // HasOne
  */
 class PostCode extends Base_PostCode
 {
@@ -30,6 +30,9 @@ class PostCode extends Base_PostCode
 	{
 		return '{{%postcodes}}';
 	}
+	/**
+	 * @var array<string, array<string, string>>
+	 */
 	public static $relations = [
 		'place' => [ 'model' => 'Place', 'left' => 'postcodes.places_id', 'right' => 'places.id', 'modelClass' => 'santilin\wrepos\models\Place', 'relatedTablename' => 'places', 'join' => 'postcodes.places_id = places.id', 'type' => 'HasOne'],
 	];
@@ -59,9 +62,9 @@ class PostCode extends Base_PostCode
 /*<<<<<MODEL_INFO*/
 	public static bool $isJunctionModel = false;
 	protected static array $_model_info = [];
-	public static function getModelInfo($part)
+	public static function getModelInfo($part): string|bool
 	{
-		if (static::$_model_info == []) {
+		if (static::$_model_info === []) {
 			$mi = [
 				'model_name' => 'PostCode',
 				'title' => 'PostCode',
@@ -70,9 +73,9 @@ class PostCode extends Base_PostCode
 				'desc_field' => 'postcode',
 				'controller_name' => 'post-code',
 				'female' => true,
-				'record_desc_format_short' => '',
-				'record_desc_format_medium' => '',
-				'record_desc_format_long' => '',
+				'record_desc_format_short' => '{}',
+				'record_desc_format_medium' => '{}',
+				'record_desc_format_long' => '{}',
 			];
 /*>>>>>MODEL_INFO*/
 /*<<<<<MODEL_INFO_CUSTOM*/
@@ -114,7 +117,7 @@ class PostCode extends Base_PostCode
 		string $format,
 		string $model_format = 'medium',
 		array|string|null $scope = null,
-		?string $filter_fields = null,
+		string|null $filter_fields = null,
 	) {
 		$field_parts = explode('.', $field);
 		if (count($field_parts) > 1) {
@@ -126,12 +129,12 @@ class PostCode extends Base_PostCode
 		$ret = null;
 /*>>>>>HANDY_VALUES*/
 /*<<<<<HANDY_VALUES.BODY*/
-		if ($field == 'places_id' || $field == 'place') { // HasOne
+		if ($field === 'places_id' || $field === 'place') { // HasOne
 			$q = Place::find();
 			static::applyScopes($q, $scope);
 			$models = $q->all();
 			$ret = [];
-			if (empty($filter_fields)) {
+			if ($filter_fields === null || trim($filter_fields) === '') {
 				foreach ($models as $model) {
 					$ret[$model->id] = $model->recordDesc($model_format);
 				}

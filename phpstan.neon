@@ -1,0 +1,61 @@
+#<<<<<INCLUDES
+includes:
+    - phar://phpstan.phar/conf/bleedingEdge.neon
+#>>>>>INCLUDES
+    level: 0
+#<<<<<PARAMETERS
+parameters:
+    tmpDir: %currentWorkingDirectory%/runtime/phpstan
+
+    bootstrapFiles:
+        - tests/_bootstrap.php
+
+    paths:
+        - components
+        - config
+        - console
+        - controllers
+        - forms
+        - helpers
+        - models
+        - modules
+        - notifications
+        - tests
+        - web
+        - widgets
+#>>>>>PARAMETERS
+#<<<<<EXCLUDE_PATHS
+    excludePaths:
+        - web/assets/*
+        - vendor/*
+        - tests/*
+        - tests/Support/_generated
+        - _generated (?)
+#>>>>>EXCLUDE_PATHS
+#<<<<<YII2
+#    yii2:
+#        config_path: %currentWorkingDirectory%/config/web.php
+#>>>>>YII2
+#<<<<<STRICT_ADVANCED_CHECKS
+    checkImplicitMixed: true
+    checkBenevolentUnionTypes: true
+    checkUninitializedProperties: true
+    checkTooWideReturnTypesInProtectedAndPublicMethods: true
+    reportAnyTypeWideningInVarTag: true
+    reportPossiblyNonexistentConstantArrayOffset: true
+    reportPossiblyNonexistentGeneralArrayOffset: true
+    checkMissingVarTagTypehint: false
+    treatPhpDocTypesAsCertain: false
+#>>>>>STRICT_ADVANCED_CHECKS
+#<<<<<IGNORE_ERRORS
+    ignoreErrors:
+        - '#Class [a-zA-Z_]+ uses unknown trait _generated\\[a-zA-Z_]+TesterActions\.#'
+        - '#Call to an undefined method yii\\.*#'
+        - '#Access to an undefined property yii\\.*#'
+        - '#Class yii\\.* not found#'
+        - identifiers:
+              - arrayFilter.strict
+              - variable.implicitArray
+              - ternary.shortNotAllowed
+              - empty.notAllowed
+#>>>>>IGNORE_ERRORS

@@ -25,8 +25,8 @@ use Yii;
  * @property string $admin_sup_name
  * @property string $national_id
  * @property integer $countries_id // smallInteger
- * @property santilin\wrepos\models\Country $country // HasOne
- * @property santilin\wrepos\models\PostCode[] $postCodes // BelongsToMany
+ * @property \santilin\wrepos\models\Country $country // HasOne
+ * @property \santilin\wrepos\models\PostCode[] $postCodes // BelongsToMany
  */
 class Place extends Base_Place
 {
@@ -40,6 +40,9 @@ class Place extends Base_Place
 	{
 		return '{{%places}}';
 	}
+	/**
+	 * @var array<string, array<string, string>>
+	 */
 	public static $relations = [
 		'country' => [ 'model' => 'Country', 'left' => 'places.countries_id', 'right' => 'countries.id', 'modelClass' => 'santilin\wrepos\models\Country', 'relatedTablename' => 'countries', 'join' => 'places.countries_id = countries.id', 'type' => 'HasOne'],
 		'postCodes' => [ 'model' => 'PostCode', 'left' => 'places.id', 'right' => 'postcodes.places_id', 'modelClass' => 'santilin\wrepos\models\PostCode', 'relatedTablename' => 'postcodes', 'join' => 'places.id = postcodes.places_id', 'type' => 'BelongsToMany'],
@@ -72,9 +75,9 @@ class Place extends Base_Place
 /*<<<<<MODEL_INFO*/
 	public static bool $isJunctionModel = false;
 	protected static array $_model_info = [];
-	public static function getModelInfo($part)
+	public static function getModelInfo($part): string|bool
 	{
-		if (static::$_model_info == []) {
+		if (static::$_model_info === []) {
 			$mi = [
 				'model_name' => 'Place',
 				'title' => 'Place',
@@ -139,7 +142,7 @@ class Place extends Base_Place
 		string $format,
 		string $model_format = 'medium',
 		array|string|null $scope = null,
-		?string $filter_fields = null,
+		string|null $filter_fields = null,
 	) {
 		$field_parts = explode('.', $field);
 		if (count($field_parts) > 1) {
@@ -151,12 +154,12 @@ class Place extends Base_Place
 		$ret = null;
 /*>>>>>HANDY_VALUES*/
 /*<<<<<HANDY_VALUES.BODY*/
-		if ($field == 'countries_id' || $field == 'country') { // HasOne
+		if ($field === 'countries_id' || $field === 'country') { // HasOne
 			$q = Country::find();
 			static::applyScopes($q, $scope);
 			$models = $q->all();
 			$ret = [];
-			if (empty($filter_fields)) {
+			if ($filter_fields === null || trim($filter_fields) === '') {
 				foreach ($models as $model) {
 					$ret[$model->id] = $model->recordDesc($model_format);
 				}
@@ -167,12 +170,12 @@ class Place extends Base_Place
 				}
 			}
 		}
-		if ($field == 'postCodes') { // hasMany
+		if ($field === 'postCodes') { // hasMany
 			$q = PostCode::find();
 			static::applyScopes($q, $scope);
 			$models = $q->all();
 			$ret = [];
-			if (empty($filter_fields)) {
+			if ($filter_fields === null || trim($filter_fields) === '') {
 				foreach ($models as $model) {
 					$ret[$model->getPrimaryKey()] = $model->recordDesc($model_format);
 				}
@@ -199,7 +202,7 @@ class Place extends Base_Place
 /*<<<<<DEFAULT_VALUES*/
 	public function setDefaultValues()
 	{
-		if ($this->getScenario() == 'create') {
+		if ($this->getScenario() === 'create') {
 			$this->level = 0;
 		}
 /*>>>>>DEFAULT_VALUES*/

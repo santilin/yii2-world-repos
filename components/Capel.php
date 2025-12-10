@@ -58,7 +58,7 @@ class Capel
 	}
 	public static function moduleTitle($module_id = null)
 	{
-		if ($module_id == null) {
+		if ($module_id === null) {
 			$module_id = Yii::$app->controller->module->id;
 		}
 		if ($module_id) {
