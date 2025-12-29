@@ -208,7 +208,7 @@ delete from territorios; insert into territorios SELECT "id" as "id","name" as "
 	}
 
 	public function actionImportaMunicipios(
-		string $dest_model_name, array $fields, string $conds=null)
+		string $dest_model_name, array $fields, ?string $conds = null)
 	{
 		$exitcode = ExitCode::OK;
 		if (!str_contains($dest_model_name, "\\")) {
@@ -225,7 +225,7 @@ delete from territorios; insert into territorios SELECT "id" as "id","name" as "
 
 
 	public function actionImportaProvincias(
-		string $dest_model_name, array $fields, string $conds=null)
+		string $dest_model_name, array $fields, ?string $conds = null)
 	{
 		$exitcode = ExitCode::OK;
 		if (!str_contains($dest_model_name, "\\")) {
