@@ -107,9 +107,7 @@ if ($module_id) {
 }
 /*>>>>>USES*/
 /*<<<<<BUTTONS*/
-echo '<p></p>';
-echo FormHelper::displayButtons($buttons);
-
+echo Html::tag('div', FormHelper::displayButtons($buttons), [ 'class' => 'btn-group']);
 if ((YII_ENV_TEST || YII_ENV_DEV) && isset($exception) && $exception->getPrevious()) {
 ?>
     <p>

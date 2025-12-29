@@ -6,7 +6,7 @@ namespace santilin\wrepos\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\web\Response;
-use santilin\wrepos\models\PostCode;
+use santilin\wrepos\modules\site\controllers\PostCode;
 /*>>>>>USES*/
 use santilin\wrepos\models\Place;
 
@@ -14,7 +14,7 @@ use santilin\wrepos\models\Place;
 /**
  * PostCodeController an empty controller.
  */
-class PostCodeController extends Controller
+class PostCodeController extends base\_BaseEmptyController
 {
 	/**
 	 * @var $layout The layout for this controller
@@ -92,5 +92,5 @@ SQL;
 	}
 
 /*<<<<<CLASS_END*/
-} // class EmptyController
+} // class PostCodeController
 /*>>>>>CLASS_END*/

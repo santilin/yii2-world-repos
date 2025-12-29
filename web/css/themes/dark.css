@@ -7,11 +7,6 @@ body.dark .dashboard-content {
 	color: #f1f1f1;
 }
 
-body.dark .dashboard-nav {
-	background-color: #131139;
-	color: #d6a2a2;
-}
-
 body.dark .dashboard-footer {
 	padding-top: 1em;
 	background-color: #131139;

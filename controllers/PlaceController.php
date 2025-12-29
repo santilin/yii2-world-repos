@@ -6,13 +6,13 @@ namespace santilin\wrepos\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\web\Response;
-use santilin\wrepos\models\Place;
+use santilin\wrepos\modules\site\controllers\Place;
 /*>>>>>USES*/
 /*<<<<<CLASS*/
 /**
  * PlaceController an empty controller.
  */
-class PlaceController extends Controller
+class PlaceController extends base\_BaseEmptyController
 {
 	/**
 	 * @var $layout The layout for this controller
@@ -89,5 +89,5 @@ class PlaceController extends Controller
 
 
 /*<<<<<CLASS_END*/
-} // class EmptyController
+} // class PlaceController
 /*>>>>>CLASS_END*/

@@ -6,17 +6,18 @@
  * @var \yii\web\View $this
  * @var string $content
  */
-use yii\helpers\{Html,Url};
-use yii\bootstrap5\{Breadcrumbs,Nav,NavBar};
+use yii\helpers\{Url};
+use yii\bootstrap5\{Breadcrumbs,Html,Nav,NavBar};
 use santilin\wrepos\assets\SiteAsset;
 use santilin\churros\widgets\SessionAlert;
 use app\helpers\UserHelper;
-
+/*>>>>>USES*/
+/*<<<<<ASSETS*/
 SiteAsset::register($this);
 $company = $brand_name = Yii::$app->name;
 $copyright_symbol = '&copy;';
 $created_by = 'Creado por Santilín con Yii' . Yii::getVersion();
-/*>>>>>USES*/
+/*>>>>>ASSETS*/
 /*<<<<<BEGINPAGE*/
 ?>
 <?php $this->beginPage() ?>
@@ -24,7 +25,6 @@ $created_by = 'Creado por Santilín con Yii' . Yii::getVersion();
 <html lang="<?= Yii::$app->language ?>" data-bs-theme=auto>
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
-</head>
 	<title><?= Html::encode($this->title) ?></title>
 <?php
     $this->registerMetaTag(['name' => 'description', 'content' => 'World repositories']);
@@ -86,13 +86,15 @@ NavBar::end();
 		'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
 		'options' => [ 'aria' => [ 'hidden' => 'true' ]],
 	]);
+/*>>>>>BREADCRUMBS*/
+/*<<<<<BEFORE_CONTENT*/
 	echo SessionAlert::widget();
 	echo $content;
 ?>
 </main>
 <footer aria-label='Pie de página' aria-hidden=true>
 <?php
-/*>>>>>BREADCRUMBS*/
+/*>>>>>BEFORE_CONTENT*/
 /*<<<<<FOOTER*/
 ?>
 	<hr/>

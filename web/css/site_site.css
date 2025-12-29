@@ -62,16 +62,6 @@ div.app-subtitle {
 #mainContent .title h1 {
 	font-size: 1.5rem;
 }
-.fake-readonly-control {
-	appearance: none;
-	background-clip: padding-box;
-	border-radius: var(--bs-border-radius);
-	display: block;
-	padding: 0.375rem 2.25rem 0.375rem 0.75rem;
-	margin-bottom: 0;
-	line-height: 1.5;
-}
-
 [data-bs-theme="dark"] {
 	& .form-control[readonly]:focus {
 		outline: none;
@@ -83,22 +73,18 @@ div.app-subtitle {
 		outline: none;
 		box-shadow: none;
 		border-color:#00000023;
-		background-color: darkslategray;
+		background-color: darkslategray !important;
 	}
-	& .fake-readonly-control {
-		color: var(--bs-body-color);
-		background-color: darkslategray;
-		border: var(--bs-border-width) solid var(--bs-border-color);
-		transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+[data-bs-theme="light"] {
+	& .form-control.readonly {
+		background-color: lightgray;
 	}
+}
+.form-control.readonly {
+	background-color: lightgray;
 }
 
-.fake-readonly-control {
-	color: var(--bs-body-color);
-	background-color: var(--bs-primary-bg-subtle);
-	border: var(--bs-border-width) solid var(--bs-border-color);
-	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
 .form-fields {
 	& fieldset {
 		padding: 1rem;

@@ -21,9 +21,7 @@ use Yii;
 class PostCode extends Base_PostCode
 {
 	use \santilin\churros\RelationTrait;
-	use \santilin\churros\models\ModelInfoTrait {
-		handyFieldValues as trait_handyFieldValues;
-	}
+	use \santilin\churros\models\ModelInfoTrait;
 /*>>>>>CLASS*/
 /*<<<<<STATIC_INFO*/
 	public static function tableName()
@@ -117,8 +115,8 @@ class PostCode extends Base_PostCode
 		string $format,
 		string $model_format = 'medium',
 		array|string|null $scope = null,
-		string|null $filter_fields = null,
-	) {
+		string|null $filter_fields = null): array
+	{
 		$field_parts = explode('.', $field);
 		if (count($field_parts) > 1) {
 			$table = array_shift($field_parts);
@@ -148,13 +146,12 @@ class PostCode extends Base_PostCode
 /*>>>>>HANDY_VALUES.BODY*/
 /*<<<<<HANDY_VALUES.RETURN*/
 		if ($ret === null) {
-			return $this->trait_handyFieldValues($field, $format, $model_format, $scope, $filter_fields);
+			$ret = $this->customFieldValues($field, $format, $model_format, $scope, $filter_fields);
+		}
+		if ($format && $ret) {
+			return $this->formatHandyFieldValues($field, $ret, $format);
 		} else {
-			if ($format) {
-				return $this->formatHandyFieldValues($field, $ret, $format);
-			} else {
-				return $ret;
-			}
+			return $ret;
 		}
 	} // handyFieldValues
 /*>>>>>HANDY_VALUES.RETURN*/
