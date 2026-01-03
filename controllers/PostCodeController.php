@@ -6,9 +6,8 @@ namespace santilin\wrepos\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\web\Response;
-use santilin\wrepos\modules\site\controllers\PostCode;
 /*>>>>>USES*/
-use santilin\wrepos\models\Place;
+use santilin\wrepos\models\{PostCode,Place};
 
 /*<<<<<CLASS*/
 /**
