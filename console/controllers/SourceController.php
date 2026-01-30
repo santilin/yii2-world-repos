@@ -20,7 +20,7 @@ use santilin\wrepos\models\{Country,Place,PostCode};
 class SourceController extends Controller
 {
 	/** The version of this command */
-	const VERSION = '0.0.1';
+	public const VERSION = '0.0.1';
 	public bool $dryRun = true;
 	public bool $abortOnError = true;
 /*>>>>>MAIN*/

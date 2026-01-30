@@ -84,9 +84,9 @@ class Place extends Base_Place
 				'desc_field' => 'name',
 				'controller_name' => 'place',
 				'female' => true,
-				'record_desc_format_short' => '{country}',
-				'record_desc_format_medium' => '{country}, {name}',
-				'record_desc_format_long' => '{country}, {name}',
+				'record_desc_format_short' => '{countries_id%ld}, {country}',
+				'record_desc_format_medium' => '{countries_id%ld}, {country}, {name}',
+				'record_desc_format_long' => '{countries_id%ld}, {country}, {name}',
 			];
 /*>>>>>MODEL_INFO*/
 /*<<<<<MODEL_INFO_CUSTOM*/
@@ -124,16 +124,18 @@ class Place extends Base_Place
 	{
 		$rules = [
 			'req' => [['name','countries_id'], 'required'],
+			'int_id' => ['id', 'integer', 'min' => -2147483648, 'max' => 2147483647],
+
 			'int_level' => ['level', 'integer', 'min' => -128, 'max' => 127],
 			'null' => [['name_es','name_en','name_fr','admin_code','admin_sup_code','admin_sup_name','national_id'], 'default', 'value' => null],
 			'def_level' => ['level', 'default', 'value' => 0],
 		];
 /*>>>>>RULES*/
-		// customize your rules here
-/*<<<<<RULES_RETURN*/
+/*<<<<<RULES.RETURN*/
 		return $rules;
 	} // rules
-/*>>>>>RULES_RETURN*/
+/*>>>>>RULES.RETURN*/
+		// customize your rules here
 /*<<<<<HANDY_VALUES*/
 	public function handyFieldValues(
 		string $field,
@@ -149,48 +151,49 @@ class Place extends Base_Place
 			$rel_model = new $rel_model_name();
 			return $rel_model->handyFieldValues(implode('.', $field_parts), $format, $model_format, $scope, $filter_fields);
 		}
-		$ret = null;
+		$ret = $this->customFieldValues($field, $format, $model_format, $scope, $filter_fields);
+		if ($ret === null) {
 /*>>>>>HANDY_VALUES*/
 /*<<<<<HANDY_VALUES.BODY*/
-		if ($field === 'countries_id' || $field === 'country') { // HasOne
-			$q = Country::find();
-			static::applyScopes($q, $scope);
-			$models = $q->all();
-			$ret = [];
-			if ($filter_fields === null || trim($filter_fields) === '') {
-				foreach ($models as $model) {
-					$ret[$model->id] = $model->recordDesc($model_format);
-				}
-			} else {
-				$fflds = explode(',', $filter_fields);
-				foreach ($models as $model) {
-					$ret[$model->id] = array_merge([$model->recordDesc($model_format)], $model->getAttributeValues($fflds));
-				}
-			}
-		}
-		if ($field === 'postCodes') { // hasMany
-			$q = PostCode::find();
-			static::applyScopes($q, $scope);
-			$models = $q->all();
-			$ret = [];
-			if ($filter_fields === null || trim($filter_fields) === '') {
-				foreach ($models as $model) {
-					$ret[$model->getPrimaryKey()] = $model->recordDesc($model_format);
-				}
-			} else {
-				$fflds = explode(',', $filter_fields);
-				foreach ($models as $model) {
-					$ret[$model->getPrimaryKey()] = array_merge([$model->recordDesc($model_format)], $model->getAttributeValues($fflds));
+			if ($field === 'country') { // HasOne
+				$q = Country::find();
+				static::applyScopes($q, $scope);
+				$models = $q->all();
+				$ret = [];
+				if ($filter_fields === null || trim($filter_fields) === '') {
+					foreach ($models as $model) {
+						$ret[$model->id] = $model->recordDesc($model_format);
+					}
+				} else {
+					$fflds = explode(',', $filter_fields);
+					foreach ($models as $model) {
+						$ret[$model->id] = array_merge([$model->recordDesc($model_format)], $model->getAttributeValues($fflds));
+					}
 				}
 			}
-		}
+			if ($field === 'postCodes') { // hasMany
+				$q = PostCode::find();
+				static::applyScopes($q, $scope);
+				$models = $q->all();
+				$ret = [];
+				if ($filter_fields === null || trim($filter_fields) === '') {
+					foreach ($models as $model) {
+						$ret[$model->places_id] = $model->recordDesc($model_format);
+					}
+				} else {
+					$fflds = explode(',', $filter_fields);
+					foreach ($models as $model) {
+						$ret[$model->places_id] = array_merge([$model->recordDesc($model_format)], $model->getAttributeValues($fflds));
+					}
+				}
+			}
 /*>>>>>HANDY_VALUES.BODY*/
 /*<<<<<HANDY_VALUES.RETURN*/
-		if ($ret === null) {
-			$ret = $this->customFieldValues($field, $format, $model_format, $scope, $filter_fields);
 		}
 		if ($format && $ret) {
 			return $this->formatHandyFieldValues($field, $ret, $format);
+		} elseif ($ret === null) {
+			throw new \Exception($field . ": no handyFieldValues");
 		} else {
 			return $ret;
 		}

@@ -65,8 +65,8 @@ class PostCode extends Base_PostCode
 		if (static::$_model_info === []) {
 			$mi = [
 				'model_name' => 'PostCode',
-				'title' => 'PostCode',
-				'title_plural' => 'PostCodes',
+				'title' => 'Post code',
+				'title_plural' => 'Post codes',
 				'code_field' => '',
 				'desc_field' => 'postcode',
 				'controller_name' => 'post-code',
@@ -104,11 +104,11 @@ class PostCode extends Base_PostCode
 			'max_postcode' => ['postcode', 'string', 'max' => 10],
 		];
 /*>>>>>RULES*/
-		// customize your rules here
-/*<<<<<RULES_RETURN*/
+/*<<<<<RULES.RETURN*/
 		return $rules;
 	} // rules
-/*>>>>>RULES_RETURN*/
+/*>>>>>RULES.RETURN*/
+		// customize your rules here
 /*<<<<<HANDY_VALUES*/
 	public function handyFieldValues(
 		string $field,
@@ -124,32 +124,33 @@ class PostCode extends Base_PostCode
 			$rel_model = new $rel_model_name();
 			return $rel_model->handyFieldValues(implode('.', $field_parts), $format, $model_format, $scope, $filter_fields);
 		}
-		$ret = null;
+		$ret = $this->customFieldValues($field, $format, $model_format, $scope, $filter_fields);
+		if ($ret === null) {
 /*>>>>>HANDY_VALUES*/
 /*<<<<<HANDY_VALUES.BODY*/
-		if ($field === 'places_id' || $field === 'place') { // HasOne
-			$q = Place::find();
-			static::applyScopes($q, $scope);
-			$models = $q->all();
-			$ret = [];
-			if ($filter_fields === null || trim($filter_fields) === '') {
-				foreach ($models as $model) {
-					$ret[$model->id] = $model->recordDesc($model_format);
-				}
-			} else {
-				$fflds = explode(',', $filter_fields);
-				foreach ($models as $model) {
-					$ret[$model->id] = array_merge([$model->recordDesc($model_format)], $model->getAttributeValues($fflds));
+			if ($field === 'place') { // HasOne
+				$q = Place::find();
+				static::applyScopes($q, $scope);
+				$models = $q->all();
+				$ret = [];
+				if ($filter_fields === null || trim($filter_fields) === '') {
+					foreach ($models as $model) {
+						$ret[$model->id] = $model->recordDesc($model_format);
+					}
+				} else {
+					$fflds = explode(',', $filter_fields);
+					foreach ($models as $model) {
+						$ret[$model->id] = array_merge([$model->recordDesc($model_format)], $model->getAttributeValues($fflds));
+					}
 				}
 			}
-		}
 /*>>>>>HANDY_VALUES.BODY*/
 /*<<<<<HANDY_VALUES.RETURN*/
-		if ($ret === null) {
-			$ret = $this->customFieldValues($field, $format, $model_format, $scope, $filter_fields);
 		}
 		if ($format && $ret) {
 			return $this->formatHandyFieldValues($field, $ret, $format);
+		} elseif ($ret === null) {
+			throw new \Exception($field . ": no handyFieldValues");
 		} else {
 			return $ret;
 		}

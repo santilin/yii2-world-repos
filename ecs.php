@@ -52,14 +52,15 @@ return Symplify\EasyCodingStandard\Config\ECSConfig::configure()
         __DIR__ . '/runtime',
         __DIR__ . '/vendor',
         __DIR__ . '/capel',
-        PhpCsFixer\Fixer\PhpTag\BlankLineAfterOpeningTagFixer::class,
         PhpCsFixer\Fixer\Import\OrderedImportsFixer::class, // DO NOT REMOVE!!!
         PhpCsFixer\Fixer\Whitespace\IndentationTypeFixer::class,
+        PhpCsFixer\Fixer\PhpTag\BlankLineAfterOpeningTagFixer::class,
         PhpCsFixer\Fixer\NamespaceNotation\BlankLinesBeforeNamespaceFixer::class,
         PhpCsFixer\Fixer\Import\SingleLineAfterImportsFixer::class,
         PhpCsFixer\Fixer\Whitespace\StatementIndentationFixer::class,
         PhpCsFixer\Fixer\NamespaceNotation\BlankLineAfterNamespaceFixer::class,
         PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer::class,
+        PhpCsFixer\Fixer\Whitespace\ArrayIndentationFixer::class,
 /*>>>>>SKIP*/
 /*<<<<<SCOPES*/
     ])

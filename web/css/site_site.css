@@ -73,12 +73,21 @@ div.app-subtitle {
 		outline: none;
 		box-shadow: none;
 		border-color:#00000023;
-		background-color: darkslategray !important;
+		color: white !important;
+		background-color: darkgray !important;
 	}
 }
 [data-bs-theme="light"] {
 	& .form-control.readonly {
 		background-color: lightgray;
+	}
+}
+[data-bs-theme="dark"] {
+	& .form-control.readonly {
+		background-color: darkgray;
+	}
+	& .select2-search.select2-search--inline > .select2-search__field {
+		color: black !important;
 	}
 }
 .form-control.readonly {

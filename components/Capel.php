@@ -13,21 +13,30 @@ class Capel
 {
 /*>>>>>CLASS*/
 /*<<<<<MODELS*/
-	const MODELS = [
+	public const MODELS = [
 		'Country' => [
 			'class' => 'santilin\wrepos\models\Country',
 			'type' => 'DbRecord',
+			'controller_name' => 'country',
+			'title' => 'Country',
+			'title_plural' => 'Countries',
 		],
 		'Place' => [
 			'class' => 'santilin\wrepos\models\Place',
 			'type' => 'DbRecord',
+			'controller_name' => 'place',
+			'title' => 'Place',
+			'title_plural' => 'Places',
 		],
 		'PostCode' => [
 			'class' => 'santilin\wrepos\models\PostCode',
 			'type' => 'DbRecord',
+			'controller_name' => 'post-code',
+			'title' => 'Post code',
+			'title_plural' => 'Post codes',
 		],
 	];
-	const MODULES = [
+	public const MODULES = [
 
 	];
 /*>>>>>MODELS*/

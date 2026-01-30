@@ -69,7 +69,7 @@ class Country extends Base_Country
 			$mi = [
 				'model_name' => 'Country',
 				'title' => 'Country',
-				'title_plural' => 'Countrys',
+				'title_plural' => 'Countries',
 				'code_field' => 'iso2',
 				'desc_field' => 'name',
 				'controller_name' => 'country',
@@ -109,17 +109,18 @@ class Country extends Base_Country
 	{
 		$rules = [
 			'req' => [['iso2','iso3'], 'required'],
+			'int_id' => ['id', 'integer', 'min' => -32768, 'max' => 32767],
 			'max_iso2' => ['iso2', 'string', 'max' => 2],
 			'max_iso3' => ['iso3', 'string', 'max' => 3],
 			'null' => [['name','name_es','name_en','name_fr'], 'default', 'value' => null],
 		];
 /*>>>>>RULES*/
-		// customize your rules here
-
-/*<<<<<RULES_RETURN*/
+/*<<<<<RULES.RETURN*/
 		return $rules;
 	} // rules
-/*>>>>>RULES_RETURN*/
+/*>>>>>RULES.RETURN*/
+		// customize your rules here
+
 /*<<<<<HANDY_VALUES*/
 	public function handyFieldValues(
 		string $field,
@@ -135,32 +136,33 @@ class Country extends Base_Country
 			$rel_model = new $rel_model_name();
 			return $rel_model->handyFieldValues(implode('.', $field_parts), $format, $model_format, $scope, $filter_fields);
 		}
-		$ret = null;
+		$ret = $this->customFieldValues($field, $format, $model_format, $scope, $filter_fields);
+		if ($ret === null) {
 /*>>>>>HANDY_VALUES*/
 /*<<<<<HANDY_VALUES.BODY*/
-		if ($field === 'places') { // hasMany
-			$q = Place::find();
-			static::applyScopes($q, $scope);
-			$models = $q->all();
-			$ret = [];
-			if ($filter_fields === null || trim($filter_fields) === '') {
-				foreach ($models as $model) {
-					$ret[$model->getPrimaryKey()] = $model->recordDesc($model_format);
-				}
-			} else {
-				$fflds = explode(',', $filter_fields);
-				foreach ($models as $model) {
-					$ret[$model->getPrimaryKey()] = array_merge([$model->recordDesc($model_format)], $model->getAttributeValues($fflds));
+			if ($field === 'places') { // hasMany
+				$q = Place::find();
+				static::applyScopes($q, $scope);
+				$models = $q->all();
+				$ret = [];
+				if ($filter_fields === null || trim($filter_fields) === '') {
+					foreach ($models as $model) {
+						$ret[$model->countries_id] = $model->recordDesc($model_format);
+					}
+				} else {
+					$fflds = explode(',', $filter_fields);
+					foreach ($models as $model) {
+						$ret[$model->countries_id] = array_merge([$model->recordDesc($model_format)], $model->getAttributeValues($fflds));
+					}
 				}
 			}
-		}
 /*>>>>>HANDY_VALUES.BODY*/
 /*<<<<<HANDY_VALUES.RETURN*/
-		if ($ret === null) {
-			$ret = $this->customFieldValues($field, $format, $model_format, $scope, $filter_fields);
 		}
 		if ($format && $ret) {
 			return $this->formatHandyFieldValues($field, $ret, $format);
+		} elseif ($ret === null) {
+			throw new \Exception($field . ": no handyFieldValues");
 		} else {
 			return $ret;
 		}

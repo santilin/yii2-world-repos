@@ -6,8 +6,10 @@ namespace santilin\wrepos\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\web\Response;
-use santilin\wrepos\modules\site\controllers\Place;
 /*>>>>>USES*/
+
+use santilin\wrepos\models\Place;
+
 /*<<<<<CLASS*/
 /**
  * PlaceController an empty controller.

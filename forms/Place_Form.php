@@ -18,17 +18,18 @@ class Place_Form extends Place
 /*<<<<<RULES*/
     public function rules()
     {
+		$parent_rules = parent::rules();
 		$rules = [
 			'f_safe' => [['id'], 'safe'],
 			'req' => [['name','level','countries_id'], 'required'],
 			'null' => [['name_es','name_en','name_fr','admin_code','admin_sup_code','admin_sup_name','national_id'], 'default', 'value' => null],
 		];
 /*>>>>>RULES*/
-/*<<<<<RULES_RETURN*/
-		$rules = array_merge(parent::rules(), $rules);
+/*<<<<<RULES.RETURN*/
+		$rules = array_merge($parent_rules, $rules);
 		return $rules;
     } // rules
-/*>>>>>RULES_RETURN*/
+/*>>>>>RULES.RETURN*/
 /*<<<<<AFTER_SAVE*/
 	public function afterSave($insert, $changedAttributes)
 	{

@@ -12,13 +12,13 @@ use yii\helpers\ArrayHelper;
 /*>>>>>USES*/
 /*<<<<<CLASS*/
 /**
- * \santilin\wrepos\forms\Place_Search represents the model behind the search form about `\santilin\wrepos\models\Place`.
+ * santilin\wrepos\forms\Place_Search represents the model behind the search form about `santilin\wrepos\models\Place`.
  */
 class Place_Search extends Place
 {
+	use \santilin\churros\models\ModelSearchTrait;
 /*>>>>>CLASS*/
 /*<<<<<CLASS_BODY*/
-	use \santilin\churros\models\ModelSearchTrait;
 	protected $related_properties = [
 		'country' => null,
 		'postCodes' => null,
@@ -84,9 +84,13 @@ class Place_Search extends Place
 			if (method_exists($this, $searchRelation)) {
 				$query = call_user_func([$this, $searchRelation]);
 			} elseif (isset($params['master'])) {
-				$junction_query = call_user_func([$params['master'], $searchRelation]);
-				if ($junction_query->via) {
-					$query = $junction_query->via[1];
+				if (true) { /// @todo this relation is generic {
+					$query = call_user_func([$params['master'], $searchRelation]);
+				} else {
+					$junction_query = call_user_func([$params['master'], $searchRelation]);
+					if ($junction_query->via) {
+						$query = $junction_query->via[1];
+					}
 				}
 			}
 		}
@@ -107,7 +111,7 @@ class Place_Search extends Place
 /*<<<<<SEARCH.LOAD*/
         $this->load($params);
 		if ($dataProvider->pagination) {
- 			$this->_gridPageSize = $dataProvider->pagination->pageSize = $params['per-page'] ?? Yii::$app->session->get('GridPageSize', 12);
+ 			$this->_gridPageSize = intval($dataProvider->pagination->pageSize = $params['per-page'] ?? Yii::$app->session->get('GridPageSize', 12));
  			if ($this->_gridPageSize !== 0 && $this->_gridPageSize !== 999999999) { // dont store All in session
  				Yii::$app->session->set('GridPageSize', $dataProvider->pagination->pageSize);
  			}
