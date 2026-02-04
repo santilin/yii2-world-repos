@@ -207,64 +207,155 @@ class PostCode extends Base_PostCode
 		}
 		if (is_numeric($search) ) {
 			if (strlen($search)>=4) {
+// 				$sql = <<<SQL
+// SELECT pc.postcode, plpr.name as nuts3, pl.name as nuts4, '' as nuts5, substr(pc.postcode,1,2) as nuts3_code
+// FROM $postcode_tbl pc
+// 	INNER JOIN $place_tbl pl ON pl.id=pc.places_id
+// 	LEFT JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
+// WHERE pc.postcode LIKE :postcode_like AND pl.level = 4 /* :place_like */
+// UNION
+// SELECT pc.postcode, plpr.name, plmun.name, pl.name, substr(pc.postcode,1,2)
+// FROM $postcode_tbl pc
+// 	INNER JOIN $place_tbl pl ON pl.id=pc.places_id
+// 	LEFT JOIN $place_tbl plmun ON pl.admin_sup_code=plmun.admin_code AND plmun.level = 4
+// 	LEFT JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
+// WHERE pc.postcode LIKE :postcode_like AND pl.level >= 5
+// SQL;
 				$sql = <<<SQL
-SELECT pc.postcode, plpr.name as nuts3, pl.name as nuts4, '' as nuts5, substr(pc.postcode,1,2) as nuts3_code
-FROM $postcode_tbl pc
-	INNER JOIN $place_tbl pl ON pl.id=pc.places_id
-	LEFT JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
-WHERE pc.postcode LIKE :postcode_like AND pl.level = 4 /* :place_like */
-UNION
-SELECT pc.postcode, plpr.name, plmun.name, pl.name, substr(pc.postcode,1,2)
-FROM $postcode_tbl pc
-	INNER JOIN $place_tbl pl ON pl.id=pc.places_id
-	LEFT JOIN $place_tbl plmun ON pl.admin_sup_code=plmun.admin_code AND plmun.level = 4
-	LEFT JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
-WHERE pc.postcode LIKE :postcode_like AND pl.level >= 5
+WITH RECURSIVE descendants AS (
+    -- ANCHOR: Level 4 places from postcodes (matches your first UNION)
+    SELECT
+		pl.id as place_id,
+        pc.postcode,
+        COALESCE(plpr.name, '') as nuts3,
+        pl.name as nuts4,
+        '' as nuts5,
+        substr(pc.postcode,1,2) as nuts3_code,
+        pl.level,
+        pl.admin_code,
+        pl.admin_sup_code
+    FROM $postcode_tbl pc
+    INNER JOIN $place_tbl pl ON pl.id=pc.places_id
+    LEFT JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
+    WHERE pc.postcode LIKE :postcode_like AND pl.level = 4
+
+    UNION ALL
+
+    -- RECURSIVE: Levels 5+ with path building (matches your second UNION)
+    SELECT
+		pl_child.id as place_id,
+        d.postcode,
+        d.nuts3,
+        d.nuts4,
+        CASE
+            WHEN d.nuts5 = '' THEN pl_child.name
+            ELSE d.nuts5 || ' - ' || pl_child.name
+        END as nuts5,
+        d.nuts3_code,
+        pl_child.level,
+        pl_child.admin_code,
+        pl_child.admin_sup_code
+    FROM descendants d
+    INNER JOIN $place_tbl pl_child ON pl_child.admin_sup_code = d.admin_code
+    WHERE pl_child.level > 4
+)
+SELECT place_id, postcode, nuts3, nuts4, nuts5, nuts3_code, level
+FROM descendants
+ORDER BY postcode, level
 SQL;
 				$models = PostCode::getDb()->createCommand($sql. $sql_limit)
 					->bindValue(':postcode_like', $search . '%')
 					->queryAll();
 			}
+			return models;
 		} else {
+// 				$sql = <<<SQL
+// SELECT pl.id, plpr.name as nuts3, pl.name as nuts4, '' as nuts5
+// 	FROM $place_tbl pl
+// 		INNER JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
+// 	WHERE (pl.name LIKE :place_like) AND pl.level = 4
+// 	UNION
+// 	SELECT pl.id, plpr.name, plmun.name, pl.name
+// 	FROM $place_tbl pl
+// 		INNER JOIN $place_tbl plmun ON pl.admin_sup_code=plmun.admin_code AND plmun.level = 4
+// 		INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
+// 	WHERE (pl.name LIKE :place_like) AND pl.level = 5
+// 	UNION
+// 	SELECT pl.id, plpr.name, plmun.name, plent.name || '|' || pl.name
+// 	FROM $place_tbl pl
+// 		INNER JOIN $place_tbl plent ON pl.admin_sup_code=plent.admin_code AND plent.level = 5
+// 		INNER JOIN $place_tbl plmun ON plent.admin_sup_code=plmun.admin_code AND plmun.level = 4
+// 		INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
+// 	WHERE (pl.name LIKE :place_like) AND pl.level = 6
+// UNION
+// 	SELECT pl.id, plpr.name, plmun.name, plent.name || '|' || plsubent.name || '|'  || pl.name
+// 	FROM $place_tbl pl
+// 	INNER JOIN $place_tbl plent ON pl.admin_sup_code=plsubent.admin_code AND plsubent.level = 6
+// 	INNER JOIN $place_tbl plsubent ON plsubent.admin_sup_code=plent.admin_code AND plent.level = 5
+// 	INNER JOIN $place_tbl plmun ON plent.admin_sup_code=plmun.admin_code AND plmun.level = 4
+// 	INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
+// 	WHERE (pl.name LIKE :place_like) AND pl.level > 6
+// SQL;
 				$sql = <<<SQL
-SELECT pl.id, plpr.name as nuts3, pl.name as nuts4, '' as nuts5
-	FROM $place_tbl pl
-		INNER JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
-	WHERE (pl.name LIKE :place_like) AND pl.level = 4
-	UNION
-	SELECT pl.id, plpr.name, plmun.name, pl.name
-	FROM $place_tbl pl
-		INNER JOIN $place_tbl plmun ON pl.admin_sup_code=plmun.admin_code AND plmun.level = 4
-		INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
-	WHERE (pl.name LIKE :place_like) AND pl.level = 5
-	UNION
-	SELECT pl.id, plpr.name, plmun.name, plent.name || '|' || pl.name
-	FROM $place_tbl pl
-		INNER JOIN $place_tbl plent ON pl.admin_sup_code=plent.admin_code AND plent.level = 5
-		INNER JOIN $place_tbl plmun ON plent.admin_sup_code=plmun.admin_code AND plmun.level = 4
-		INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
-	WHERE (pl.name LIKE :place_like) AND pl.level = 6
-UNION
-	SELECT pl.id, plpr.name, plmun.name, plent.name || '|' || plsubent.name || '|'  || pl.name
-	FROM $place_tbl pl
-	INNER JOIN $place_tbl plent ON pl.admin_sup_code=plsubent.admin_code AND plsubent.level = 6
-	INNER JOIN $place_tbl plsubent ON plsubent.admin_sup_code=plent.admin_code AND plent.level = 5
-	INNER JOIN $place_tbl plmun ON plent.admin_sup_code=plmun.admin_code AND plmun.level = 4
-	INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
-	WHERE (pl.name LIKE :place_like) AND pl.level > 6
+WITH RECURSIVE descendants AS (
+    -- ANCHOR: Level 4 places matching place_like
+    SELECT
+        pl.id as place_id,
+        plpr.name as nuts3,
+        pl.name as nuts4,
+        '' as nuts5,
+        pl.level,
+        pl.admin_code,
+        pl.admin_sup_code
+    FROM $place_tbl pl
+    INNER JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
+    WHERE pl.name LIKE :place_like AND pl.level = 4
+
+    UNION ALL
+
+    -- RECURSIVE: Levels 5+ with path building
+    SELECT
+        id AS place_id,
+        d.nuts3,
+        d.nuts4,
+        CASE
+            WHEN d.level = 4 THEN ''
+            WHEN d.level = 5 THEN pl_child.name
+            ELSE d.nuts5 || '* ' || pl_child.name
+        END as nuts5,
+        pl_child.level,
+        pl_child.admin_code,
+        pl_child.admin_sup_code
+    FROM descendants d
+    INNER JOIN $place_tbl pl_child ON pl_child.admin_sup_code = d.admin_code
+    WHERE pl_child.level > d.level
+)
+SELECT place_id, nuts3, nuts4, nuts5, level
+FROM descendants
+ORDER BY level, nuts5
 SQL;
 			$places = PostCode::getDb()->createCommand($sql)
 					->bindValue(':place_like', "%$search%")
 					->queryAll();
 			foreach ($places as $place) {
+				$postcode = PostCode::findPlacePostCode(intval($place['place_id']));
 				$place['nuts3'] = '(' . $place['nuts3'] . ')';
-				$place['postcode'] = PostCode::findPlacePostCode(intval($place['id']));
+				$place['postcode'] = $postcode;
+				// $place['nuts4'] not changed
 				$place['nuts3_code'] = substr($place['postcode'],0,2);
 				$place['nuts5'] = str_replace('|', ', ', $place['nuts5']);
-				$models[] = $place;
+				if ($postcode) {
+					$k = $postcode . '-' . $place['nuts4'] . '-' . $place['nuts5'];
+					if (isset($models[$k])) {
+						continue;
+					}
+					$models[$k] = $place;
+				} else {
+					$models[] = $place;
+				}
 			}
+			return array_values($models);
 		}
-		return $models;
 	}
 
 /*<<<<<END*/

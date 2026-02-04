@@ -39,6 +39,23 @@ class PlaceController extends base\_BaseEmptyController
 		]);
 	}
 
+	public function actionFindById(int $id)
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$model = Place::findOne($id);
+		return $model->getAttributes();
+	}
+
+	public function actionFindIdByLevel(int $id, int $level)
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$model = Place::findOne($id);
+		while ($model->level > $level) {
+			$model = $model->findSupPlaceById($model->id);
+		}
+		return $model->getAttributes();
+	}
+
 	public function actionFindPlace(string $place, string $country_code)
 	{
 		\Yii::$app->response->format = Response::FORMAT_JSON;
