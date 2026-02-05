@@ -20,7 +20,7 @@ class Module extends \yii\base\Module
 		// Set this module db connection when used from another app
 		unset($db_config['components']['db']['class']);
 		$db_config['components']['db']['dsn'] = str_replace('@app','@wrepos', $db_config['components']['db']['dsn']);
-		$this->db = new yii\db\Connection( $db_config['components']['db'] );
+		$this->db = new yii\db\Connection($db_config['components']['db']);
 	}
 
 } // class Module

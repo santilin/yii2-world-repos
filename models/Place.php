@@ -66,7 +66,11 @@ class Place extends Base_Place
 
 	static public function getDb()
 	{
-		return Yii::$app->getModule('wrepos')->db;
+		if (Yii::$app->getModule('wrepos')) {
+			return Yii::$app->getModule('wrepos')->db;
+		} else {
+			return Yii::$app->db;
+		}
 	}
 
 
@@ -259,7 +263,8 @@ class Place extends Base_Place
 	}
 
 
-	static public function importToModel(?callable $callback, string $dest_model_name, array $fields, string $conds=null, string $country='ES'): int
+	static public function importToModel(?callable $callback, string $dest_model_name, array $fields,
+										 ?string $conds=null, string $country='ES'): int
 	{
 		$select_fields = [];
 		$place_schema = Place::getTableSchema();

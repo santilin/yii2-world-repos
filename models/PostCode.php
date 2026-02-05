@@ -54,7 +54,11 @@ class PostCode extends Base_PostCode
 
 	static public function getDb()
 	{
-		return Yii::$app->getModule('wrepos')->db;
+		if (Yii::$app->getModule('wrepos')) {
+			return Yii::$app->getModule('wrepos')->db;
+		} else {
+			return Yii::$app->db;
+		}
 	}
 
 /*<<<<<MODEL_INFO*/
@@ -302,19 +306,21 @@ SQL;
 					->bindValue(':place_like', "%$search%")
 					->queryAll();
 			foreach ($places as $place) {
-				$postcode = PostCode::findPlacePostCode(intval($place['place_id']));
-				$place['nuts3'] = '(' . $place['nuts3'] . ')';
-				$place['postcode'] = $postcode;
 				// $place['nuts4'] not changed
-				$place['nuts3_code'] = substr($place['postcode'],0,2);
+				// $place['place_id'] not changed
+				$postcode = PostCode::findPlacePostCode(intval($place['place_id']));
 				$place['nuts5'] = str_replace('|', ', ', $place['nuts5']);
+				$place['nuts3'] = '(' . $place['nuts3'] . ')';
 				if ($postcode) {
+					$place['postcode'] = $postcode;
+					$place['nuts3_code'] = substr($postcode,0,2);
 					$k = $postcode . '-' . $place['nuts4'] . '-' . $place['nuts5'];
 					if (isset($models[$k])) {
 						continue;
 					}
 					$models[$k] = $place;
 				} else {
+					$place['nuts3_code'] = $place['postcode'] = '';
 					$models[] = $place;
 				}
 			}

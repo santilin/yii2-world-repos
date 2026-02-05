@@ -56,6 +56,19 @@ class PlaceController extends base\_BaseEmptyController
 		return $model->getAttributes();
 	}
 
+	public function actionFindIdByLevelWithSup(int $id, int $level)
+	{
+		\Yii::$app->response->format = Response::FORMAT_JSON;
+		$model = Place::findOne($id);
+		while ($model->level > $level) {
+			$model = $model->findSupPlaceById($model->id);
+		}
+		$result = $model->getAttributes();
+		$parent = $model->findSupPlaceById($model->id);
+		$result['sup_place'] = $parent->getAttributes();
+		return $result;
+	}
+
 	public function actionFindPlace(string $place, string $country_code)
 	{
 		\Yii::$app->response->format = Response::FORMAT_JSON;
