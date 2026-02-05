@@ -267,72 +267,36 @@ SQL;
 					->bindValue(':postcode_like', $search . '%')
 					->queryAll();
 			}
-			return models;
+			return $models;
 		} else {
-// 				$sql = <<<SQL
-// SELECT pl.id, plpr.name as nuts3, pl.name as nuts4, '' as nuts5
-// 	FROM $place_tbl pl
-// 		INNER JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
-// 	WHERE (pl.name LIKE :place_like) AND pl.level = 4
-// 	UNION
-// 	SELECT pl.id, plpr.name, plmun.name, pl.name
-// 	FROM $place_tbl pl
-// 		INNER JOIN $place_tbl plmun ON pl.admin_sup_code=plmun.admin_code AND plmun.level = 4
-// 		INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
-// 	WHERE (pl.name LIKE :place_like) AND pl.level = 5
-// 	UNION
-// 	SELECT pl.id, plpr.name, plmun.name, plent.name || '|' || pl.name
-// 	FROM $place_tbl pl
-// 		INNER JOIN $place_tbl plent ON pl.admin_sup_code=plent.admin_code AND plent.level = 5
-// 		INNER JOIN $place_tbl plmun ON plent.admin_sup_code=plmun.admin_code AND plmun.level = 4
-// 		INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
-// 	WHERE (pl.name LIKE :place_like) AND pl.level = 6
-// UNION
-// 	SELECT pl.id, plpr.name, plmun.name, plent.name || '|' || plsubent.name || '|'  || pl.name
-// 	FROM $place_tbl pl
-// 	INNER JOIN $place_tbl plent ON pl.admin_sup_code=plsubent.admin_code AND plsubent.level = 6
-// 	INNER JOIN $place_tbl plsubent ON plsubent.admin_sup_code=plent.admin_code AND plent.level = 5
-// 	INNER JOIN $place_tbl plmun ON plent.admin_sup_code=plmun.admin_code AND plmun.level = 4
-// 	INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
-// 	WHERE (pl.name LIKE :place_like) AND pl.level > 6
-// SQL;
 				$sql = <<<SQL
-WITH RECURSIVE descendants AS (
-    -- ANCHOR: Level 4 places matching place_like
-    SELECT
-        pl.id as place_id,
-        plpr.name as nuts3,
-        pl.name as nuts4,
-        '' as nuts5,
-        pl.level,
-        pl.admin_code,
-        pl.admin_sup_code
-    FROM $place_tbl pl
-    INNER JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
-    WHERE pl.name LIKE :place_like AND pl.level = 4
+SELECT pl.id as place_id, plpr.name as nuts3, pl.name as nuts4, '' as nuts5
+	FROM $place_tbl pl
+		INNER JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
+	WHERE (pl.name LIKE :place_like) AND pl.level = 4
+	UNION
+	SELECT pl.id, plpr.name, plmun.name, pl.name
+	FROM $place_tbl pl
+		INNER JOIN $place_tbl plmun ON pl.admin_sup_code=plmun.admin_code AND plmun.level = 4
+		INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
+	WHERE (pl.name LIKE :place_like) AND pl.level = 5
+	UNION
+	SELECT pl.id, plpr.name, plmun.name, plent.name || ' - ' || pl.name
+	FROM $place_tbl pl
+		INNER JOIN $place_tbl plent ON pl.admin_sup_code=plent.admin_code AND plent.level = 5
+		INNER JOIN $place_tbl plmun ON plent.admin_sup_code=plmun.admin_code AND plmun.level = 4
+		INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
+	WHERE (pl.name LIKE :place_like) AND pl.level = 6
+UNION
+	SELECT pl.id, plpr.name, plmun.name, plent.name || ' - ' || plsubent.name || ' - '  || pl.name
+	FROM $place_tbl pl
+	INNER JOIN $place_tbl plent ON pl.admin_sup_code=plsubent.admin_code AND plsubent.level = 6
+	INNER JOIN $place_tbl plsubent ON plsubent.admin_sup_code=plent.admin_code AND plent.level = 5
+	INNER JOIN $place_tbl plmun ON plent.admin_sup_code=plmun.admin_code AND plmun.level = 4
+	INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
+	WHERE (pl.name LIKE :place_like) AND pl.level > 6
 
-    UNION ALL
-
-    -- RECURSIVE: Levels 5+ with path building
-    SELECT
-        id AS place_id,
-        d.nuts3,
-        d.nuts4,
-        CASE
-            WHEN d.level = 4 THEN ''
-            WHEN d.level = 5 THEN pl_child.name
-            ELSE d.nuts5 || '* ' || pl_child.name
-        END as nuts5,
-        pl_child.level,
-        pl_child.admin_code,
-        pl_child.admin_sup_code
-    FROM descendants d
-    INNER JOIN $place_tbl pl_child ON pl_child.admin_sup_code = d.admin_code
-    WHERE pl_child.level > d.level
-)
-SELECT place_id, nuts3, nuts4, nuts5, level
-FROM descendants
-ORDER BY level, nuts5
+ORDER BY nuts3, nuts4, nuts5
 SQL;
 			$places = PostCode::getDb()->createCommand($sql)
 					->bindValue(':place_like', "%$search%")
