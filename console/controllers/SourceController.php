@@ -490,7 +490,9 @@ aqui:
 		// Rellenar códigos postales desde la tabla geonames_es
 		$sql_cp = <<<sql
 select t.id, g.POSTCODE AS cp, t.name, g.place_name
-FROM geonames_es g INNER join places t on t.admin_sup_code=g.admin3_code AND UPPER(t.name) = UPPER(g.place_name) AND t.level = 4 AND COUNTRY='ES'
+FROM geonames_es g INNER join places t on t.admin_sup_code=g.admin3_code AND UPPER(t.name) = UPPER(g.place_name) AND COUNTRY='ES'
+UNION select t.id, g.POSTCODE AS cp, t.name, g.place_name
+FROM geonames_es g INNER join places t on t.admin_code = g.admin3_code AND UPPER(t.name) = UPPER(g.place_name) AND COUNTRY='ES'
 sql;
 // WHERE t.name = 'Espinardo'
 // WHERE p.POSTCODE = '30140' OR t.name = 'Alacant/Alicante'

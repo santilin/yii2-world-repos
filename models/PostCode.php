@@ -211,20 +211,6 @@ class PostCode extends Base_PostCode
 		}
 		if (is_numeric($search) ) {
 			if (strlen($search)>=4) {
-// 				$sql = <<<SQL
-// SELECT pc.postcode, plpr.name as nuts3, pl.name as nuts4, '' as nuts5, substr(pc.postcode,1,2) as nuts3_code
-// FROM $postcode_tbl pc
-// 	INNER JOIN $place_tbl pl ON pl.id=pc.places_id
-// 	LEFT JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
-// WHERE pc.postcode LIKE :postcode_like AND pl.level = 4 /* :place_like */
-// UNION
-// SELECT pc.postcode, plpr.name, plmun.name, pl.name, substr(pc.postcode,1,2)
-// FROM $postcode_tbl pc
-// 	INNER JOIN $place_tbl pl ON pl.id=pc.places_id
-// 	LEFT JOIN $place_tbl plmun ON pl.admin_sup_code=plmun.admin_code AND plmun.level = 4
-// 	LEFT JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
-// WHERE pc.postcode LIKE :postcode_like AND pl.level >= 5
-// SQL;
 				$sql = <<<SQL
 WITH RECURSIVE descendants AS (
     -- ANCHOR: Level 4 places from postcodes (matches your first UNION)
@@ -272,59 +258,53 @@ SQL;
 					->queryAll();
 			}
 			return $models;
-		} else {
+		} else { // búsqueda no numérica
 				$sql = <<<SQL
-SELECT pl.id as place_id, plpr.name as nuts3, pl.name as nuts4, '' as nuts5
+SELECT pl.id as place_id, pl.admin_sup_code as nuts3_code, plpr.name as nuts3, pl.name as nuts4, '' as nuts5
 	FROM $place_tbl pl
 		INNER JOIN $place_tbl plpr ON pl.admin_sup_code=plpr.admin_code AND plpr.level = 3
 	WHERE (pl.name LIKE :place_like) AND pl.level = 4
-	UNION
-	SELECT pl.id, plpr.name, plmun.name, pl.name
+UNION
+	SELECT pl.id, pl.admin_sup_code, plpr.name, plmun.name, pl.name
 	FROM $place_tbl pl
 		INNER JOIN $place_tbl plmun ON pl.admin_sup_code=plmun.admin_code AND plmun.level = 4
 		INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
 	WHERE (pl.name LIKE :place_like) AND pl.level = 5
-	UNION
-	SELECT pl.id, plpr.name, plmun.name, plent.name || ' - ' || pl.name
+UNION
+	SELECT pl.id, pl.admin_sup_code, plpr.name, plmun.name, plent.name || ' - ' || pl.name
 	FROM $place_tbl pl
 		INNER JOIN $place_tbl plent ON pl.admin_sup_code=plent.admin_code AND plent.level = 5
 		INNER JOIN $place_tbl plmun ON plent.admin_sup_code=plmun.admin_code AND plmun.level = 4
 		INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
 	WHERE (pl.name LIKE :place_like) AND pl.level = 6
 UNION
-	SELECT pl.id, plpr.name, plmun.name, plent.name || ' - ' || plsubent.name || ' - '  || pl.name
+	SELECT pl.id, pl.admin_sup_code, plpr.name, plmun.name, plent.name || ' - ' || plsubent.name || ' - '  || pl.name
 	FROM $place_tbl pl
 	INNER JOIN $place_tbl plent ON pl.admin_sup_code=plsubent.admin_code AND plsubent.level = 6
 	INNER JOIN $place_tbl plsubent ON plsubent.admin_sup_code=plent.admin_code AND plent.level = 5
 	INNER JOIN $place_tbl plmun ON plent.admin_sup_code=plmun.admin_code AND plmun.level = 4
 	INNER JOIN $place_tbl plpr ON plmun.admin_sup_code=plpr.admin_code AND plpr.level = 3
 	WHERE (pl.name LIKE :place_like) AND pl.level > 6
-
-ORDER BY nuts3, nuts4, nuts5
 SQL;
-			$places = PostCode::getDb()->createCommand($sql)
+			$places = Place::getDb()->createCommand($sql)
 					->bindValue(':place_like', "%$search%")
 					->queryAll();
-			foreach ($places as $place) {
+			foreach ($places as $place_row) {
 				// $place['nuts4'] not changed
 				// $place['place_id'] not changed
-				$postcode = PostCode::findPlacePostCode(intval($place['place_id']));
-				$place['nuts5'] = str_replace('|', ', ', $place['nuts5']);
-				$place['nuts3'] = '(' . $place['nuts3'] . ')';
-				if ($postcode) {
-					$place['postcode'] = $postcode;
-					$place['nuts3_code'] = substr($postcode,0,2);
-					$k = $postcode . '-' . $place['nuts4'] . '-' . $place['nuts5'];
-					if (isset($models[$k])) {
-						continue;
-					}
-					$models[$k] = $place;
-				} else {
-					$place['nuts3_code'] = $place['postcode'] = '';
-					$models[] = $place;
+				$place = Place::findOne(intval($place_row['place_id']));
+				$postcodes = $place->findPostCodes();
+				$place_row['nuts3'] = '(' . $place_row['nuts3'] . ')';
+				if (count($postcodes) >= 1) {
+					$place_row['postcode'] = array_shift($postcodes);
 				}
+				if (count($postcodes) > 1) {
+					$place_row['nuts3'] .= ', ' . implode(', ', $postcodes);
+				}
+				$place_row['nuts5'] = str_replace('|', ', ', $place_row['nuts5']);
+				$models[] = $place_row;
 			}
-			return array_values($models);
+			return $models;
 		}
 	}
 

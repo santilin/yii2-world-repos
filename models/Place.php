@@ -337,7 +337,7 @@ class Place extends Base_Place
 			[ 'codigoine' => str_pad($this->national_id,11,'0',STR_PAD_RIGHT) ])->queryScalar());
 	}
 
-	public function findCodigoPostal(): ?string
+	public function findPostCode(): ?string
 	{
 		$place = $this;
 		$pc = null;
@@ -356,6 +356,20 @@ class Place extends Base_Place
 			return $pc->postcode;
 		} else {
 			return null;
+		}
+	}
+
+	public function findPostCodes(): array
+	{
+		$pcs = PostCode::find()->andWhere(['places_id' => $this->id])->all();
+		if (count($pcs) === 0) {
+			return [ $this->findPostCode() ];
+		} else {
+			$ret = [];
+			foreach($pcs as $pc) {
+				$ret[] = $pc->postcode;
+			}
+			return $ret;
 		}
 	}
 
