@@ -344,9 +344,12 @@ class Place extends Base_Place
 		while (!$pc) {
 			$pc = PostCode::findOne(['places_id' => $place->id]);
 			if (!$pc) {
+				if ($place->level <=4) {
+					break;
+				}
 				$place = $place->findSupPlaceById($place->id);
 				if (!$place) {
-					echo "Código postal de [{$this->id}]{$this->fullName()} no encontrado\n";
+					// echo "Código postal de [{$this->id}]{$this->fullName()} no encontrado\n";
 					return null;
 				}
 			}
