@@ -24,17 +24,23 @@ class PlaceController extends base\_BaseEmptyController
 
 	public function behaviors()
 	{
+		$cors = [
+			'Origin' => ['*'],
+			'Access-Control-Request-Method' => ['GET'],
+			'Access-Control-Allow-Credentials' => null,
+			'Access-Control-Max-Age' => 86400,
+			'Access-Control-Expose-Headers' => [],
+		];
+
+		// Solo en entorno no dev forzamos ese header
+		if (!YII_ENV_DEV) {
+			$cors['Access-Control-Request-Headers'] = ['strict-origin-when-cross-origin'];
+		}
+
 		return array_merge(parent::behaviors(), [
 			'corsFilter' => [
 				'class' => \yii\filters\Cors::class,
-				'cors' => [
-					'Origin' => ['*'],
-					'Access-Control-Request-Headers' => ['strict-origin-when-cross-origin'],
-					'Access-Control-Request-Method' => ['GET'],
-					'Access-Control-Allow-Credentials' => null,
-					'Access-Control-Max-Age' => 86400,
-					'Access-Control-Expose-Headers' => [],
-				],
+				'cors'  => $cors,
 			],
 		]);
 	}
