@@ -35,6 +35,8 @@ class PlaceController extends base\_BaseEmptyController
 		// Solo en entorno no dev forzamos ese header
 		if (!YII_ENV_DEV) {
 			$cors['Access-Control-Request-Headers'] = ['strict-origin-when-cross-origin'];
+		} else {
+			$cors['Access-Control-Request-Headers'] = ['*'];
 		}
 
 		return array_merge(parent::behaviors(), [
