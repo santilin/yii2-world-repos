@@ -92,7 +92,7 @@ class PlaceController extends base\_BaseEmptyController
 		return $db->createCommand("SELECT * FROM entidades_es WHERE NOMBRE = :nombre AND TIPO = 'Municipio'", ['nombre' => $nombre])->queryOne();
 	}
 
-	public function actionDegurbaMunicipioPorIdIne(string $mun_id)
+	public function actionMunicipioPorIdIne(string $mun_id)
 	{
 		\Yii::$app->response->format = Response::FORMAT_JSON;
 		$p = new Place; // to get the db object
