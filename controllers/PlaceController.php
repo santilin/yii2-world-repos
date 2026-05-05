@@ -127,7 +127,7 @@ class PlaceController extends base\_BaseEmptyController
 		return $entidades;
 	}
 
-	public function actionDegurbaMuncipioPorCodigoIne(string $codigo_ine)
+	public function actionDegurbaMunicipioPorCodigoIne(string $codigo_ine)
 	{
 		\Yii::$app->response->format = Response::FORMAT_JSON;
 		$p = new Place; // to get the db object
