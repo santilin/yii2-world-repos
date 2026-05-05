@@ -132,7 +132,7 @@ class PlaceController extends base\_BaseEmptyController
 		\Yii::$app->response->format = Response::FORMAT_JSON;
 		$p = new Place; // to get the db object
 		$db = $p->getDb();
-		$entidades = $db->createCommand("SELECT * FROM entidades_es WHERE TIPO IN ('Municipio') AND CODIGOINE LIKE :mun_id ORDER BY NOMBRE", ['mun_id' => "$codigo_ine%"])->queryAll();
+		$entidades = $db->createCommand("SELECT * FROM entidades_es WHERE TIPO IN ('Municipio') AND CODIGOINE LIKE :mun_id ORDER BY NOMBRE", ['mun_id' => substr($codigo_ine, 0, 5) . '%'])->queryAll();
 		return $entidades;
 	}
 
