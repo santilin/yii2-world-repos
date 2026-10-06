@@ -1,6 +1,6 @@
 {
     "name": "world-repos",
-    "schema_version": "0.1.6",
+    "schema_version": "0.1.8",
     "version": "0.0.1",
     "params": {
         "adminEmail": "z@zzzz.es",
